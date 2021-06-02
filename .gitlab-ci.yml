@@ -7,13 +7,6 @@ stages:
 
 check_sscx:
   stage: page_checks
-  script:
-    - 'echo "check sscx"'
-    - python pagechecker.py  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5
-
-
-check_portal:
-  stage: page_checks
   tags:
     - bb5_user
   variables:
@@ -25,6 +18,13 @@ check_portal:
   script:
     - module load unstable python
     - python -V
+    - 'echo "check sscx"'
+    - python pagechecker.py  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5
+
+
+check_portal:
+  stage: page_checks
+  script:
     - 'echo "check potal"'
     - pwd
     - ls
