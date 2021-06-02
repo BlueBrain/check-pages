@@ -39,7 +39,7 @@ check_portal:
 
 check_docker:
   stage: page_checks
-  image: python:3.8-slim
+  image: python:3.8-buster
   script:
     - python -V
     - google-chrome --version
