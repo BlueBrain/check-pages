@@ -55,10 +55,10 @@ check_docker:
 #    && curl http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip -o /opt/selenium/chromedriver_linux64.zip \
 #    && cd /opt/selenium; unzip /opt/selenium/chromedriver_linux64.zip; rm -rf chromedriver_linux64.zip; ln -fs /opt/selenium/chromedriver /usr/bin/chromedriver;
     - chmod ugo+rwx bin/chromedriver
-    - wget  https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    - dpkg -i ./google-chrome-stable_current_amd64.deb 
-    - apt --fix-broken install
-    - dpkg -i google-chrome-stable_current_amd64.deb
+#    - wget  https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+#    - dpkg -i ./google-chrome-stable_current_amd64.deb 
+#    - apt --fix-broken install
+#    - dpkg -i google-chrome-stable_current_amd64.deb
 #    - apt-get install chromium-browser
     - google-chrome --version
     - pip install -r requirements.txt
