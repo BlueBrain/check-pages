@@ -14,7 +14,15 @@ check_sscx:
 
 check_portal:
   stage: page_checks
+  variables:
+    bb5_account: proj30
+    bb5_memory: 20G
+    bb5_duration: "15:00"
+    bb5_ntasks: 1
+    bb5_cpus_per_task: 4
   script:
+    - module load unstable python
+    - python -V
     - 'echo "check potal"'
     - pwd
     - ls
