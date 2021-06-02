@@ -35,3 +35,11 @@ check_portal:
     - pip install --upgrade pip setuptools wheel
     - pip install -r requirements.txt
     - python pagechecker.py  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5
+
+
+check_docker:
+  stage: page_checks
+  image: ubuntu:20.04
+  script:
+    - python -V
+
