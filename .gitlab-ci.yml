@@ -42,6 +42,7 @@ check_docker:
   image: python:3.8-slim
   script:
     - python -V
+    - google-chrome --version
     - pip install -r requirements.txt
     - export PATH=`pwd`/bin:$PATH
     - python test_code.py
