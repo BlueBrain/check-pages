@@ -9,8 +9,7 @@ check_sscx:
   stage: page_checks
   script:
     - 'echo "check sscx"'
-    - pwd
-    - ls
+    - python pagechecker.py  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5
 
 
 check_portal:
