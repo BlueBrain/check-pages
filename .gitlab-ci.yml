@@ -17,6 +17,10 @@ check_sscx:
     bb5_cpus_per_task: 4
   script:
     - module load unstable python
+    - python -mvenv venv
+    - source venv/bin/activate
+    - pip install --upgrade pip setuptools wheel
+    - pip install -r requirements.txt
     - python -V
     - 'echo "check sscx"'
     - python pagechecker.py  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5
