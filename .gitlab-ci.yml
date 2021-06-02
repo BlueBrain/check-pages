@@ -43,5 +43,6 @@ check_docker:
   script:
     - python -V
     - pip install -r requirements.txt
+    - export PATH=`pwd`/bin:$PATH
     - python pagechecker.py  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5
 
