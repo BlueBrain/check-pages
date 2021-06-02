@@ -39,7 +39,7 @@ check_portal:
 
 check_docker:
   stage: page_checks
-  image: 3.8.10-slim
+  image: 3.8-slim
   script:
     - python -V
 
