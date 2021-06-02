@@ -23,7 +23,7 @@ check_sscx:
     - pip install -r requirements.txt
     - python -V
     - 'echo "check sscx"'
-    - python pagechecker.py  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5
+    - python test_code.py
 
 
 check_portal:
@@ -34,7 +34,7 @@ check_portal:
     - python -V
     - pip install --upgrade pip setuptools wheel
     - pip install -r requirements.txt
-    - python pagechecker.py  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5
+    - python test_code.py
 
 
 check_docker:
@@ -44,5 +44,5 @@ check_docker:
     - python -V
     - pip install -r requirements.txt
     - export PATH=`pwd`/bin:$PATH
-    - python pagechecker.py  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5
+    - python test_code.py
 
