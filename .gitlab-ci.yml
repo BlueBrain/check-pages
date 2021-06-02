@@ -42,4 +42,6 @@ check_docker:
   image: python:3.8-slim
   script:
     - python -V
+    - pip install -r requirements.txt
+    - python pagechecker.py  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5
 
