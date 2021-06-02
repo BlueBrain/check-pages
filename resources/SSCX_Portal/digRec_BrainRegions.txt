@@ -1,0 +1,8 @@
+/digital-reconstructions/brain-regions?brain_region=S1DZ
+/digital-reconstructions/brain-regions?brain_region=S1DZO
+/digital-reconstructions/brain-regions?brain_region=S1FL
+/digital-reconstructions/brain-regions?brain_region=S1HL
+/digital-reconstructions/brain-regions?brain_region=S1J
+/digital-reconstructions/brain-regions?brain_region=S1Sh
+/digital-reconstructions/brain-regions?brain_region=S1Tr
+/digital-reconstructions/brain-regions?brain_region=S1ULp
