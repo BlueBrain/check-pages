@@ -1,0 +1,21 @@
+
+
+stages:
+  - lint
+  - page_checks
+
+
+check_sscx:
+  stage: page_checks
+  script:
+    - 'echo "check sscx"'
+    - pwd
+    - ls
+
+
+check_portal:
+  stage: page_checks
+  script:
+    - 'echo "check potal"'
+    - pwd
+    - ls
