@@ -42,6 +42,7 @@ check_docker:
   image: python:3.8-buster
   script:
     - python -V
+    - apt-get install chromium-browser
     - google-chrome --version
     - pip install -r requirements.txt
     - export PATH=`pwd`/bin:$PATH
