@@ -51,7 +51,7 @@ check_docker:
     - python -V
     - ls
     - apt-get update
-    - apt-get install -y unzip curl software-properties-common  vim git  
+    - apt-get install -y unzip curl software-properties-common  vim git python3-pip python3
     - curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub
     - cat /tmp/google.pub | apt-key add -
     - rm /tmp/google.pub
@@ -62,4 +62,7 @@ check_docker:
     - echo -e "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome
     - chmod 755 /opt/google/chrome/google-chrome
     - google-chrome --version
+    - pip install -r requirements.txt
+    - export PATH=`pwd`/bin:${PATH}
+    - python test_code.py
 
