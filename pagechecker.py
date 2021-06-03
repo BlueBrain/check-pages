@@ -48,7 +48,7 @@ def get_requests(url, interceptor):
             }
             request_list.append(myreq)
     driver.quit()
-    L.info("** Analyzing %s created %d requests.", url.strip(), len(requests))
+    L.info("** Analyzing %s created %d requests.", url.strip(), len(request_list))
     return request_list
 
 
