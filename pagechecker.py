@@ -141,15 +141,19 @@ def linkchecker(verbose, domain, file, folder, number, header, url):
     L.info("Analyzing %s URL's", len(selected_urls))
 
     # Check each URL
+    errors = []
     status_code = 0
     for url in selected_urls:
         req = get_requests(url, interceptor)
         for request in req:
             if request["status"] >= 400:
                 L.error(f"{request['status']} -> {request['url']}  from {url}")
+                errors.append(f"{request['status']} -> {request['url']}  from {url}")
                 status_code = 1
 
-    sys.exit(status_code)
+    with open("errors.list", "w") as fileout:
+        for error in errors:
+            fileout.write(error + "\n")
 
 
 if __name__ == "__main__":

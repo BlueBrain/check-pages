@@ -6,8 +6,11 @@ stages:
 
 check_portal:
   stage: page_checks
+  variables:
+    SLACK_HOOK: https://hooks.slack.com/services/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
   script:
-    - 'echo "check potal"'
+    - echo "check portal"
+    - curl -X POST $SLACK_HOOK -d "{'text': 'Just a test', 'icon_emoji':':frog:', 'username': 'SSCX Check'}"
     # - python -V
     # - pip install --upgrade pip setuptools wheel
     # - pip install -r requirements.txt
