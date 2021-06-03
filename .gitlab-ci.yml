@@ -5,36 +5,36 @@ stages:
   - page_checks
 
 
-check_sscx:
-  stage: page_checks
-  tags:
-    - bb5_user
-  variables:
-    bb5_account: proj30
-    bb5_memory: 20G
-    bb5_duration: "15:00"
-    bb5_ntasks: 1
-    bb5_cpus_per_task: 4
-  script:
-    - module load unstable python
-    - python -mvenv venv
-    - source venv/bin/activate
-    - pip install --upgrade pip setuptools wheel
-    - pip install -r requirements.txt
-    - python -V
-    - 'echo "check sscx"'
-    - python test_code.py
+# check_sscx:
+#   stage: page_checks
+#   tags:
+#     - bb5_user
+#   variables:
+#     bb5_account: proj30
+#     bb5_memory: 20G
+#     bb5_duration: "15:00"
+#     bb5_ntasks: 1
+#     bb5_cpus_per_task: 4
+#   script:
+#     - module load unstable python
+#     - python -mvenv venv
+#     - source venv/bin/activate
+#     - pip install --upgrade pip setuptools wheel
+#     - pip install -r requirements.txt
+#     - python -V
+#     - 'echo "check sscx"'
+#     - python test_code.py
 
 
-check_portal:
-  stage: page_checks
-  script:
-    - apt-get update; apt-get -y install python3-pip python3
-    - 'echo "check potal"'
-    - python -V
-    - pip install --upgrade pip setuptools wheel
-    - pip install -r requirements.txt
-    - python test_code.py
+# check_portal:
+#   stage: page_checks
+#   script:
+#     - apt-get update; apt-get -y install python3-pip python3
+#     - 'echo "check potal"'
+#     - python -V
+#     - pip install --upgrade pip setuptools wheel
+#     - pip install -r requirements.txt
+#     - python test_code.py
 
 
 check_docker:
@@ -42,28 +42,21 @@ check_docker:
   image: python:3.8-buster
   script:
     - python -V
+    - apt-get update
+    - apt-get install -y unzip curl software-properties-common  vim git  
     # Install google-chrome and the chomedriver
     - curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub
     - cat /tmp/google.pub | apt-key add -
-    - rm /tmp/google.pub 
+    - rm /tmp/google.pub
     - echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list
-    - mkdir -p /usr/share/desktop-directories 
-    - apt-get -y update 
-    - apt-get install -y google-chrome-stable
+    - mkdir -p /usr/share/desktop-directories
+    - apt-get -y update && apt-get install -y google-chrome-stable
     - dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome
     - echo "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome
     - chmod 755 /opt/google/chrome/google-chrome
-#    - mkdir -p /opt/selenium \
-#    && curl http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip -o /opt/selenium/chromedriver_linux64.zip \
-#    && cd /opt/selenium; unzip /opt/selenium/chromedriver_linux64.zip; rm -rf chromedriver_linux64.zip; ln -fs /opt/selenium/chromedriver /usr/bin/chromedriver;
-    - chmod ugo+rwx bin/chromedriver
-#    - wget  https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-#    - dpkg -i ./google-chrome-stable_current_amd64.deb 
-#    - apt --fix-broken install
-#    - dpkg -i google-chrome-stable_current_amd64.deb
-#    - apt-get install chromium-browser
     - google-chrome --version
-    - pip install -r requirements.txt
-    - export PATH=`pwd`/bin:$PATH
-    - python test_code.py
+
+#    - pip install -r requirements.txt
+#    - export PATH=`pwd`/bin:$PATH
+#    - python test_code.py
 
