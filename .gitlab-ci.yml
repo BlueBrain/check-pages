@@ -42,8 +42,9 @@ stages:
 
 check_docker:
   stage: page_checks
-  image: python:3.8-buster
-  extends: .build-image-using-kaniko
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
   variables:
     CI_REGISTRY_IMAGE: $CI_REGISTRY/bbp-ou-nse/python-test
   script:
