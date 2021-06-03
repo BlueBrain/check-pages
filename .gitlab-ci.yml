@@ -1,3 +1,6 @@
+include:
+  - project: cs/gitlabci-templates
+    file: /build-image-using-kaniko.yml
 
 
 stages:
@@ -40,6 +43,7 @@ stages:
 check_docker:
   stage: page_checks
   image: python:3.8-buster
+  extends: .build-image-using-kaniko
   script:
     - python -V
     - apt-get update
