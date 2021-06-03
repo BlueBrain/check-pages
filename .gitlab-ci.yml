@@ -29,15 +29,19 @@ stages:
 #     - python test_code.py
 
 
-# check_portal:
-#   stage: page_checks
-#   script:
-#     - apt-get update; apt-get -y install python3-pip python3
-#     - 'echo "check potal"'
-#     - python -V
-#     - pip install --upgrade pip setuptools wheel
-#     - pip install -r requirements.txt
-#     - python test_code.py
+check_portal:
+  stage: page_checks
+  variables:
+    IMAGE_PROD: docker-registry-default.ocp.bbp.epfl.ch/bbp-ou-nse/selenium-test-prod
+  script:
+    - docker pull ${IMAGE_PROD}
+    - docker run --rm ${IMAGE_PROD}
+    # - apt-get update; apt-get -y install python3-pip python3
+    # - 'echo "check potal"'
+    # - python -V
+    # - pip install --upgrade pip setuptools wheel
+    # - pip install -r requirements.txt
+    # - python test_code.py
 
 
 check_docker:
