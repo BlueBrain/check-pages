@@ -11,7 +11,7 @@ check_portal:
   script:
     - echo "check portal"
     - apt update
-    - apt install curl
+    - apt install -y curl
     - "curl -X POST $SLACK_HOOK -d \"{'text': 'Just a test', 'icon_emoji':':frog:', 'username': 'SSCX Check'}\""
     # - python -V
     # - pip install --upgrade pip setuptools wheel
