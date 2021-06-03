@@ -1,5 +1,6 @@
-
-import sys
+"""
+Code to check all or randomly selected URLs given in file(s).
+"""
 import glob
 import time
 import random
@@ -35,9 +36,8 @@ def get_requests(url, interceptor):
             break
         numbers = len(driver.requests)
 
-    
     # Access requests via the `requests` attribute
-    requests = []
+    request_list = []
     for request in driver.requests:
         if request.response:
             myreq = {
@@ -46,10 +46,10 @@ def get_requests(url, interceptor):
                 "method": request.method,
                 "status": request.response.status_code
             }
-            requests.append(myreq)
+            request_list.append(myreq)
     driver.quit()
     L.info("** Analyzing %s created %d requests.", url.strip(), len(requests))
-    return requests
+    return request_list
 
 
 @click.command()
@@ -107,7 +107,6 @@ def linkchecker(verbose, domain, file, folder, number, header, url):
     level = (logging.WARNING, logging.INFO, logging.DEBUG)[min(verbose, 2)]
     logging.basicConfig(level=level, format='%(levelname)s: %(message)s')
 
-
     if folder:
         files = glob.glob(folder + "/*.txt")
     if file:
@@ -126,7 +125,7 @@ def linkchecker(verbose, domain, file, folder, number, header, url):
 
     # Add the domain
     if domain:
-        urls = [domain+url for url in urls]
+        urls = [domain + url for url in urls]
 
     # Define the interceptor to inject headers into each request
     def interceptor(request):
@@ -135,7 +134,7 @@ def linkchecker(verbose, domain, file, folder, number, header, url):
             request.headers[key] = value
 
     # Select the sample
-    if number==0:
+    if number == 0:
         selected_urls = urls
     else:
         selected_urls = random.sample(urls, number)
@@ -143,22 +142,25 @@ def linkchecker(verbose, domain, file, folder, number, header, url):
 
     # Check each URL
     errors = []
-    for url in selected_urls:
-        req = get_requests(url, interceptor)
+    for use_url in selected_urls:
+        req = get_requests(use_url, interceptor)
         for request in req:
             if request["status"] >= 400:
-                L.error(f"{request['status']} -> {request['url']}  from {url}")
-                errors.append(f"{request['status']} -> {request['url']}  from {url}")
+                msg = f"{request['status']} -> {request['url']}  from {use_url}"
+                L.error(msg)
+                errors.append(msg)
 
     if not errors:
         url = "https://hooks.slack.com/services/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"
-        data = {'text': 'Check OK', 'icon_emoji':':frog:', 'username': 'SSCX Check'}
+        data = {'text': 'Check OK', 'icon_emoji': ':frog:', 'username': 'SSCX Check'}
     else:
         error_list = "\n".join(errors)
+        text = f'*** SSCX Portal Check NOK.\n${error_list}'
         url = "https://hooks.slack.com/services/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"
-        data = {'text': f'*** SSCX Portal Check NOK.\n${error_list}', 'icon_emoji':':crab:', 'username': 'SSCX Check'}
-    resp = requests.post(url, json = data)
+        data = {'text': text, 'icon_emoji': ':crab:', 'username': 'SSCX Check'}
+    resp = requests.post(url, json=data)
     print(resp.text)
+
 
 if __name__ == "__main__":
     linkchecker()
