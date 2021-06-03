@@ -4,5 +4,5 @@ venv:
 	venv/bin/pip install pycodestyle pylint
 
 lint: | venv
-	venv/bin/pycodestyle --max-line-length=100 -- *.py
-	venv/bin/pylint -d E1120,E0401,R0912,R0913,R0914 *.py
+	venv/bin/pycodestyle --config=.pycodestyle *.py
+	venv/bin/pylint  *.py
