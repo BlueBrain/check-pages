@@ -47,6 +47,8 @@ check_docker:
     entrypoint: [""]
   variables:
     CI_REGISTRY_IMAGE: $CI_REGISTRY/bbp-ou-nse/python-test
+    CI_COMMIT_TAG: test
+    CI_PROJECT_DIR: `pwd`
   script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
