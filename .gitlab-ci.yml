@@ -46,6 +46,7 @@ check_docker:
   extends: .build-image-using-kaniko
   script:
     - python -V
+    - ls
     # - apt-get update
     # - apt-get install -y unzip curl software-properties-common  vim git  
     # - curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub
