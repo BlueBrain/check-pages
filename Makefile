@@ -5,4 +5,4 @@ venv:
 
 lint: | venv
 	venv/bin/pycodestyle -- *.py
-	venv/bin/pylint -d E1120,E0401,R0912,R0913,R0914 *.py
+	venv/bin/pylint  --max-line-length=100 -d E1120,E0401,R0912,R0913,R0914 *.py
