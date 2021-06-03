@@ -4,6 +4,7 @@ import glob
 import time
 import random
 import logging
+import requests
 import click
 from seleniumwire import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -142,19 +143,22 @@ def linkchecker(verbose, domain, file, folder, number, header, url):
 
     # Check each URL
     errors = []
-    status_code = 0
     for url in selected_urls:
         req = get_requests(url, interceptor)
         for request in req:
             if request["status"] >= 400:
                 L.error(f"{request['status']} -> {request['url']}  from {url}")
                 errors.append(f"{request['status']} -> {request['url']}  from {url}")
-                status_code = 1
 
-    with open("errors.list", "w") as fileout:
-        for error in errors:
-            fileout.write(error + "\n")
-
+    if not errors:
+        url = "https://hooks.slack.com/services/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"
+        data = {'text': 'Check OK', 'icon_emoji':':frog:', 'username': 'SSCX Check'}
+    else:
+        error_list = "\n".join(errors)
+        url = "https://hooks.slack.com/services/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"
+        data = {'text': f'*** SSCX Portal Check NOK.\n${error_list}', 'icon_emoji':':crab:', 'username': 'SSCX Check'}
+    resp = requests.post(url, json = data)
+    print(resp.text)
 
 if __name__ == "__main__":
     linkchecker()
