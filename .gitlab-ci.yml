@@ -49,26 +49,26 @@ check_docker:
   image: python:3.8-buster
 #    name: gcr.io/kaniko-project/executor:debug
 #    entrypoint: [""]
-  variables:
-    CI_REGISTRY_IMAGE: $CI_REGISTRY/bbp-ou-nse/python-test
-    CI_COMMIT_TAG: test
+#  variables:
+#    CI_REGISTRY_IMAGE: $CI_REGISTRY/bbp-ou-nse/python-test
+#    CI_COMMIT_TAG: test
   script:
     #- mkdir -p /kaniko/.docker
     #- echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
     #- /kaniko/executor --context . --dockerfile Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
     - python -V
     - ls
-    # - apt-get update
-    # - apt-get install -y unzip curl software-properties-common  vim git  
-    # - curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub
-    # - cat /tmp/google.pub | apt-key add -
-    # - rm /tmp/google.pub
-    # - echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list
-    # - mkdir -p /usr/share/desktop-directories
-    # - apt-get -y update && apt-get install -y google-chrome-stable
-    # - dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome
-    # - echo "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome
-    # - chmod 755 /opt/google/chrome/google-chrome
+    - apt-get update
+    - apt-get install -y unzip curl software-properties-common  vim git  
+    - curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub
+    - cat /tmp/google.pub | apt-key add -
+    - rm /tmp/google.pub
+    - echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list
+    - mkdir -p /usr/share/desktop-directories
+    - apt-get -y update && apt-get install -y google-chrome-stable
+    - dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome
+    - echo "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome
+    - chmod 755 /opt/google/chrome/google-chrome
     - google-chrome --version
 
 #    - pip install -r requirements.txt
