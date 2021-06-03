@@ -1,55 +1,23 @@
-include:
-  - project: cs/gitlabci-templates
-    file: /build-image-using-kaniko.yml
-
-
 stages:
   - lint
   - page_checks
 
 
-# check_sscx:
-#   stage: page_checks
-#   tags:
-#     - bb5_user
-#   variables:
-#     bb5_account: proj30
-#     bb5_memory: 20G
-#     bb5_duration: "15:00"
-#     bb5_ntasks: 1
-#     bb5_cpus_per_task: 4
-#   script:
-#     - module load unstable python
-#     - python -mvenv venv
-#     - source venv/bin/activate
-#     - pip install --upgrade pip setuptools wheel
-#     - pip install -r requirements.txt
-#     - python -V
-#     - 'echo "check sscx"'
-#     - python test_code.py
-
 
 check_portal:
   stage: page_checks
-  variables:
-    IMAGE_PROD: docker-registry-default.ocp.bbp.epfl.ch/bbp-ou-nse/selenium-test-prod
   script:
-    - docker pull ${IMAGE_PROD}
-    - docker run --rm ${IMAGE_PROD}
-    # - apt-get update; apt-get -y install python3-pip python3
-    # - 'echo "check potal"'
+    - 'echo "check potal"'
     # - python -V
     # - pip install --upgrade pip setuptools wheel
     # - pip install -r requirements.txt
     # - python test_code.py
 
 
-check_docker:
+check_sscx:
   stage: page_checks
   image: python:3.8-buster
   script:
-    - python -V
-    - ls
     - apt-get update
     - apt-get install -y unzip curl software-properties-common  vim git python3-pip python3
     - curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub
@@ -64,5 +32,6 @@ check_docker:
     - google-chrome --version
     - pip install -r requirements.txt
     - export PATH=`pwd`/bin:${PATH}
-    - python test_code.py
+    #- python test_code.py
+    - python pagechecker.py  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5
 
