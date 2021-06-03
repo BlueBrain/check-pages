@@ -10,6 +10,7 @@ check_portal:
     SLACK_HOOK: https://hooks.slack.com/services/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
   script:
     - echo "check portal"
+    - apt update
     - apt install curl
     - "curl -X POST $SLACK_HOOK -d \"{'text': 'Just a test', 'icon_emoji':':frog:', 'username': 'SSCX Check'}\""
     # - python -V
