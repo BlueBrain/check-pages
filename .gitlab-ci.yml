@@ -21,7 +21,7 @@ lint:
     - make lint
 
 check_sscx:
-  stage: page_checks
+  stage: page_checksX
   image: python:3.8-buster
   script:
     - apt-get update
@@ -38,6 +38,21 @@ check_sscx:
     - google-chrome --version
     - pip install -r requirements.txt
     - export PATH=`pwd`/bin:${PATH}
-    #- python test_code.py
     - python pagechecker.py  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5
 
+check_portal:
+  stage: page_checks
+  image: python:3.8-buster
+  variables:
+    - page: "https://portal.bluebrain.epfl.ch/"
+  script:
+    #- apt-get update 
+    #- apt-get install -y python3-pip python3
+    - pip install beautifulsoup4 pylinkvalidator
+# set the proxies 
+    - export http_proxy=http://bbpproxy.epfl.ch:80/
+    - export https_proxy=http://bbpproxy.epfl.ch:80/
+    - export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
+# perform the check
+    - pylinkvalidate.py -o linkreport.txt -P $page
+#pylinkvalidate.py -o linkreport.txt -P http://www.deadlinkcity.com/
