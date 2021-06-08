@@ -47,10 +47,12 @@ def slack_report(ok_url, err_url, name, file, status):
     #prev = os.environ["PREV_COMMAND"]
 
     if int(status)==0:
+        print("Check was OK")
         url = ok_url
         text = f"{name} OK"
         data = {'text': text, 'icon_emoji': ':frog:', 'username': name}
     else:
+        print("Check was NOK")
         with open(file) as filein:
             errors = filein.read()
         text = f"*** {name} ERROR:\n{errors}"
@@ -59,7 +61,7 @@ def slack_report(ok_url, err_url, name, file, status):
         url = err_url
         data = {'text': text, 'icon_emoji': ':crab:', 'username': name}
     resp = requests.post(url, json=data)
-    print(resp.text)
+    print(resp.status_code)
 
 
 if __name__ == "__main__":
