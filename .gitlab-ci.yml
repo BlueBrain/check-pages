@@ -44,7 +44,10 @@ check_portal:
   stage: page_checks
   image: python:3.8-buster
   variables:
-    page: "https://portal.bluebrain.epfl.ch/"
+    #page: "https://portal.bluebrain.epfl.ch/"
+    page: "http://www.deadlinkcity.com/"
+    linkok: "https://hooks.slack.com/services/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:"
+    linknok: " https://hooks.slack.com/services/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"
   script:
     #- apt-get update 
     #- apt-get install -y python3-pip python3
@@ -54,5 +57,7 @@ check_portal:
     - export https_proxy=http://bbpproxy.epfl.ch:80/
     - export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
 # perform the check
-    - pylinkvalidate.py -o linkreport.txt -P $page
-#pylinkvalidate.py -o linkreport.txt -P http://www.deadlinkcity.com/
+    - pylinkvalidate.py -d 0 -o linkreport.txt -P $page
+    - status=$?
+    - python validate_converter.py linkreport.txt > report.txt
+    - python slack_reporter.py --ok_url $linkok --err_url $linknok --name "Portal Test" --file report.txt --status $status
