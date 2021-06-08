@@ -46,7 +46,7 @@ check_portal:
   image: python:3.8-buster
   variables:
     page: "https://portal.bluebrain.epfl.ch/"
-    linkok: "https://hooks.slack.com/services/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:"
+    linkok: "https://hooks.slack.com/services/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"
     linknok: " https://hooks.slack.com/services/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"
   script:
     # Install required packages
