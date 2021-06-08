@@ -150,16 +150,23 @@ def linkchecker(verbose, domain, file, folder, number, header, url):
                 L.error(msg)
                 errors.append(msg)
 
-    if not errors:
-        url = "https://hooks.slack.com/services/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"
-        data = {'text': 'Check OK', 'icon_emoji': ':frog:', 'username': 'SSCX Check'}
-    else:
-        error_list = "\n".join(errors)
-        text = f'*** SSCX Portal Check NOK.\n${error_list}'
-        url = "https://hooks.slack.com/services/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"
-        data = {'text': text, 'icon_emoji': ':crab:', 'username': 'SSCX Check'}
-    resp = requests.post(url, json=data)
-    print(resp.text)
+    with open("ssxc_report.txt", "w") as fileout:
+        for error in errors:
+            fileout.writer(error + "\n")
+
+    if errors:
+        sys.exit(1)
+
+    # if not errors:
+    #     url = "https://hooks.slack.com/services/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"
+    #     data = {'text': 'Check OK', 'icon_emoji': ':frog:', 'username': 'SSCX Check'}
+    # else:
+    #     error_list = "\n".join(errors)
+    #     text = f'*** SSCX Portal Check NOK.\n${error_list}'
+    #     url = "https://hooks.slack.com/services/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"
+    #     data = {'text': text, 'icon_emoji': ':crab:', 'username': 'SSCX Check'}
+    # resp = requests.post(url, json=data)
+    # print(resp.text)
 
 
 if __name__ == "__main__":
