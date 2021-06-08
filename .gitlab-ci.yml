@@ -6,7 +6,7 @@ workflow:
     - when: always
 
 stages:
-  #- lint
+  - lint
   - page_checks
 
 
@@ -18,7 +18,8 @@ lint:
       when: never
     - when: on_success
   script:
-    - make lint
+    - pwd
+    #- make lint
 
 # check_sscx:
 #   stage: page_checks
