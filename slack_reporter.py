@@ -56,10 +56,10 @@ def slack_report(ok_url, err_url, name, file, status):
         with open(file) as filein:
             errors = filein.read()
         text = f"*** {name} ERROR:\n{errors}"
-        #error_list = "\n".join(errors)
-        #text = f'*** SSCX Portal Check NOK.\n${error_list}'
         url = err_url
         data = {'text': text, 'icon_emoji': ':crab:', 'username': name}
+
+    print(f"Sending to URL {url}")
     resp = requests.post(url, json=data)
     print(resp.status_code)
 
