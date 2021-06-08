@@ -58,7 +58,6 @@ check_portal:
     - export https_proxy=http://bbpproxy.epfl.ch:80/
     - export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
 # perform the check
-    - pylinkvalidate.py -d 0 -o linkreport.txt -P $page
-    - status=$?
+    - pylinkvalidate.py -d 0 -o linkreport.txt -P $page || exit_code=$?
     - python validate_converter.py linkreport.txt > report.txt
-    - python slack_reporter.py --ok_url $linkok --err_url $linknok --name "Portal Test" --file report.txt --status $status
+    - python slack_reporter.py --ok_url $linkok --err_url $linknok --name "Portal Test" --file report.txt --status $exit_code
