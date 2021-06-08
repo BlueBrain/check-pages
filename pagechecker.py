@@ -152,7 +152,7 @@ def linkchecker(verbose, domain, file, folder, number, header, url):
 
     with open("ssxc_report.txt", "w") as fileout:
         for error in errors:
-            fileout.writer(error + "\n")
+            fileout.write(error + "\n")
 
     if errors:
         sys.exit(1)
