@@ -6,7 +6,7 @@ workflow:
     - when: always
 
 stages:
-  - lint
+  #- lint
   - page_checks
 
 
