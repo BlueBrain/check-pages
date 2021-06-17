@@ -1,6 +1,7 @@
 """
 Code to check all or randomly selected URLs given in file(s).
 """
+import sys
 import glob
 import time
 import random
@@ -9,6 +10,7 @@ import requests
 import click
 from seleniumwire import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.common import exceptions
 
 
 L = logging.getLogger(__name__)
@@ -27,7 +29,10 @@ def get_requests(url, interceptor):
 
     # Load the URL
     driver.request_interceptor = interceptor
-    driver.get(url)
+    try:
+        driver.get(url)
+    except exceptions.WebDriverException:
+        L.warning(">> Webdriver exception for URL '%s'", url)
 
     numbers = len(driver.requests)
     while True:
