@@ -43,6 +43,7 @@ check_pages_sscx:
     - echo -e "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome
     - chmod 755 /opt/google/chrome/google-chrome
     - google-chrome --version
+    - wget https://chromedriver.storage.googleapis.com/91.0.4472.101/chromedriver_linux64.zip && unzip chromedriver_linux64.zip
     - pip install -r requirements.txt
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
     - exit_code=0
@@ -68,6 +69,7 @@ check_dom_sscx:
     - echo -e "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome
     - chmod 755 /opt/google/chrome/google-chrome
     - google-chrome --version
+    - wget https://chromedriver.storage.googleapis.com/91.0.4472.101/chromedriver_linux64.zip && unzip chromedriver_linux64.zip
     - pip install -r requirements.txt
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
     - exit_code=0
