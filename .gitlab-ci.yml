@@ -88,6 +88,7 @@ check_links:
   script:
     # Install required packages
     - pip install beautifulsoup4 pylinkvalidator click requests
+    - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
     - export http_proxy=http://bbpproxy.epfl.ch:80/
     - export https_proxy=http://bbpproxy.epfl.ch:80/
     - export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
