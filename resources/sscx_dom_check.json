@@ -1,0 +1,39 @@
+{
+	"exp_LayerAnatomy": {
+		"urls": "resources/SSCX_Portal/exp_LayerAnatomy.txt",
+		"ids": ["layerThickness", "neuronDensity", "layerAnatomySummary"],
+		"classes": []
+	},
+	"exp_neuronMorphology": {
+		"urls": "resources/SSCX_Portal/exp_neuronMorphology.txt",
+		"ids": ["metadata", "morphologyDownloadBtn", "morphometrics", "expMorphMemodelList", "expMorphologyTable"],
+		"classes": ["morpho-viewer"]
+	},
+	"exp_neuronEphys": {
+		"urls": "resources/SSCX_Portal/exp_neuronEphys.txt",
+		"ids": ["metadata", "expTraceTable"],
+		"classes": ["stimuli-list"]
+	},
+	"digRec_BrainRegions": {
+		"urls": "resources/SSCX_Portal/digRec_BrainRegions.txt",
+		"ids": ["subregionCircuitFactsheet", "regionCircuitFactsheet"],
+		"classes": []
+	},
+	"digRec_Microcircuit": {
+		"urls": "resources/SSCX_Portal/digRec_Microcircuit.txt",
+		"ids": ["layerAnatomyFactsheet", "layerPhysiologyFactsheet", "subregionMicrocircuitFactsheet"],
+		"classes": []
+	},
+	"digRec_Pathways": {
+		"urls": "resources/SSCX_Portal/digRec_Pathways.txt",
+		"ids": ["pathwayAnatomyFactsheet", "pathwayPhysiologyFactsheet"],
+		"classes": []
+	},
+	"digRec_Neurons": {
+		"urls": "resources/SSCX_Portal/digRec_Neurons.txt",
+		"ids": ["memodelAnatomyFactsheet", "memodelPhysiologyFactsheet", "memodelExpMorphList",
+		   "mtypeAnatomyFactsheet", "mtypePhysiologyFactsheet", "morphHistogram", "etypeFactsheet",
+		   "modelFittingEphys"],
+		"classes": ["morpho-viewer", "stimuli-list"]
+	}
+}

@@ -1,7 +1,5 @@
 """Code to report results on slack.
 """
-import os
-import sys
 import click
 import requests
 
@@ -20,40 +18,36 @@ import requests
 @click.option(
     "-n",
     "--name",
-    help="Defines the name to give to this check.",
+    help="Defines the name of this check.",
 )
 @click.option(
     "-f",
-    "--file",
-    help="Defines the file to be used in case of failure.",
+    "--filename",
+    help="Defines the filename whose contents should be shown on slack in case of failure.",
 )
 @click.option(
     "-s",
     "--status",
     help="Exit code of previous command (by using '$?'').",
 )
-def slack_report(ok_url, err_url, name, file, status):
-    """Main linkchecker mehthod.
+def slack_report(ok_url, err_url, name, filename, status):
+    """Main linkchecker method.
 
     Args:
-        ok_url: Url to use of the check was OK
-        err_url: Url to use of the check was NOK
-        name: Name to use for this check (e.g. SSCX, Portal)
-        filename: Filename whose content gets added to the slack message in case of failure
-        status: Exit code from the previous command (by using $?).
+        ok_url (string): Url to use of the check was OK
+        err_url (string): Url to use of the check was NOK
+        name (string): Name to use for this check (e.g. SSCX, Portal)
+        filename (string): Filename whose content gets added to the slack message in case of failure
+        status (int): Exit code from the previous command (by using $? in the CI).
     """
-
-    # get status code from env variable
-    #prev = os.environ["PREV_COMMAND"]
-
-    if int(status)==0:
+    if int(status) == 0:
         print("Check was OK")
         url = ok_url
         text = f"{name} OK"
         data = {'text': text, 'icon_emoji': ':frog:', 'username': name}
     else:
         print("Check was NOK")
-        with open(file) as filein:
+        with open(filename) as filein:
             errors = filein.read()
         text = f"*** {name} ERROR:\n{errors}"
         url = err_url
@@ -62,7 +56,3 @@ def slack_report(ok_url, err_url, name, file, status):
     print(f"Sending to URL {url}")
     resp = requests.post(url, json=data)
     print(resp.status_code)
-
-
-if __name__ == "__main__":
-    slack_report()

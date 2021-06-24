@@ -6,7 +6,7 @@ import glob
 import time
 import random
 import logging
-import requests
+
 import click
 from seleniumwire import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -20,8 +20,8 @@ def get_requests(url, interceptor):
     """Returns all requests for the specified URL.
 
     Args:
-        url: The URL to be checked
-        interceptor: Function to insert header elements
+        url (string): The URL to be checked.
+        interceptor (function): Function to inject header elements for each request.
     """
     chrome_options = Options()
     chrome_options.add_argument("--headless")
@@ -91,21 +91,28 @@ def get_requests(url, interceptor):
     multiple=True,
     help="Adds a header used for each request in the format KEY:VALUE.",
 )
+@click.option(
+    "-o",
+    "--output",
+    help="Defines the output filename.",
+    default="pagechecker.log"
+)
 @click.argument(
     "url",
     required=False
 )
-def linkchecker(verbose, domain, file, folder, number, header, url):
-    """Main linkchecker mehthod.
+def linkchecker(verbose, domain, file, folder, number, header, output, url):
+    """Main linkchecker method.
 
     Args:
-        verbose: Defines the logging level
-        domain: The domain added to each URL
-        urls: Name of a file containing a list of URL's to test
-        folders: Name of the folder containing URL files
-        number: Number of URL's to check
-        header: Optional header used for each request
-        url: Single URL (e.g. for testing purposes)
+        verbose (int): Defines the logging level.
+        domain (string): The domain added to each URL.
+        file (string): Name of a file containing a list of URL's to test.
+        folder (string): Name of the folder containing URL files.
+        number (string): Number of URL's to check.
+        header (string): Optional header used for each request (e.g. for authorization)
+        output (string): Name for the output file.
+        url (string): Single URL (e.g. for testing purposes)
     """
 
     # Set the logging level
@@ -155,24 +162,9 @@ def linkchecker(verbose, domain, file, folder, number, header, url):
                 L.error(msg)
                 errors.append(msg)
 
-    with open("ssxc_report.txt", "w") as fileout:
+    with open(output, "w") as fileout:
         for error in errors:
             fileout.write(error + "\n")
 
     if errors:
         sys.exit(1)
-
-    # if not errors:
-    #     url = "https://hooks.slack.com/services/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"
-    #     data = {'text': 'Check OK', 'icon_emoji': ':frog:', 'username': 'SSCX Check'}
-    # else:
-    #     error_list = "\n".join(errors)
-    #     text = f'*** SSCX Portal Check NOK.\n${error_list}'
-    #     url = "https://hooks.slack.com/services/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"
-    #     data = {'text': text, 'icon_emoji': ':crab:', 'username': 'SSCX Check'}
-    # resp = requests.post(url, json=data)
-    # print(resp.text)
-
-
-if __name__ == "__main__":
-    linkchecker()

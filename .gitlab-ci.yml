@@ -5,6 +5,7 @@ workflow:
       when: never
     - when: always
 
+
 stages:
   - lint
   - page_checks
@@ -18,10 +19,12 @@ lint:
       when: never
     - when: on_success
   script:
-    - pwd
-    #- make lint
+    - apt-get update; apt-get -y install python3-pip
+    - pip install tox
+    - tox -e lint
 
-check_sscx:
+
+check_pages_sscx:
   stage: page_checks
   image: python:3.8-buster
   variables:
@@ -41,10 +44,37 @@ check_sscx:
     - chmod 755 /opt/google/chrome/google-chrome
     - google-chrome --version
     - pip install -r requirements.txt
-    - export PATH=`pwd`/bin:${PATH}
+    - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
+    - #export PATH=`pwd`/bin:${PATH}
     - exit_code=0
-    - python pagechecker.py  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5 || exit_code=$?
-    - python slack_reporter.py --ok_url $linkok --err_url $linknok --name "SSCX Test" --file ssxc_report.txt --status $exit_code
+    - pagechecker  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5 || exit_code=$?
+    - slack_reporter --ok_url $linkok --err_url $linknok --name "SSCX Page Check" --file pagechecker.log --status $exit_code
+
+check_dom_sscx:
+  stage: page_checks
+  image: python:3.8-buster
+  variables:
+    linkok: "https://hooks.slack.com/services/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"
+    linknok: "https://hooks.slack.com/services/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"
+  script:
+    - apt-get update
+    - apt-get install -y unzip curl software-properties-common  vim git python3-pip python3
+    - curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub
+    - cat /tmp/google.pub | apt-key add -
+    - rm /tmp/google.pub
+    - echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list
+    - mkdir -p /usr/share/desktop-directories
+    - apt-get -y update && apt-get install -y google-chrome-stable
+    - dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome
+    - echo -e "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome
+    - chmod 755 /opt/google/chrome/google-chrome
+    - google-chrome --version
+    - pip install -r requirements.txt
+    - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
+    - #export PATH=`pwd`/bin:${PATH}
+    - exit_code=0
+    - page_dom_check -n 5 -p resources/sscx_dom_check.json  || exit_code=$?
+    - slack_reporter --ok_url $linkok --err_url $linknok --name "SSCX Dom Check" --file page_dom_check.log --status $exit_code
 
 check_portal:
   stage: page_checks
