@@ -47,7 +47,7 @@ check_pages_sscx:
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
     - exit_code=0
     - pagechecker  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5 || exit_code=$?
-    - slack_reporter --ok_url $linkok --err_url $linknok --name "SSCX Page Check" --file pagechecker.log --status $exit_code
+    - slack_reporter --ok_url $linkok --err_url $linknok --name "SSCX Page Check" --filename pagechecker.log --status $exit_code
 
 check_dom_sscx:
   stage: page_checks
@@ -72,9 +72,9 @@ check_dom_sscx:
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
     - exit_code=0
     - page_dom_check -n 5 -p resources/sscx_dom_check.json  || exit_code=$?
-    - slack_reporter --ok_url $linkok --err_url $linknok --name "SSCX Dom Check" --file page_dom_check.log --status $exit_code
+    - slack_reporter --ok_url $linkok --err_url $linknok --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
 
-check_portal:
+check_links:
   stage: page_checks
   image: python:3.8-buster
   variables:
@@ -92,4 +92,4 @@ check_portal:
     - pylinkvalidate.py -d 0 -o linkreport.txt -P $page || exit_code=$?
     # and create the report to slack
     - python validate_converter.py linkreport.txt > report.txt
-    - python slack_reporter.py --ok_url $linkok --err_url $linknok --name "Portal Test" --file report.txt --status $exit_code
+    - slack_reporter --ok_url $linkok --err_url $linknok --name "BBP Portal Links" --filename report.txt --status $exit_code
