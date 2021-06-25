@@ -10,6 +10,8 @@ setup(
     version=VERSION,
     install_requires=[
         'click>=7.0',
+        'requests',
+        'selenium'
     ],
     packages=find_packages(),
     include_package_data=True,

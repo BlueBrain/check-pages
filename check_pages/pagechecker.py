@@ -5,15 +5,11 @@ import sys
 import glob
 import time
 import random
-import logging
 
 import click
 from seleniumwire import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common import exceptions
-
-
-L = logging.getLogger(__name__)
 
 
 def get_requests(url, interceptor):
@@ -32,7 +28,7 @@ def get_requests(url, interceptor):
     try:
         driver.get(url)
     except exceptions.WebDriverException:
-        L.warning(">> Webdriver exception for URL '%s'", url)
+        print(">> Webdriver exception for URL '%s'", url)
 
     numbers = len(driver.requests)
     while True:
@@ -53,18 +49,11 @@ def get_requests(url, interceptor):
             }
             request_list.append(myreq)
     driver.quit()
-    L.info("** Analyzing %s created %d requests.", url.strip(), len(request_list))
+    print("** Analyzing %s created %d requests.", url.strip(), len(request_list))
     return request_list
 
 
 @click.command()
-@click.option(
-    "-v",
-    "--verbose",
-    count=True,
-    default=0,
-    help="-v for DEBUG",
-)
 @click.option(
     "-d",
     "--domain",
@@ -101,11 +90,10 @@ def get_requests(url, interceptor):
     "url",
     required=False
 )
-def linkchecker(verbose, domain, file, folder, number, header, output, url):
+def linkchecker(domain, file, folder, number, header, output, url):
     """Main linkchecker method.
 
     Args:
-        verbose (int): Defines the logging level.
         domain (string): The domain added to each URL.
         file (string): Name of a file containing a list of URL's to test.
         folder (string): Name of the folder containing URL files.
@@ -114,10 +102,6 @@ def linkchecker(verbose, domain, file, folder, number, header, output, url):
         output (string): Name for the output file.
         url (string): Single URL (e.g. for testing purposes)
     """
-
-    # Set the logging level
-    level = (logging.WARNING, logging.INFO, logging.DEBUG)[min(verbose, 2)]
-    logging.basicConfig(level=level, format='%(levelname)s: %(message)s')
 
     if folder:
         files = glob.glob(folder + "/*.txt")
@@ -150,7 +134,7 @@ def linkchecker(verbose, domain, file, folder, number, header, output, url):
         selected_urls = urls
     else:
         selected_urls = random.sample(urls, number)
-    L.info("Analyzing %s URL's", len(selected_urls))
+    print("Analyzing %s URL's", len(selected_urls))
 
     # Check each URL
     errors = []
@@ -158,8 +142,8 @@ def linkchecker(verbose, domain, file, folder, number, header, output, url):
         req = get_requests(use_url, interceptor)
         for request in req:
             if request["status"] >= 400:
-                msg = f"{request['status']} -> {request['url']}  from {use_url}"
-                L.error(msg)
+                msg = f"ERROR {request['status']} -> {request['url']}  from {use_url}"
+                print(msg)
                 errors.append(msg)
 
     with open(output, "w") as fileout:
