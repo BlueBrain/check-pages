@@ -3,6 +3,7 @@
 	"urls":[
 		"/experimental-data/neuron-morphology/?instance=og060523b1-2_idD&layer=L6&mtype=L6_BTC",
     	"/experimental-data/neuron-electrophysiology/?etype=cADpyr&etype_instance=C061208B2-SR-C1",
-    	"/digital-reconstructions/neurons/?brain_region=S1FL&layer=L23&etype=bNAC&mtype=L23_NGC&memodel=L23_NGC_bNAC_2"
+    	"/digital-reconstructions/neurons/?brain_region=S1FL&layer=L23&etype=bNAC&mtype=L23_NGC&memodel=L23_NGC_bNAC_2",
+    	"/"
 	]
 }
