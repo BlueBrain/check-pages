@@ -21,9 +21,10 @@ FORM_ENDPOINT = (
     "--params",
     help="Defines the json files containing the URLs to use for the test.",
 )
-@click.option("--test/--no-test", 
+@click.option(
+    "--test/--no-test",
     default=False,
-    help="When set, will only use on location for one URL."
+    help="When set, will only use on location for one URL.",
 )
 def location_test(params, test):
     """Performs the location performance test.
@@ -67,7 +68,9 @@ def location_test(params, test):
             # Retrieve the metrics
             metrics = result["attributes"]
             time0_fb = metrics["time_to_first_byte"]  # time to first byte
-            time1_fcp = metrics["first_contentful_paint"]  # time to first contentful paint
+            time1_fcp = metrics[
+                "first_contentful_paint"
+            ]  # time to first contentful paint
             time2_dcl = metrics["dom_content_loaded_time"]  # time to dom content loaded
             time3_onload = metrics["onload_time"]  # time onload
             time4_flt = metrics["fully_loaded_time"]  # time to fully loaded
