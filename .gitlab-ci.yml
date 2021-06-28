@@ -9,6 +9,7 @@ workflow:
 stages:
   - lint
   - page_checks
+  - location_test
 
 
 lint:
@@ -40,8 +41,11 @@ lint:
     - pip install -r requirements.txt
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
 
+
 check_pages_sscx:
   stage: page_checks
+  rules:
+    - if $PIPELINE_SELECT=="weekly"
   image: python:3.8-buster
   variables:
     linkok: "https://hooks.slack.com/services/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"
@@ -54,6 +58,8 @@ check_pages_sscx:
 
 check_dom_sscx:
   stage: page_checks
+  rules:
+    - if $PIPELINE_SELECT=="weekly"
   image: python:3.8-buster
   variables:
     linkok: "https://hooks.slack.com/services/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"
@@ -66,6 +72,8 @@ check_dom_sscx:
 
 check_links:
   stage: page_checks
+  rules:
+    - if $PIPELINE_SELECT=="weekly"
   image: python:3.8-buster
   variables:
     page: "https://portal.bluebrain.epfl.ch/"
@@ -84,3 +92,12 @@ check_links:
     # and create the report to slack
     - python validate_converter.py linkreport.txt > report.txt
     - slack_reporter --ok_url $linkok --err_url $linknok --name "BBP Portal Links" --filename report.txt --status $exit_code
+
+location_testing_sscx:
+  stage: location_test
+  rules:
+    - if $PIPELINE_SELECT=="daily"
+  script:
+    - pip install click requests
+    - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
+    - location_test -p check-pages/resources/perf_sscx.json --test

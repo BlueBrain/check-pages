@@ -21,7 +21,11 @@ FORM_ENDPOINT = (
     "--params",
     help="Defines the json files containing the URLs to use for the test.",
 )
-def location_test(params):
+@click.option("--test/--no-test", 
+    default=False,
+    help="When set, will only use on location for one URL."
+)
+def location_test(params, test):
     """Performs the location performance test.
 
     Args:
@@ -44,11 +48,17 @@ def location_test(params):
     gt = gtmetrix.GTMetrix(USER_EMAIL, API_KEY)
     print("Credits left for testing: %f" % gt.credits())
 
+    if test:
+        test_urls = [test_urls[0]]
+        locations = [list(gt.LOCATIONS.items())[0]]
+    else:
+        locations = gt.LOCATIONS.items()
+
     # Loop over the URLS to be tested and the location
     for test_url in test_urls:
 
         url = domain + test_url
-        for loc_number, location in gt.LOCATIONS.items():
+        for loc_number, location in locations:
 
             # Start and wait for the test to be finished
             test_id = gt.test(url, location=loc_number, auth=HTTP_AUTH)
