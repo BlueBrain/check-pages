@@ -95,12 +95,10 @@ check_links:
 
 location_testing_sscx:
   stage: location_test
-#  rules:
-#    - if: $PIPELINE_SELECT=="daily"
+  rules:
+    - if: $PIPELINE_SELECT=="daily"
   image: python:3.8-buster
   script:
     - pip install click requests
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
-    - pwd
-    - ls
-    - location_test -p resources/perf_sscx.json --test
+    - location_test -p resources/perf_sscx.json
