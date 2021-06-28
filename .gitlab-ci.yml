@@ -101,4 +101,4 @@ location_testing_sscx:
   script:
     - pip install click requests
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
-    - location_test -p check-pages/resources/perf_sscx.json --test
+    - location_test -p check-pages/check-pages/resources/perf_sscx.json --test
