@@ -28,7 +28,7 @@ def get_requests(url, interceptor):
     try:
         driver.get(url)
     except exceptions.WebDriverException:
-        print(">> Webdriver exception for URL '%s'", url)
+        print(">> Webdriver exception for URL '%s'" % url)
 
     numbers = len(driver.requests)
     while True:
@@ -49,7 +49,7 @@ def get_requests(url, interceptor):
             }
             request_list.append(myreq)
     driver.quit()
-    print("** Analyzing %s created %d requests.", url.strip(), len(request_list))
+    print("** Analyzing %s created %d requests." % (url.strip(), len(request_list)))
     return request_list
 
 
@@ -134,7 +134,7 @@ def linkchecker(domain, file, folder, number, header, output, url):
         selected_urls = urls
     else:
         selected_urls = random.sample(urls, number)
-    print("Analyzing %s URL's", len(selected_urls))
+    print("Analyzing %d URL's" % len(selected_urls))
 
     # Check each URL
     errors = []

@@ -56,6 +56,20 @@ check_pages_sscx:
     - pagechecker  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5 || exit_code=$?
     - slack_reporter --ok_url $linkok --err_url $linknok --name "SSCX Page Check" --filename pagechecker.log --status $exit_code
 
+check_pages_hippocampus:
+  stage: page_checks
+  rules:
+    - if: $PIPELINE_SELECT == "weekly"
+  image: python:3.8-buster
+  variables:
+    linkok: "https://hooks.slack.com/services/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"
+    linknok: "https://hooks.slack.com/services/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"
+  script:
+    - *setup-env
+    - exit_code=0
+    - pagechecker  --folder resources/HIPPO_Portal/  --domain "https://www.hippocampushub.eu/" -n 5 || exit_code=$?
+    - slack_reporter --ok_url $linkok --err_url $linknok --name "HIPPO Page Check" --filename pagechecker.log --status $exit_code
+
 check_dom_sscx:
   stage: page_checks
   rules:
