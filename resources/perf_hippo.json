@@ -1,0 +1,8 @@
+{
+	"domain": "https://www.hippocampushub.eu",
+	"urls":[
+		"/",
+		"/model/experimental-data/neuronal-morphology/?instance=980513B&layer=SP&mtype=SP_BS",
+    	"/model/experimental-data/neuronal-electrophysiology/?etype=bAC&etype_instance=95810036"
+	]
+}

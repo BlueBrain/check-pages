@@ -22,11 +22,15 @@ FORM_ENDPOINT = (
     help="Defines the json files containing the URLs to use for the test.",
 )
 @click.option(
+    "--portal",
+    help="Defines the portal tested.",
+)
+@click.option(
     "--test/--no-test",
     default=False,
     help="When set, will only use on location for one URL.",
 )
-def location_test(params, test):
+def location_test(params, portal, test):
     """Performs the location performance test.
 
     Args:
@@ -87,6 +91,7 @@ def location_test(params, test):
 
             # Post the results to the google form
             files = {
+                "entry.231103326": (None, portal),
                 "entry.730635873": (None, timestamp),
                 "entry.2044683746": (None, url),
                 "entry.537616198": (None, location),

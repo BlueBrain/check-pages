@@ -99,9 +99,19 @@ check_links:
 location_testing_sscx:
   stage: location_test
   rules:
-    - if: $PIPELINE_SELECT == "daily"
+    - if: $PIPELINE_SELECT == "daily1"
   image: python:3.8-buster
   script:
     - pip install click requests
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
-    - location_test -p resources/perf_sscx.json
+    - location_test -p resources/perf_sscx.json --portal sscx
+
+location_testing_hippo:
+  stage: location_test
+  rules:
+    - if: $PIPELINE_SELECT == "daily2"
+  image: python:3.8-buster
+  script:
+    - pip install click requests
+    - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
+    - location_test -p resources/perf_hippo.json --portal hippo
