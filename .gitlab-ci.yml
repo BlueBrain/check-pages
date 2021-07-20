@@ -75,6 +75,17 @@ check_dom_sscx:
     - page_dom_check -n 5 -p resources/sscx_dom_check.json  || exit_code=$?
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
 
+check_dom_hippo:
+  stage: page_checks
+  rules:
+    - if: $PIPELINE_SELECT == "weekly"
+  image: python:3.8-buster
+  script:
+    - *setup-env
+    - exit_code=0
+    - page_dom_check -n 5 -p resources/hippo_dom_check.json -d https://www.hippocampushub.eu || exit_code=$?
+    - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Dom Check" --filename page_dom_check.log --status $exit_code
+
 check_links:
   stage: page_checks
   rules:

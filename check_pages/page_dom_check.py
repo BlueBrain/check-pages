@@ -110,8 +110,9 @@ def page_check(domain, use_all, number, wait, params, output):
         # Now check all elements in the given page
         for url in selected_urls:
             # Load the URL
-            driver.get(domain + url)
-            print(f"Checking {site}, URL: {url}")
+            complete_url = domain + url
+            driver.get(complete_url)
+            print(f"Checking {site}, URL: {complete_url}")
 
             # Wait a maximum of 'wait' seconds for an element to appear
             elements_check = {element: False for element in elements}
@@ -129,7 +130,7 @@ def page_check(domain, use_all, number, wait, params, output):
             else:
                 # Not all elements found after time limit: we have a missing element
                 has_error = True
-                print(f"ERROR {site} with URL '{url}':")
+                print(f"ERROR {site} with URL '{complete_url}':")
                 errors = []
                 for element, found in elements_check.items():
                     if not found:

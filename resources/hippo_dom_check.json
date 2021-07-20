@@ -1,0 +1,17 @@
+{
+	"expData_NeuronMorphology": {
+		"urls": "resources/HIPPO_Portal/expData_NeuronMorph.txt",
+		"ids": ["morphologyDownloadBtn", "morphometrics", "expMorphologyTable"],
+		"classes": ["morpho-viewer"]
+	},
+	"expData_NeuronElectrophysiology": {
+		"urls": "resources/HIPPO_Portal/expData_NeuronElectro.txt",
+		"ids": ["expTraceTable"],
+		"classes": ["stimuli-list"]
+	},	
+    "dirRec_Neurons": {
+		"urls": "resources/HIPPO_Portal/digRec_Neurons.txt",
+		"ids": ["modelMorphologyFactsheet", "etypeFactsheet"],
+		"classes": ["morpho-viewer"]
+	}
+}
