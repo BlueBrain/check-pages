@@ -45,7 +45,7 @@ lint:
 check_pages_sscx:
   stage: page_checks
   rules:
-    - if: $PIPELINE_SELECT == "weekly"
+    - if: $PIPELINE_SELECT == "test"
   image: python:3.8-buster
   script:
     - *setup-env
