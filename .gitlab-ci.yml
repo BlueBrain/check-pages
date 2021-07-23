@@ -50,7 +50,9 @@ check_pages_sscx:
   script:
     - *setup-env
     - exit_code=0
-    - pagechecker  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5 || exit_code=$?
+    - pagechecker  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5 || exit_code=1
+    - echo $SLACK_LINK_OK
+    - echo $SLACK_LINK_NOK
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Page Check" --filename pagechecker.log --status $exit_code
 
 check_pages_hippocampus:
