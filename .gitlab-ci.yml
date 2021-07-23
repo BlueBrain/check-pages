@@ -45,16 +45,12 @@ lint:
 check_pages_sscx:
   stage: page_checks
   rules:
-    - if: $PIPELINE_SELECT == "test"
+    - if: $PIPELINE_SELECT == "weekly"
   image: python:3.8-buster
   script:
     - *setup-env
     - exit_code=0
     - pagechecker  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5 || exit_code=1
-    - echo $SLACK_LINK_OK  | sed -e 's/\(.\)/\1\n/g'
-    - echo $SLACK_LINK_NOK | sed -e 's/\(.\)/\1\n/g'
-    - echo ${#SLACK_LINK_OK}
-    - echo ${#SLACK_LINK_NOK}
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Page Check" --filename pagechecker.log --status $exit_code
 
 check_pages_hippocampus:
@@ -65,7 +61,7 @@ check_pages_hippocampus:
   script:
     - *setup-env
     - exit_code=0
-    - pagechecker  --folder resources/HIPPO_Portal/  --domain "https://www.hippocampushub.eu/" -n 5 || exit_code=$?
+    - pagechecker  --folder resources/HIPPO_Portal/  --domain "https://www.hippocampushub.eu/" -n 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Page Check" --filename pagechecker.log --status $exit_code
 
 check_dom_sscx:
@@ -76,7 +72,7 @@ check_dom_sscx:
   script:
     - *setup-env
     - exit_code=0
-    - page_dom_check -n 5 -p resources/sscx_dom_check.json || exit_code=$?
+    - page_dom_check -n 5 -p resources/sscx_dom_check.json || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
 
 check_dom_hippo:
@@ -87,7 +83,7 @@ check_dom_hippo:
   script:
     - *setup-env
     - exit_code=0
-    - page_dom_check -n 5 -p resources/hippo_dom_check.json -d https://www.hippocampushub.eu || exit_code=$?
+    - page_dom_check -n 5 -p resources/hippo_dom_check.json -d https://www.hippocampushub.eu || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Dom Check" --filename page_dom_check.log --status $exit_code
 
 check_links:
