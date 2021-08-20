@@ -134,6 +134,9 @@ check_mooc:
   image: python:3.8-buster
   script:
     - *setup-env
+    - export http_proxy=http://bbpproxy.epfl.ch:80/
+    - export https_proxy=http://bbpproxy.epfl.ch:80/
+    - export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
     - exit_code=0
     - check_mooc -t resources/Mooc/mooc_tests.json || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "MOOC Check" --filename mooc_results.txt --status $exit_code
