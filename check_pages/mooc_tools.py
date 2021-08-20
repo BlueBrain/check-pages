@@ -34,8 +34,8 @@ class MoocChecker:
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument('--start-maximized')
         driver = webdriver.Chrome(options=chrome_options)
-        driver.implicitly_wait(300)
-        driver.set_page_load_timeout(300)
+        #driver.implicitly_wait(300)
+        #driver.set_page_load_timeout(300)
 
         self.browser = elemental.Browser(selenium_webdriver=driver)
         self.browser.visit(self.URL)
@@ -52,6 +52,7 @@ class MoocChecker:
         password = os.environ["EDX_PW"]
 
         while "Sign in or Register" in self.browser.title:
+            time.sleep(2)
             self.browser.get_input(id="login-email").fill(username)
             self.browser.get_input(id="login-password").fill(password)
             time.sleep(1)
