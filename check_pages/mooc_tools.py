@@ -24,7 +24,7 @@ class MoocChecker:
         "ba6f8be8f0bb4956a94147f7a09e4cf4/fc4b687d340a4c69a862661e110970b1/1"
     )
 
-    def __init__(self, headless=True):
+    def __init__(self, headless):
         """Initialize new elemental driver and log into edX."""
         # Initialize selenium driver
         chrome_options = Options()
@@ -34,8 +34,8 @@ class MoocChecker:
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument('--start-maximized')
         driver = webdriver.Chrome(options=chrome_options)
-        #driver.implicitly_wait(300)
-        #driver.set_page_load_timeout(300)
+        driver.implicitly_wait(60)
+        driver.set_page_load_timeout(60)
 
         self.browser = elemental.Browser(selenium_webdriver=driver)
         self.browser.visit(self.URL)
@@ -52,7 +52,6 @@ class MoocChecker:
         password = os.environ["EDX_PW"]
 
         while "Sign in or Register" in self.browser.title:
-            time.sleep(2)
             self.browser.get_input(id="login-email").fill(username)
             self.browser.get_input(id="login-password").fill(password)
             time.sleep(1)
@@ -68,6 +67,7 @@ class MoocChecker:
                 StaleElementReferenceException,
             ):
                 time.sleep(1)
+            time.sleep(2)
 
         self.report_check(True, "EDX Login")
 

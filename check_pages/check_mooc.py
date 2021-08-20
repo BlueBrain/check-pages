@@ -21,15 +21,20 @@ from check_pages import mooc_tools
     default="mooc_results.txt",
     help="Defines the results output filename.",
 )
-def mooc_checking(tests, output):
+@click.option(
+    "--headless/--no-headless",
+    default=False,
+    help="Starts the test in a headless browser.",
+)
+def mooc_checking(tests, output, headless):
     """Performs the MOOC checks of application and services."""
-
+    
     # Read the MOOC tests
     with open(tests) as f:
         tests = json.load(f)
 
     # Setup the MOOC driver including edX login
-    mooc = mooc_tools.MoocChecker()
+    mooc = mooc_tools.MoocChecker(headless)
 
     # Perform the grade submission test
     mooc.test_grade_submission()
