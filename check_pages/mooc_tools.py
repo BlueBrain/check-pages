@@ -18,6 +18,7 @@ from selenium.common.exceptions import (
 class MoocChecker:
     """Defines the MOOC Checking class."""
 
+    # This URL leads to a special edx page containing links to all test apps and services.
     URL = (
         "https://courseware.epfl.ch/courses/course-v1:EPFL+SimNeuro2+2019_2/courseware/"
         "ba6f8be8f0bb4956a94147f7a09e4cf4/fc4b687d340a4c69a862661e110970b1/1"
