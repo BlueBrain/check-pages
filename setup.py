@@ -28,7 +28,8 @@ setup(
             'pagechecker=check_pages.pagechecker:linkchecker',
             'page_dom_check=check_pages.page_dom_check:page_check',
             'slack_reporter=check_pages.slack_reporter:slack_report',
-            'location_test=check_pages.location_testing:location_test'
+            'location_test=check_pages.location_testing:location_test',
+            'check_mooc=check_pages.check_mooc:mooc_checking'
         ],
     }
 )

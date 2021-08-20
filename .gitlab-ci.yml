@@ -126,3 +126,14 @@ location_testing_hippo:
     - pip install click requests
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
     - location_test -p resources/perf_hippo.json --portal hippo
+
+check_mooc:
+  stage: page_checks
+  rules:
+    - if: $PIPELINE_SELECT == "daily1"
+  image: python:3.8-buster
+  script:
+    - *setup-env
+    - exit_code=0
+    - check_mooc -t resources/Mooc/mooc_tests.json || exit_code=1
+    - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "MOOC Check" --filename mooc_results.txt --status $exit_code

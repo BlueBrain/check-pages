@@ -1,0 +1,9 @@
+{
+	"Negative Test": {"test": "Error", "element": {"id": "submissionKey"}, "negative": true},
+	"Simulation App": {"test": "AppSim", "element": {"xpath": "//h1"}},
+	"PSP App": {"test": "AppPSP", "element": {"xpath": "//span[contains(text(),'Hippocampus MOOC Microcircuit')]"}},
+	"Bryans App": {"test": "AppBryan", "element": {"xpath": "//div[contains(text(),'Load model into the scene')]"}, "wait":100},
+	"Jupyter App": {"test": "AppJupyter", "element": {"id": "jp-main-dock-panel"}, "wait":100},
+	"Fetch Key": {"test": "KeyFetch", "element": {"id": "submissionKey"}},
+	"Grading Key": {"test": "KeyGrading", "element": {"id": "submissionKey"}}
+}
