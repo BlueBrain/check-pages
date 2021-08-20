@@ -34,8 +34,8 @@ class MoocChecker:
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument('--start-maximized')
         driver = webdriver.Chrome(options=chrome_options)
-        driver.implicitly_wait(3000)
-        driver.set_page_load_timeout(3000)
+        driver.implicitly_wait(300)
+        driver.set_page_load_timeout(300)
 
         self.browser = elemental.Browser(selenium_webdriver=driver)
         self.browser.visit(self.URL)
