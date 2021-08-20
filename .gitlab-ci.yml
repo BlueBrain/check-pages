@@ -130,7 +130,7 @@ location_testing_hippo:
 check_mooc:
   stage: page_checks
   rules:
-    - if: $PIPELINE_SELECT == "daily1"
+    - if: $PIPELINE_SELECT == "daily"
   image: python:3.8-buster
   script:
     - *setup-env
