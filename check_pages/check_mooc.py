@@ -28,7 +28,7 @@ from check_pages import mooc_tools
 )
 def mooc_checking(tests, output, headless):
     """Performs the MOOC checks of application and services."""
-    
+
     # Read the MOOC tests
     with open(tests) as f:
         tests = json.load(f)
