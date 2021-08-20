@@ -7,6 +7,8 @@ import json
 
 import elemental
 from elemental.exceptions import NoSuchElementError
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import (
     ElementClickInterceptedException,
     StaleElementReferenceException,
@@ -23,7 +25,13 @@ class MoocChecker:
 
     def __init__(self, headless=True):
         """Initialize new elemental driver and log into edX."""
-        self.browser = elemental.Browser(headless=headless)
+        # Initialize selenium driver
+        chrome_options = Options()
+        if headless:
+            chrome_options.add_argument("--headless")
+        driver = webdriver.Chrome(options=chrome_options)
+
+        self.browser = elemental.Browser(selenium_webdriver=driver)
         self.browser.visit(self.URL)
 
         self.output = ""
