@@ -73,6 +73,7 @@ class MoocChecker:
 
     def get_grader_key(self):
         """Get and returns the current grader key for the demo exercise."""
+        time.sleep(5)
         self.browser.get_button(partial_text="KeyGrading").click()
         time.sleep(5)
 
