@@ -1,0 +1,4 @@
+/anatomy/experimental-data/
+/anatomy/validations/
+/anatomy/predictions/
+/anatomy/reconstruction-data/

@@ -1,0 +1,12 @@
+{
+	"main": {
+		"urls": "resources/NGV_Portal/NGV_main.txt",
+		"ids": [],
+		"classes": ["nav__basis"]
+	},
+	"pages": {
+		"urls": "resources/NGV_Portal/NGV_data.txt",
+		"ids": ["rc_select_0"],
+		"classes": ["nav__basis"]
+	}
+}
