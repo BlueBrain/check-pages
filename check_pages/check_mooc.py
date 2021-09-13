@@ -6,7 +6,7 @@ import json
 
 import click
 
-from check_pages import mooc_tools
+from check_pages import mooc_tools, check_apps
 
 
 @click.command()
@@ -46,11 +46,14 @@ def mooc_checking(tests, output, headless):
     # Quit the browser
     mooc.browser.quit()
 
+    apps_output, apps_error = check_apps.check_apps(headless)    
+
     # Write all results to a file
     with open(output, "w") as fileout:
         fileout.write(mooc.output)
+        fileout.write(apps_output)
 
     # Exit the code
-    if mooc.error:
+    if mooc.error or apps_error:
         sys.exit(1)
     sys.exit(0)
