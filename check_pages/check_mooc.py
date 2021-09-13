@@ -46,7 +46,7 @@ def mooc_checking(tests, output, headless):
     # Quit the browser
     mooc.browser.quit()
 
-    apps_output, apps_error = check_apps.check_apps(headless)    
+    apps_output, apps_error = check_apps.check_apps(headless)
 
     # Write all results to a file
     with open(output, "w") as fileout:

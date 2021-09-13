@@ -9,7 +9,12 @@ disable=bad-continuation,
         import-error,
         too-many-locals,
         too-many-branches,
-        unspecified-encoding
+        unspecified-encoding,
+        attribute-defined-outside-init,
+        bare-except,
+        protected-access,
+        too-many-instance-attributes,
+        too-many-statements
 
 [FORMAT]
 # Maximum number of characters on a single line.

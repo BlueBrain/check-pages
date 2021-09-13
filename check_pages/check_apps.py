@@ -1,6 +1,6 @@
+"""Running tests on applications."""
 import os
 import time
-import random
 
 from seleniumbase import BaseCase
 from selenium.webdriver.common.by import By
@@ -95,6 +95,7 @@ class AppTests(BaseCase):
 
 
 def run_test(test_name, headless):
+    """Runs a single test outside of the py.test environment."""
 
     sb = AppTests(test_name)
     sb.browser = "chrome"
@@ -176,6 +177,7 @@ def run_test(test_name, headless):
 
 
 def check_apps(headless):
+    """Rins the test on the given applications."""
     output = ""
     error = False
     for test_name in ["test_simui", "test_pspapp"]:
