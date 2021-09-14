@@ -138,14 +138,12 @@ class MoocChecker:
 
         # Get and set grader key
         key = self.get_grader_key()
-        time.sleep(1)
-        self.browser.get_element(xpath="//input[@id='vizKey']").fill(key)
-
+        self.browser.get_element(xpath="//input[@id='vizKey']", wait=5).fill(key)
         # Click on submit button with the 'correct' answer already filled in
         self.browser.get_element(xpath="//button[text()='Submit']").click()
 
-        # Check result
-        time.sleep(5)
+        # Check result; sleep is required because element can be found, but it is empty
+        time.sleep(10)
         text = self.browser.get_element(xpath="//div[@id='bbpGraderAnswer']").text
         try:
             result = json.loads(text)
