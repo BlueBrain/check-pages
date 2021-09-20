@@ -45,7 +45,6 @@ def write_errors(filename, site, url, errors):
 @click.option(
     "-d",
     "--domain",
-    default="http://sscx-portal.ocp.bbp.epfl.ch/sscx-portal",
     help="Defines the domain URL.",
 )
 @click.option(
@@ -111,6 +110,7 @@ def page_check(domain, use_all, number, wait, params, output):
         for url in selected_urls:
             # Load the URL
             complete_url = domain + url
+            time.sleep(5)
             driver.get(complete_url)
             print(f"Checking {site}, URL: {complete_url}")
 

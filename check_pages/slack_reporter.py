@@ -26,11 +26,16 @@ import requests
     help="Defines the filename whose contents should be shown on slack in case of failure.",
 )
 @click.option(
+    "-m",
+    "--message",
+    help="Defines the message to be shown on slack in case of failure.",
+)
+@click.option(
     "-s",
     "--status",
     help="Exit code of previous command (by using '$?'').",
 )
-def slack_report(ok_url, err_url, name, filename, status):
+def slack_report(ok_url, err_url, name, filename, message, status):
     """Main linkchecker method.
 
     Args:
@@ -47,9 +52,12 @@ def slack_report(ok_url, err_url, name, filename, status):
         data = {'text': text, 'icon_emoji': ':frog:', 'username': name}
     else:
         print("Check was NOK")
-        with open(filename) as filein:
-            errors = filein.read()
-        text = f"*** {name} ERROR:\n{errors}"
+        if filename:
+            with open(filename) as filein:
+                msg = filein.read()
+        else:
+            msg = message
+        text = f"*** {name} ERROR:\n{msg}"
         url = err_url
         data = {'text': text, 'icon_emoji': ':crab:', 'username': name}
 

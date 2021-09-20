@@ -6,7 +6,7 @@
 	},
 	"pages": {
 		"urls": "resources/NGV_Portal/NGV_data.txt",
-		"ids": ["rc_select_0"],
-		"classes": ["nav__basis"]
+		"ids": [],
+		"classes": ["nav__basis", "header", "content"]
 	}
 }

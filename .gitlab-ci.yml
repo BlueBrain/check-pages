@@ -40,6 +40,16 @@ lint:
     - pip install -r requirements.txt
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
 
+check_ngvviewer:
+  stage: page_checks
+  script:
+    - NGVViewerStatus=`curl -s https://bbp.epfl.ch/ngv-viewer/status2`
+    - if [ "$NGVViewerStatus" = "Status OK" ]; then
+    -   echo "NGV Viewer seems to work normally."
+    - else
+    -   echo "NGV Viewer seems to have a problem! $NGVViewerStatus"
+    -   slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NGV Viewer Check" --message "Error: $NGVViewerStatus" --status 1
+    - fi
 
 check_pages_sscx:
   stage: page_checks
@@ -71,7 +81,7 @@ check_dom_sscx:
   script:
     - *setup-env
     - exit_code=0
-    - page_dom_check -n 5 -p resources/sscx_dom_check.json || exit_code=1
+    - page_dom_check -n 5 -p resources/SSCX_Portal/sscx_dom_check.json -d http://sscx-portal.ocp.bbp.epfl.ch/sscx-portal || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
 
 check_dom_hippo:
@@ -82,7 +92,7 @@ check_dom_hippo:
   script:
     - *setup-env
     - exit_code=0
-    - page_dom_check -n 5 -p resources/hippo_dom_check.json -d https://www.hippocampushub.eu || exit_code=1
+    - page_dom_check -n 5 -p resources/HIPPO_Portal/hippo_dom_check.json -d https://www.hippocampushub.eu || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Dom Check" --filename page_dom_check.log --status $exit_code
 
 check_dom_ngv:
@@ -93,7 +103,7 @@ check_dom_ngv:
   script:
     - *setup-env
     - exit_code=0
-    - page_dom_check -n 3 -p resources/ngv_dom_check.json -d http://ngv-portal.ocp.bbp.epfl.ch/ngv-portal || exit_code=1
+    - page_dom_check -n 3 -p resources/NGV_Portal/ngv_dom_check.json -d http://ngv-portal.ocp.bbp.epfl.ch/ngv-portal || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NGV Dom Check" --filename page_dom_check.log --status $exit_code
 
 check_links:
