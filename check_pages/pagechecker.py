@@ -141,7 +141,7 @@ def linkchecker(domain, file, folder, number, header, output, url):
     for use_url in selected_urls:
         req = get_requests(use_url, interceptor)
         for request in req:
-            if request["status"] >= 400:
+            if request["status"] >= 400 and request["status"] != 403:
                 msg = f"ERROR {request['status']} -> {request['url']}  from {use_url}"
                 print(msg)
                 errors.append(msg)

@@ -40,9 +40,6 @@ class MoocChecker:
         self.browser = elemental.Browser(selenium_webdriver=driver)
         self.browser.visit(self.URL)
 
-        self.output = ""
-        self.error = False
-
         # Perform the edx login
         self.login_edx()
 
@@ -91,15 +88,13 @@ class MoocChecker:
 
         return attribute
 
-    def report_check(self, result, text):
+    @staticmethod
+    def report_check(result, text):
         """Logs and prints the result of a check."""
         if result:
-            out = f"{text} ... OK"
+            return True, f"{text} ... OK\n"
         else:
-            out = f"{text} ... TEST FAILED"
-            self.error = True
-        print(out)
-        self.output += out + "\n"
+            return False, f"{text} ... TEST FAILED\n"
 
     def test_page(self, name, params):
         """Test a certain page or service."""
@@ -131,7 +126,7 @@ class MoocChecker:
             if not element:
                 element = True
 
-        self.report_check(element, name)
+        return self.report_check(element, name)
 
     def test_grade_submission(self):
         """Checks if the grade submission works."""
@@ -152,4 +147,4 @@ class MoocChecker:
         except json.JSONDecodeError:
             testok = False
 
-        self.report_check(testok, "Grade Submission")
+        return self.report_check(testok, "Grade Submission")
