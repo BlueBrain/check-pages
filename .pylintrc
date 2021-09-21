@@ -14,7 +14,8 @@ disable=bad-continuation,
         bare-except,
         protected-access,
         too-many-instance-attributes,
-        too-many-statements
+        too-many-statements,
+        consider-using-f-string
 
 [FORMAT]
 # Maximum number of characters on a single line.
