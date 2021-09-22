@@ -51,7 +51,7 @@ def location_test(params, portal, test):
 
     # Instantiate GTMetrix object
     gt = gtmetrix.GTMetrix(USER_EMAIL, API_KEY)
-    print("Credits left for testing: %f" % gt.credits())
+    print(f"Credits left for testing: {gt.credits()}")
 
     if test:
         test_urls = [test_urls[0]]
@@ -107,4 +107,4 @@ def location_test(params, portal, test):
             response = requests.post(FORM_ENDPOINT, files=files)
             print(f"Result of Post: {response.reason}")
 
-    print("Credits left for testing: %f" % gt.credits())
+    print(f"Credits left for testing: {gt.credits()}")

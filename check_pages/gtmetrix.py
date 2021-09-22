@@ -45,7 +45,7 @@ class GTMetrix:
         # Define the access header
         self.headers = {
             "Content-Type": "application/vnd.api+json",
-            "Authorization": "Basic %s" % base64.b64encode(self.apikey.encode()).decode()
+            "Authorization": f"Basic {base64.b64encode(self.apikey.encode()).decode()}"
         }
 
     def request(self, command):
