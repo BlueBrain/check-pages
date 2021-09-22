@@ -50,7 +50,7 @@ check_ngvviewer:
     -   'echo "NGV Viewer seems to work normally."'
     - else
     -   'echo "NGV Viewer seems to have a problem! $NGVViewerStatus"'
-    -   slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NGV Viewer Check" --message "Error: $NGVViewerStatus" --status 1
+    -   'slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NGV Viewer Check" --message "Error: $NGVViewerStatus" --status 1'
     - fi
 
 check_pages_sscx:
