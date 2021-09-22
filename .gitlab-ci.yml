@@ -47,9 +47,9 @@ check_ngvviewer:
   script:
     - NGVViewerStatus=`curl -s https://bbp.epfl.ch/ngv-viewer/status2`
     - if [ "$NGVViewerStatus" = "Status OK" ]; then
-    -   echo "NGV Viewer seems to work normally."
+    -   'echo "NGV Viewer seems to work normally."'
     - else
-    -   echo "NGV Viewer seems to have a problem! $NGVViewerStatus"
+    -   'echo "NGV Viewer seems to have a problem! $NGVViewerStatus"'
     -   slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NGV Viewer Check" --message "Error: $NGVViewerStatus" --status 1
     - fi
 
