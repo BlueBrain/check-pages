@@ -43,7 +43,7 @@ lint:
 check_ngvviewer:
   stage: page_checks
   rules:
-    - if: $PIPELINE_SELECT == "dailt"
+    - if: $PIPELINE_SELECT == "daily"
   script:
     - NGVViewerStatus=`curl -s https://bbp.epfl.ch/ngv-viewer/status2`
     - if [ "$NGVViewerStatus" = "Status OK" ]; then
