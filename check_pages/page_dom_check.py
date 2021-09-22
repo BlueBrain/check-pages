@@ -3,6 +3,7 @@
 The code will load random pages and checks for expected DOM elements.
 """
 
+import re
 import sys
 import json
 import time
@@ -110,7 +111,7 @@ def page_check(domain, use_all, number, wait, params, output):
         for url in selected_urls:
             # Load the URL
             complete_url = domain + url
-            time.sleep(5)
+            time.sleep(10)
             driver.get(complete_url)
             print(f"Checking {site}, URL: {complete_url}")
 
@@ -130,6 +131,8 @@ def page_check(domain, use_all, number, wait, params, output):
             else:
                 # Not all elements found after time limit: we have a missing element
                 has_error = True
+                screenshot_name = re.sub(r"[/\&\?=]", "_", url[1:]) + ".png"
+                driver.save_screenshot(screenshot_name)
                 print(f"ERROR {site} with URL '{complete_url}':")
                 errors = []
                 for element, found in elements_check.items():

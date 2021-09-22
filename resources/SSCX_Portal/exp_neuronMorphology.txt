@@ -1,8 +1,6 @@
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=mtC050800E_idD
-/experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=rat_20140926_RH1
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=rp120430_P_1_idA
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=vd100621_idE
-/experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=rp120509_P-1_idB
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=rp120803_P_1_idC
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=rp120902_P_2_idB
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=vd110315_idB
@@ -15,10 +13,8 @@
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=C260199A-P2
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=rp120914_P_1_idC
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=vd100726B_idE
-/experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=C310897B-P4
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=C200897C-P4
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=rp120509_P-2_idB
-/experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=C310897B-P3
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=C200897C-P2
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=C060998B-P4
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=C220498B-P3_cor
@@ -30,7 +26,6 @@
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=C310897A-P4
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=rp120722_L4-1_idC
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=mtC171001A_idA
-/experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=C300797C-P4
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=rat_20161103_E1_LH2_cell1
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=rp120604_P_3_idA
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_TPC&instance=rat_20160331_E2_LH3_cell1
@@ -57,7 +52,6 @@
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_MC&instance=rp110114_L5-1_idH
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_MC&instance=C070600B2
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_MC&instance=mtC060800A_idD
-/experimental-data/neuron-morphology?layer=L4&mtype=L4_MC&instance=C061000A3
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_MC&instance=mtC050301A_idB
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_MC&instance=rp120913_P_1_idC
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_MC&instance=C310897A-I1
@@ -65,7 +59,6 @@
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_MC&instance=vd100716B_idA
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_MC&instance=C230998C-I4
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_MC&instance=C090997A-I2
-/experimental-data/neuron-morphology?layer=L4&mtype=L4_UPC&instance=rp110112_L5-3_idA
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_UPC&instance=rp120803_P_1_idB
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_UPC&instance=rp101229_L5-2_idE
 /experimental-data/neuron-morphology?layer=L4&mtype=L4_UPC&instance=C010398B-P3
@@ -110,7 +103,6 @@
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_HAC&instance=sm080902a1-5_idB
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_HAC&instance=sm091208a1-2_idF
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_HAC&instance=sm080908a1-7_idC
-/experimental-data/neuron-morphology?layer=L1&mtype=L1_HAC&instance=sm100224a1-4_idC
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_HAC&instance=sm080918a1-5_idA
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_HAC&instance=sm080905b1-6_idA
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_HAC&instance=sm080905a1-3_idB
@@ -121,7 +113,6 @@
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_HAC&instance=sm100423a1-2_idA
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_HAC&instance=C060106F
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_HAC&instance=sm081009a1-7_idA
-/experimental-data/neuron-morphology?layer=L1&mtype=L1_HAC&instance=sm081017b1-6_idC
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_HAC&instance=sm081009a1-7_idB
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_HAC&instance=sm081017b1-6_idA
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_HAC&instance=sm091208b1-2_idA
@@ -167,7 +158,6 @@
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_NGC-SA&instance=sm081024a1-2_idB
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_NGC-SA&instance=C170106D
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_NGC-SA&instance=sm080529a1-5_idD
-/experimental-data/neuron-morphology?layer=L1&mtype=L1_NGC-SA&instance=sm090730a1-3_idC
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_NGC-SA&instance=sm090730a1-3_idD
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_NGC-SA&instance=C170106B
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_NGC-SA&instance=sm090130b1-3_idA
@@ -176,7 +166,6 @@
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_NGC-SA&instance=sm090130b1-3_idB
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_NGC-SA&instance=C280206K
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_NGC-SA&instance=sm081017b1-6_idD
-/experimental-data/neuron-morphology?layer=L1&mtype=L1_NGC-SA&instance=sm090121a1-3_idA
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_NGC-SA&instance=sm091214b1-3_idF
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_LAC&instance=sm090707a1-4_idB
 /experimental-data/neuron-morphology?layer=L1&mtype=L1_LAC&instance=sm080904a1-6_idB
@@ -191,13 +180,10 @@
 /experimental-data/neuron-morphology?layer=L23&mtype=L2_TPC%3AB&instance=C230797B-P1
 /experimental-data/neuron-morphology?layer=L23&mtype=L2_TPC%3AB&instance=rr110114C1_idA
 /experimental-data/neuron-morphology?layer=L23&mtype=L2_TPC%3AB&instance=C230797B-P4
-/experimental-data/neuron-morphology?layer=L23&mtype=L2_TPC%3AB&instance=sm100429a1-5_INT_idH
 /experimental-data/neuron-morphology?layer=L23&mtype=L2_TPC%3AB&instance=rr101124C1_idA
-/experimental-data/neuron-morphology?layer=L23&mtype=L2_TPC%3AB&instance=sm110125a1-3_idA
 /experimental-data/neuron-morphology?layer=L23&mtype=L2_TPC%3AB&instance=C250500A-P3
 /experimental-data/neuron-morphology?layer=L23&mtype=L2_TPC%3AB&instance=mtC191200B_idA
 /experimental-data/neuron-morphology?layer=L23&mtype=L2_TPC%3AB&instance=rr110113C1_idA
-/experimental-data/neuron-morphology?layer=L23&mtype=L3_TPC%3AB&instance=rat_20150323_E1_LH4_cell1
 /experimental-data/neuron-morphology?layer=L23&mtype=L3_TPC%3AB&instance=rat_20141016_LH3_cell2
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_MC&instance=sm110128b1-2_INT_left_hemi_idC
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_MC&instance=sm101020a1-6_INT_idA
@@ -217,7 +203,6 @@
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_MC&instance=mtC190800C_idB
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_MC&instance=mtC100100_7_idA
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_MC&instance=C050398B-I3
-/experimental-data/neuron-morphology?layer=L23&mtype=L23_MC&instance=C100501A3
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_MC&instance=rp100426-2_idA
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_MC&instance=mtC010800B_idD
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_MC&instance=C280199C-I4
@@ -231,14 +216,12 @@
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_DBC&instance=mtC291001C_idB
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_DBC&instance=mtC151001A_idB
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_DBC&instance=C130200-19
-/experimental-data/neuron-morphology?layer=L23&mtype=L23_DBC&instance=C120501A1
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_DBC&instance=mtC211299_4_idC
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_DBC&instance=C080400C2
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_DBC&instance=sm100506a1-4_idB
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_DBC&instance=mtC231001B_idA
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_DBC&instance=mtC221001B_idB
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_DBC&instance=mtC080800C_idA
-/experimental-data/neuron-morphology?layer=L23&mtype=L23_DBC&instance=mtC120501A_idB
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_DBC&instance=C181200A2
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_DBC&instance=C231001B3
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_DBC&instance=mtC151100A_idC
@@ -253,12 +236,10 @@
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=mtC080800A_idD
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=mtC141001A_idB
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=sm110120c1-2_INT_idC
-/experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=C260897C-I1
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=mtC280600A_idB
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=sm110125a1-3_idC
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=mtC050800B_idB
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=mtC280600C_idA
-/experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=mtC050800A_idE
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=rp120516_P-1_idA
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=mtC170501A_idA
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=C250500A-I4
@@ -282,7 +263,6 @@
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=vd110112B_INT_idA
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=mtC121100B_idG
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=mtC120501B_idB
-/experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=mtC161001A_idA
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=mtC190800A_idA
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=C230300D1
 /experimental-data/neuron-morphology?layer=L23&mtype=L23_LBC&instance=mtC180800A_idC

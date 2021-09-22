@@ -32,7 +32,7 @@
 	"digRec_Neurons": {
 		"urls": "resources/SSCX_Portal/digRec_Neurons.txt",
 		"ids": ["memodelAnatomyFactsheet", "memodelPhysiologyFactsheet", "memodelExpMorphList",
-		   "mtypeAnatomyFactsheet", "mtypePhysiologyFactsheet", "morphHistogram", "etypeFactsheet",
+		   "mtypeAnatomyFactsheet", "mtypePhysiologyFactsheet", "morphHistogram",
 		   "modelFittingEphys"],
 		"classes": ["morpho-viewer", "stimuli-list"]
 	}
