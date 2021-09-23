@@ -56,7 +56,6 @@ class AppTests(BaseCase):
 
         # Check RUNNING is visible on the page
         self.assert_text("RUNNING", timeout=60)
-        print("Sim running")
 
     def test_pspapp(self):
         """Test the PSP Validation by starting a validation and checking it is running."""
@@ -179,22 +178,3 @@ def run_test(test_name, headless):
     else:
         msg = f"{test_name} ... TEST FAILED\n"
     return testok, msg
-
-
-# def check_apps(headless, testname=None):
-#     """Runs the test on the given applications."""
-#     output = ""
-#     error = False
-#     if testname:
-#         tests = [testname]
-#     else:
-#         tests = ["test_simui", "test_pspapp"]
-#     for test_name in tests:
-#         if run_test(test_name, headless):
-#             text = f"{test_name} ... OK"
-#         else:
-#             text = f"{test_name} ... TEST FAILED"
-#             error = True
-#         print(text)
-#         output += text + "\n"
-#     return output, error

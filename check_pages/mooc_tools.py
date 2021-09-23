@@ -104,6 +104,7 @@ class MoocChecker:
             wait = 5
 
         # Click on next test
+        time.sleep(5)
         self.browser.get_button(partial_text=params["test"]).click()
         time.sleep(5)
 
