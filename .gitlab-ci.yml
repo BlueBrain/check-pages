@@ -161,4 +161,5 @@ check_mooc:
     - export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
     - exit_code=0
     - py.test -s --tests resources/Mooc/mooc_tests.json --headless || exit_code=1
+    - cat mooc_results.txt
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "MOOC Check" --filename mooc_results.txt --status $exit_code
