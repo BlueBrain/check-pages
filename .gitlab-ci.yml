@@ -45,7 +45,8 @@ check_ngvviewer:
   rules:
     - if: $PIPELINE_SELECT == "daily"
   script:
-    - apt install curl
+    - apt-get update
+    - apt-get -y install curl
     - NGVViewerStatus=`curl -s https://bbp.epfl.ch/ngv-viewer/status2`
     - if [ "$NGVViewerStatus" = "Status OK" ]; then
     -   'echo "NGV Viewer seems to work normally."'
