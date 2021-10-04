@@ -44,6 +44,7 @@ check_ngvviewer:
   stage: page_checks
   rules:
     - if: $PIPELINE_SELECT == "daily"
+  image: python:3.8-buster
   script:
     - *setup-env
     - NGVViewerStatus=`curl -s https://bbp.epfl.ch/ngv-viewer/status2`
