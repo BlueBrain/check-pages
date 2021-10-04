@@ -47,7 +47,7 @@ check_ngvviewer:
   image: python:3.8-buster
   script:
     - *setup-env
-    - NGVViewerStatus=`curl -s https://bbp.epfl.ch/ngv-viewer/status2`
+    - NGVViewerStatus=`curl -s https://bbp.epfl.ch/ngv-viewer/status`
     - if [ "$NGVViewerStatus" = "Status OK" ]; then
     -   'echo "NGV Viewer seems to work normally."'
     - else
