@@ -83,9 +83,10 @@ class AppTests(BaseCase):
 
         # check id is there
         if not self.is_text_visible(id_):
-            print("Text not visible!!!")
+            print("ID of the job not visible!")
+            assert False
 
-        # check status is running
+        # check status of each job to be either READY or SUCCESFUL
         xpath = "//span[contains(@class, 'status-text')]"
         elements = self.find_elements(xpath, by=By.XPATH)
         correct_text = ["READY", "SUCCESSFUL"]
