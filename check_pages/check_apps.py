@@ -57,7 +57,7 @@ class AppTests(BaseCase):
         self.click('//button/span[contains(text(),"Run Simulation")]', by=By.XPATH)
 
         # Check RUNNING is visible on the page
-        self.assert_text("RUNNING", timeout=60)
+        self.assert_text("RUNNING", timeout=120)
 
     def test_pspapp(self):
         """Test the PSP Validation by starting a validation and checking it is running."""
