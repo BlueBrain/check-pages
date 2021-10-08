@@ -20,6 +20,8 @@ class AppTests(BaseCase):
         self.open(URL)
 
         # Get the login credentials
+        if "EDX_LOGIN" not in os.environ:
+            raise ValueError("Error: EDX login undefined!")
         username = os.environ["EDX_LOGIN"]
         password = os.environ["EDX_PW"]
 
@@ -79,7 +81,7 @@ class AppTests(BaseCase):
 
         # Open list page
         self.open("https://bbp-mooc-sim-neuro.epfl.ch/psp-validation/list")
-        time.sleep(10)
+        time.sleep(20)
 
         # check id is there
         if not self.is_text_visible(id_):
@@ -162,6 +164,7 @@ def run_test(test_name, headless):
     sb.interval = None
     sb.cap_file = None
     sb.cap_string = None
+
 
     sb.setUp()
     testok = True
