@@ -165,7 +165,6 @@ def run_test(test_name, headless):
     sb.cap_file = None
     sb.cap_string = None
 
-
     sb.setUp()
     testok = True
     try:
