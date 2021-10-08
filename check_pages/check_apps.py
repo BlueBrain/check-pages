@@ -81,12 +81,9 @@ class AppTests(BaseCase):
 
         # Open list page
         self.open("https://bbp-mooc-sim-neuro.epfl.ch/psp-validation/list")
-        time.sleep(20)
 
         # check id is there
-        if not self.is_text_visible(id_):
-            print("ID of the job not visible!")
-            assert False
+        self.assert_text(id_, timeout=20)
 
         # check status of each job to be either READY or SUCCESFUL
         xpath = "//span[contains(@class, 'status-text')]"
@@ -170,7 +167,8 @@ def run_test(test_name, headless):
     try:
         getattr(sb, test_name)()
         time.sleep(5)
-    except:
+    except Exception as e:
+        print(f"ERROR: {e}")
         testok = False
     finally:
         sb.tearDown()
