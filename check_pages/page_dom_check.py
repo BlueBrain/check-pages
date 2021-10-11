@@ -62,8 +62,8 @@ def write_errors(filename, site, url, errors):
 @click.option(
     "-w",
     "--wait",
-    default=10,
-    help="Defines the maximum time to wait for an element to appear [seconds]. Default: 10 s",
+    default=20,
+    help="Defines the maximum time to wait for an element to appear [seconds]. Default: 20 s",
 )
 @click.option(
     "-p",
@@ -113,10 +113,10 @@ def page_check(domain, use_all, number, wait, params, output):
             complete_url = domain + url
             time.sleep(10)
             driver.get(complete_url)
-            print(f"Checking {site}, URL: {complete_url}")
 
             # Wait a maximum of 'wait' seconds for an element to appear
             elements_check = {element: False for element in elements}
+            counter = 0
             for _ in range(wait):
                 # Check missing elements
                 for element in elements:
@@ -125,9 +125,11 @@ def page_check(domain, use_all, number, wait, params, output):
 
                 # Check if we found all elements
                 if all(elements_check.values()):
+                    print(f"All elements found for {site} after {counter} s, URL: {complete_url}")
                     break
 
                 time.sleep(1)
+                counter += 1
             else:
                 # Not all elements found after time limit: we have a missing element
                 has_error = True
