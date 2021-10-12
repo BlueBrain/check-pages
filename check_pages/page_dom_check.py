@@ -31,7 +31,7 @@ def make_full_screenshot(driver, savename):
         height = driver.execute_script(
             "return Math.max(" "document.documentElement.clientHeight, window.innerHeight);"
         )
-    except WebDriverException:
+    except exceptions.WebDriverException:
         return
 
     # js to get the maximum scroll height
@@ -79,17 +79,21 @@ def make_full_screenshot(driver, savename):
 
 
 def get_savename(text):
-    for ch in ['/','-','=','?','&']:
+    """Return a simplified name for saving."""
+    for ch in ['/', '-', '=', '?', '&']:
         if ch in text:
-            text = text.replace(ch,"_")
+            text = text.replace(ch, "_")
     text = text.replace("-", "")
     return text
 
+
 def accept_cookies(driver):
+    """Safely accepting the possible cookies popup."""
     try:
         driver.find_element_by_xpath("//*[text()='Allow']").click()
     except exceptions.NoSuchElementException:
         pass
+
 
 def find_element(driver, method, name):
     """Returns True, if elements exists in webpage, False else.
@@ -196,7 +200,7 @@ def page_check(domain, use_all, number, wait, params, output, screenshots):
             time.sleep(5)
             driver.get(complete_url)
             time.sleep(5)
-            # Allow cookies 
+            # Allow cookies
             accept_cookies(driver)
 
             # Wait a maximum of 'wait' seconds for an element to appear
