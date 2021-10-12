@@ -11,7 +11,8 @@ setup(
     install_requires=[
         'click>=7.0',
         'requests',
-        'selenium'
+        'selenium',
+        'pillow'
     ],
     packages=find_packages(),
     include_package_data=True,
