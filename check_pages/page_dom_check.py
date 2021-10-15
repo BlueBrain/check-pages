@@ -224,9 +224,20 @@ def page_check(domain, use_all, number, wait, params, output, screenshots):
             else:
                 # Not all elements found after time limit: we have a missing element
                 has_error = True
-                screenshot_name = re.sub(r"[/\&\?=]", "_", url[1:]) + ".png"
-                driver.save_screenshot(screenshot_name)
                 print(f"ERROR {site} with URL '{complete_url}':")
+
+                screenshot_name = re.sub(r"[/\&\?=]", "_", url[1:]) + ".png"
+                counter = 0
+                while counter<5:
+                    try:
+                        driver.save_screenshot(screenshot_name)
+                        print("Screenshot was successful.")
+                        break
+                    except exceptions.WebDriverException:
+                        print(f"ERROR taking screenshot, try {counter}")
+                        counter += 1
+                        time.sleep(1)
+
                 errors = []
                 for element, found in elements_check.items():
                     if not found:
