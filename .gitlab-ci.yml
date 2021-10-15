@@ -84,6 +84,7 @@ check_dom_sscx:
   image: python:3.8-buster
   script:
     - *setup-env
+    - mkdir -p screenshots
     - exit_code=0
     - page_dom_check -n 5 -p resources/SSCX_Portal/sscx_dom_check.json -d http://sscx-portal.ocp.bbp.epfl.ch/sscx-portal --screenshots || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
@@ -95,6 +96,7 @@ check_dom_hippo:
   image: python:3.8-buster
   script:
     - *setup-env
+    - mkdir -p screenshots
     - exit_code=0
     - page_dom_check -n 5 -p resources/HIPPO_Portal/hippo_dom_check.json -d https://www.hippocampushub.eu || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Dom Check" --filename page_dom_check.log --status $exit_code
@@ -106,6 +108,7 @@ check_dom_ngv:
   image: python:3.8-buster
   script:
     - *setup-env
+    - mkdir -p screenshots
     - exit_code=0
     - page_dom_check -n 3 -p resources/NGV_Portal/ngv_dom_check.json -d http://ngv-portal.ocp.bbp.epfl.ch/ngv-portal || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NGV Dom Check" --filename page_dom_check.log --status $exit_code
