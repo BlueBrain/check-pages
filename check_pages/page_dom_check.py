@@ -228,7 +228,7 @@ def page_check(domain, use_all, number, wait, params, output, screenshots):
 
                 screenshot_name = re.sub(r"[/\&\?=]", "_", url[1:]) + ".png"
                 counter = 0
-                while counter<5:
+                while counter < 5:
                     try:
                         driver.save_screenshot(screenshot_name)
                         print("Screenshot was successful.")
