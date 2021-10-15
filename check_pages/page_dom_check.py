@@ -3,7 +3,6 @@
 The code will load random pages and checks for expected DOM elements.
 """
 
-import re
 import sys
 import json
 import time
@@ -123,46 +122,31 @@ def write_errors(filename, site, url, errors):
         fileout.write(f"{site} -> {url}: {errors}\n")
 
 
-def screenshot_helper(driver, filename):
-    """Screenshot helper function."""
-    c = 0
-    while c < 5:
-        try:
-            make_full_screenshot(driver, filename)
-            print("Screenshot was successful.")
-            break
-        except exceptions.WebDriverException:
-            print(f"ERROR taking screenshot, try {c}")
-            c += 1
-            time.sleep(1)
-
-
-def check_url(site, domain, url, elements, screenshots, output):
-
+def check_url(site, domain, url, elements, wait, screenshots, output):
+    """Function to check a single URL."""
     has_error = False
 
-     # Initialize selenium driver
+    # Initialize selenium driver
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     driver = webdriver.Chrome(options=chrome_options)
 
+    # Create the names used
     complete_url = domain + url
     savename = get_savename(url[1:])
-    time.sleep(5)
 
-    # Call selenium method
+    # Call selenium method to open URL
     driver.get(complete_url)
     time.sleep(5)
-    
+
     # Allow cookies
     accept_cookies(driver)
 
     # Wait a maximum of 'wait' seconds for an element to appear
     elements_check = {element: False for element in elements}
     counter = 0
-    for _ in range(10):
+    for _ in range(wait):
         # Check missing elements
-        #print(f"{counter=}")
         for element in elements:
             if not elements_check[element]:
                 elements_check[element] = find_element(driver, *element)
@@ -174,25 +158,13 @@ def check_url(site, domain, url, elements, screenshots, output):
 
         time.sleep(1)
         counter += 1
+        # Make full screenshot if required
         if screenshots:
-            #screenshot_helper(driver, f"screenshots/{savename}_{counter}.png")
             make_full_screenshot(driver, f"screenshots/{savename}_{counter}.png")
     else:
         # Not all elements found after time limit: we have a missing element
         has_error = True
         print(f"ERROR {site} with URL '{complete_url}':")
-
-        #screenshot_name = re.sub(r"[/\&\?=]", "_", url[1:]) + ".png"
-        # counter = 0
-        # while counter < 5:
-        #     try:
-        #         driver.save_screenshot(screenshot_name)
-        #         print("Screenshot was successful.")
-        #         break
-        #     except exceptions.WebDriverException:
-        #         print(f"ERROR taking screenshot, try {counter}")
-        #         counter += 1
-        #         time.sleep(1)
 
         errors = []
         for element, found in elements_check.items():
@@ -202,8 +174,8 @@ def check_url(site, domain, url, elements, screenshots, output):
         write_errors(output, site, url, errors)
 
     driver.quit()
-
     return has_error
+
 
 @click.command()
 @click.option(
@@ -253,11 +225,6 @@ def page_check(domain, use_all, number, wait, params, output, screenshots):
     with open(params) as json_file:
         page_data = json.load(json_file)
 
-    # Initialize selenium driver
-    #chrome_options = Options()
-    #chrome_options.add_argument("--headless")
-    #driver = webdriver.Chrome(options=chrome_options)
-
     # Loop over the page sections
     for site, page in page_data.items():
         # Read all URL's
@@ -283,75 +250,11 @@ def page_check(domain, use_all, number, wait, params, output, screenshots):
                 counter += 1
                 print(f"... Running check {counter} for {url}.")
                 try:
-                    has_error |= check_url(site, domain, url, elements, screenshots, output)
+                    has_error |= check_url(site, domain, url, elements, wait, screenshots, output)
                     break
                 except exceptions.WebDriverException:
                     print("... UNEXPECTED ERROR")
                     time.sleep(1)
-        #     make_full_screenshot(driver, filename)
-        #     print("Screenshot was successful.")
-        #     break
-        # except exceptions.WebDriverException:
-        #     print(f"ERROR taking screenshot, try {c}")
-        #     c += 1
-        #     time.sleep(1)
-        #     has_error |= check_url(site, domain, url, elements, screenshots, output)
-
-            # Load the URL
-            # complete_url = domain + url
-            # savename = get_savename(url[1:])
-            # time.sleep(5)
-            # driver.get(complete_url)
-            # time.sleep(5)
-            # # Allow cookies
-            # accept_cookies(driver)
-
-            # # Wait a maximum of 'wait' seconds for an element to appear
-            # elements_check = {element: False for element in elements}
-            # counter = 0
-            # for _ in range(wait):
-            #     # Check missing elements
-            #     print(f"{counter=}")
-            #     for element in elements:
-            #         if not elements_check[element]:
-            #             elements_check[element] = find_element(driver, *element)
-
-            #     # Check if we found all elements
-            #     if all(elements_check.values()):
-            #         print(f"All elements found for {site} after {counter} s, URL: {complete_url}")
-            #         break
-
-            #     time.sleep(1)
-            #     counter += 1
-            #     if screenshots:
-            #         screenshot_helper(driver, f"screenshots/{savename}_{counter}.png")
-            #         # make_full_screenshot(driver, f"screenshots/{savename}_{counter}.png")
-            # else:
-            #     # Not all elements found after time limit: we have a missing element
-            #     has_error = True
-            #     print(f"ERROR {site} with URL '{complete_url}':")
-
-            #     screenshot_name = re.sub(r"[/\&\?=]", "_", url[1:]) + ".png"
-            #     counter = 0
-            #     while counter < 5:
-            #         try:
-            #             driver.save_screenshot(screenshot_name)
-            #             print("Screenshot was successful.")
-            #             break
-            #         except exceptions.WebDriverException:
-            #             print(f"ERROR taking screenshot, try {counter}")
-            #             counter += 1
-            #             time.sleep(1)
-
-            #     errors = []
-            #     for element, found in elements_check.items():
-            #         if not found:
-            #             errors.append(element)
-            #             print(f"    Not found: {element}")
-            #     write_errors(output, site, url, errors)
-
-    # Quit webdriver
-    # driver.quit()
 
     # User output
     if has_error:
