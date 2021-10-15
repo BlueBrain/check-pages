@@ -153,7 +153,7 @@ def check_url(site, domain, url, elements, wait, screenshots, output):
 
         # Check if we found all elements
         if all(elements_check.values()):
-            print(f"All elements found for {site} after {counter} s, URL: {complete_url}")
+            print(f"All elements found after {counter} s, URL: {url}")
             break
 
         time.sleep(1)
@@ -164,7 +164,7 @@ def check_url(site, domain, url, elements, wait, screenshots, output):
     else:
         # Not all elements found after time limit: we have a missing element
         has_error = True
-        print(f"ERROR {site} with URL '{complete_url}':")
+        print(f"ERROR for '{url}':")
 
         errors = []
         for element, found in elements_check.items():
@@ -248,12 +248,12 @@ def page_check(domain, use_all, number, wait, params, output, screenshots):
             counter = 0
             while counter < 5:
                 counter += 1
-                print(f"... Running check {counter} for {url}.")
+                print(f"Try {counter} for {url}.")
                 try:
                     has_error |= check_url(site, domain, url, elements, wait, screenshots, output)
                     break
                 except exceptions.WebDriverException:
-                    print("... UNEXPECTED ERROR")
+                    print("UNEXPECTED ERROR. Trying again.")
                     time.sleep(1)
 
     # User output
