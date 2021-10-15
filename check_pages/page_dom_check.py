@@ -122,6 +122,20 @@ def write_errors(filename, site, url, errors):
         fileout.write(f"{site} -> {url}: {errors}\n")
 
 
+def screenshot_helper(driver, filename):
+    """Screenshot helper function."""
+    c = 0
+    while c < 5:
+        try:
+            make_full_screenshot(driver, filename)
+            print("Screenshot was successful.")
+            break
+        except exceptions.WebDriverException:
+            print(f"ERROR taking screenshot, try {c}")
+            c += 1
+            time.sleep(1)
+
+
 @click.command()
 @click.option(
     "-d",
@@ -220,7 +234,8 @@ def page_check(domain, use_all, number, wait, params, output, screenshots):
                 time.sleep(1)
                 counter += 1
                 if screenshots:
-                    make_full_screenshot(driver, f"screenshots/{savename}_{counter}.png")
+                    screenshot_helper(driver, f"screenshots/{savename}_{counter}.png")
+                    # make_full_screenshot(driver, f"screenshots/{savename}_{counter}.png")
             else:
                 # Not all elements found after time limit: we have a missing element
                 has_error = True
