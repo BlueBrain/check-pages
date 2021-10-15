@@ -222,6 +222,7 @@ def page_check(domain, use_all, number, wait, params, output, screenshots):
             counter = 0
             for _ in range(wait):
                 # Check missing elements
+                print(f"{counter=}")
                 for element in elements:
                     if not elements_check[element]:
                         elements_check[element] = find_element(driver, *element)
