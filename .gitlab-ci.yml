@@ -90,7 +90,7 @@ check_dom_sscx:
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
   artifacts:
     paths:
-      screenshots
+      - screenshots
 
 check_dom_hippo:
   stage: page_checks
