@@ -44,6 +44,7 @@ check_ngvviewer:
   stage: page_checks
   rules:
     - if: $PIPELINE_SELECT == "daily"
+    - if: $PIPELINE_SELECT == "ngvviewer"
   image: python:3.8-buster
   script:
     - *setup-env
@@ -59,6 +60,7 @@ check_pages_sscx:
   stage: page_checks
   rules:
     - if: $PIPELINE_SELECT == "weekly"
+    - if: $PIPELINE_SELECT == "pages_sscx"
   image: python:3.8-buster
   script:
     - *setup-env
@@ -66,10 +68,11 @@ check_pages_sscx:
     - pagechecker  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Page Check" --filename pagechecker.log --status $exit_code
 
-check_pages_hippocampus:
+check_pages_hippo:
   stage: page_checks
   rules:
     - if: $PIPELINE_SELECT == "weekly"
+    - if: $PIPELINE_SELECT == "pages_hippo"
   image: python:3.8-buster
   script:
     - *setup-env
@@ -81,6 +84,7 @@ check_dom_sscx:
   stage: page_checks
   rules:
     - if: $PIPELINE_SELECT == "daily1"
+    - if: $PIPELINE_SELECT == "dom_sscx"
   image: python:3.8-buster
   script:
     - *setup-env
@@ -96,6 +100,7 @@ check_dom_hippo:
   stage: page_checks
   rules:
     - if: $PIPELINE_SELECT == "daily1"
+    - if: $PIPELINE_SELECT == "dom_hippo"
   image: python:3.8-buster
   script:
     - *setup-env
@@ -108,6 +113,7 @@ check_dom_ngv:
   stage: page_checks
   rules:
     - if: $PIPELINE_SELECT == "daily1"
+    - if: $PIPELINE_SELECT == "dom_ngv"
   image: python:3.8-buster
   script:
     - *setup-env
@@ -120,6 +126,7 @@ check_links:
   stage: page_checks
   rules:
     - if: $PIPELINE_SELECT == "weekly"
+    - if: $PIPELINE_SELECT == "links"
   image: python:3.8-buster
   variables:
     page: "https://portal.bluebrain.epfl.ch/"
@@ -141,6 +148,7 @@ location_testing_sscx:
   stage: location_test
   rules:
     - if: $PIPELINE_SELECT == "daily1"
+    - if: $PIPELINE_SELECT == "location_sscx"
   image: python:3.8-buster
   script:
     - pip install click requests
@@ -151,6 +159,7 @@ location_testing_hippo:
   stage: location_test
   rules:
     - if: $PIPELINE_SELECT == "daily2"
+    - if: $PIPELINE_SELECT == "location_hippo"
   image: python:3.8-buster
   script:
     - pip install click requests
@@ -161,6 +170,7 @@ check_mooc:
   stage: page_checks
   rules:
     - if: $PIPELINE_SELECT == "daily"
+    - if: $PIPELINE_SELECT == "mooc"
   image: python:3.8-buster
   script:
     - *setup-env
