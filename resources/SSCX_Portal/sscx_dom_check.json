@@ -1,39 +1,36 @@
 {
 	"exp_LayerAnatomy": {
 		"urls": "resources/SSCX_Portal/exp_LayerAnatomy.txt",
-		"ids": ["layerThickness", "neuronDensity", "layerAnatomySummary"],
-		"classes": []
+		"id": ["layerThickness", "neuronDensity", "layerAnatomySummary"]
 	},
 	"exp_neuronMorphology": {
 		"urls": "resources/SSCX_Portal/exp_neuronMorphology.txt",
-		"ids": ["metadata", "morphologyDownloadBtn", "morphometrics", "expMorphMemodelList", "expMorphologyTable"],
-		"classes": ["morpho-viewer"]
+		"id": ["metadata", "morphologyDownloadBtn", "morphometrics", "expMorphMemodelList", "expMorphologyTable"],
+		"class name": ["morpho-viewer"]
 	},
 	"exp_neuronEphys": {
 		"urls": "resources/SSCX_Portal/exp_neuronEphys.txt",
-		"ids": ["metadata", "expTraceTable"],
-		"classes": ["stimuli-list"]
+		"id": ["metadata", "expTraceTable"],
+		"class name": ["stimuli-list"],
+		"css selector": ["#expTraceTable tr"]
 	},
 	"digRec_BrainRegions": {
 		"urls": "resources/SSCX_Portal/digRec_BrainRegions.txt",
-		"ids": ["subregionCircuitFactsheet", "regionCircuitFactsheet"],
-		"classes": []
+		"id": ["subregionCircuitFactsheet", "regionCircuitFactsheet"]
 	},
 	"digRec_Microcircuit": {
 		"urls": "resources/SSCX_Portal/digRec_Microcircuit.txt",
-		"ids": ["layerAnatomyFactsheet", "layerPhysiologyFactsheet", "subregionMicrocircuitFactsheet"],
-		"classes": []
+		"id": ["layerAnatomyFactsheet", "layerPhysiologyFactsheet", "subregionMicrocircuitFactsheet"]
 	},
 	"digRec_Pathways": {
 		"urls": "resources/SSCX_Portal/digRec_Pathways.txt",
-		"ids": ["pathwayAnatomyFactsheet", "pathwayPhysiologyFactsheet"],
-		"classes": []
+		"id": ["pathwayAnatomyFactsheet", "pathwayPhysiologyFactsheet"]
 	},
 	"digRec_Neurons": {
 		"urls": "resources/SSCX_Portal/digRec_Neurons.txt",
-		"ids": ["memodelAnatomyFactsheet", "memodelPhysiologyFactsheet", "memodelExpMorphList",
+		"id": ["memodelAnatomyFactsheet", "memodelPhysiologyFactsheet", "memodelExpMorphList",
 		   "mtypeAnatomyFactsheet", "mtypePhysiologyFactsheet", "morphHistogram",
 		   "modelFittingEphys"],
-		"classes": ["morpho-viewer", "stimuli-list"]
+		"class name": ["morpho-viewer", "stimuli-list"]
 	}
 }

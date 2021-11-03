@@ -238,9 +238,12 @@ def page_check(domain, use_all, number, wait, params, output, screenshots):
             selected_urls = random.sample(urls, number)
         print(f"\nAnalyzing {len(selected_urls)} URLs for {site}")
 
-        # Get all elements to be checked for this set of URLs
-        elements = [("id", element) for element in page["ids"]]
-        elements.extend([("class name", element) for element in page["classes"]])
+        # Compile all elements to be checked for this set of URLs
+        elements = []
+        selectors = ["id", "class name", "css selector"]
+        for selector in selectors:
+            if selector in page:
+                elements.extend([(selector, element) for element in page[selector]])
 
         # Now check all elements in the given page
         for url in selected_urls:
@@ -252,8 +255,8 @@ def page_check(domain, use_all, number, wait, params, output, screenshots):
                 try:
                     has_error |= check_url(site, domain, url, elements, wait, screenshots, output)
                     break
-                except exceptions.WebDriverException:
-                    print("UNEXPECTED ERROR. Trying again.")
+                except exceptions.WebDriverException as e:
+                    print(f"UNEXPECTED ERROR {e}. Trying again.")
                     time.sleep(1)
 
     # User output
