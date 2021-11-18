@@ -171,7 +171,6 @@ def run_test(test_name, headless):
         time.sleep(5)
     except Exception as e:
         print(f"ERROR: {e}")
-        raise
         testok = False
     finally:
         sb.tearDown()
