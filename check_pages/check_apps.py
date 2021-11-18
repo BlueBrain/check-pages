@@ -57,7 +57,9 @@ class AppTests(BaseCase):
         self.click('//button/span[contains(text(),"Run Simulation")]', by=By.XPATH)
 
         # Check RUNNING is visible on the page
-        self.assert_text("RUNNING", timeout=120)
+        t0 = time.time()
+        self.assert_text("RUNNING", timeout=200)
+        print(f"SimUI Test OK after {time.time()-t0:.1f} seconds")
 
     def test_pspapp(self):
         """Test the PSP Validation by starting a validation and checking it is running."""
@@ -169,6 +171,7 @@ def run_test(test_name, headless):
         time.sleep(5)
     except Exception as e:
         print(f"ERROR: {e}")
+        raise
         testok = False
     finally:
         sb.tearDown()
