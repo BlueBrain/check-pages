@@ -206,6 +206,11 @@ def check_url(site, domain, url, elements, wait, screenshots, output):
     help="Defines the json files containing the parameters; the URLs and elements to check.",
 )
 @click.option(
+    "-g",
+    "--group",
+    help="Defines the group to be tested. Only pages from this group will be tested.",
+)
+@click.option(
     "-o",
     "--output",
     help="Defines the output filename.",
@@ -216,7 +221,7 @@ def check_url(site, domain, url, elements, wait, screenshots, output):
     is_flag=True,
     help="Will make screenshots.",
 )
-def page_check(domain, use_all, number, wait, params, output, screenshots):
+def page_check(domain, use_all, number, wait, params, group, output, screenshots):
     """The main code to check elements in some/all URL's of a portal.
     """
     has_error = False
@@ -224,6 +229,11 @@ def page_check(domain, use_all, number, wait, params, output, screenshots):
     # Read the page data from the given json
     with open(params) as json_file:
         page_data = json.load(json_file)
+
+    # Select the group to be tested
+    if group:
+        print(f"Checking only group {group}.")
+        page_data = {group: page_data[group]}
 
     # Loop over the page sections
     for site, page in page_data.items():
