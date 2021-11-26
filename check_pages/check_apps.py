@@ -85,7 +85,9 @@ class AppTests(BaseCase):
         self.open("https://bbp-mooc-sim-neuro.epfl.ch/psp-validation/list")
 
         # check id is there
-        self.assert_text(id_, timeout=20)
+        t0 = time.time()
+        self.assert_text(id_, timeout=60)
+        print(f"PSPApp Test ID visible after {time.time()-t0:.1f} seconds")
 
         # check status of each job to be either READY or SUCCESFUL
         xpath = "//span[contains(@class, 'status-text')]"
