@@ -1,36 +1,66 @@
 {
 	"exp_LayerAnatomy": {
 		"urls": "resources/SSCX_Portal/exp_LayerAnatomy.txt",
-		"id": ["layerThickness", "neuronDensity", "layerAnatomySummary"]
+		"checks": [
+			["id", "layerThickness"],
+			["id", "neuronDensity"],
+			["id", "layerAnatomySummary"]
+		]
 	},
 	"exp_neuronMorphology": {
 		"urls": "resources/SSCX_Portal/exp_neuronMorphology.txt",
-		"id": ["metadata", "morphologyDownloadBtn", "morphometrics", "expMorphMemodelList", "expMorphologyTable"],
-		"class name": ["morpho-viewer"]
+		"checks": [
+			[["id", "metadata"]],
+			[["id", "morphologyDownloadBtn"]],
+			[["id", "morphometrics"]],
+			[["id", "expMorphMemodelList"]],
+			[["id", "expMorphologyTable"], ["xpath", ".//p[contains(text(),'No models were built using this morphology')]"]],
+			[["class name", "morpho-viewer"]]
+		]
 	},
 	"exp_neuronEphys": {
 		"urls": "resources/SSCX_Portal/exp_neuronEphys.txt",
-		"id": ["metadata", "expTraceTable"],
-		"class name": ["stimuli-list"],
-		"css selector": ["#expTraceTable tr"]
+		"checks": [
+			[["id", "metadata"]],
+			[["id", "expTraceTable"]],
+			[["class name", "stimuli-list"]],
+			[["css_selector", "#expTraceTable tr"]]
+		]
 	},
 	"digRec_BrainRegions": {
 		"urls": "resources/SSCX_Portal/digRec_BrainRegions.txt",
-		"id": ["subregionCircuitFactsheet", "regionCircuitFactsheet"]
+		"checks": [
+			[["id", "subregionCircuitFactsheet"]],
+			[["id", "regionCircuitFactsheet"]]
+		]
 	},
 	"digRec_Microcircuit": {
 		"urls": "resources/SSCX_Portal/digRec_Microcircuit.txt",
-		"id": ["layerAnatomyFactsheet", "layerPhysiologyFactsheet", "subregionMicrocircuitFactsheet"]
+		"checks": [
+			[["id", "layerAnatomyFactsheet"]],
+			[["id", "layerPhysiologyFactsheet"]],
+			[["id", "subregionMicrocircuitFactsheet"]]
+		]
 	},
 	"digRec_Pathways": {
 		"urls": "resources/SSCX_Portal/digRec_Pathways.txt",
-		"id": ["pathwayAnatomyFactsheet", "pathwayPhysiologyFactsheet"]
+		"checks": [
+			[["id", "pathwayAnatomyFactsheet"]],
+			[["id", "pathwayPhysiologyFactsheet"]]	
+		]
 	},
 	"digRec_Neurons": {
 		"urls": "resources/SSCX_Portal/digRec_Neurons.txt",
-		"id": ["memodelAnatomyFactsheet", "memodelPhysiologyFactsheet", "memodelExpMorphList",
-		   "mtypeAnatomyFactsheet", "mtypePhysiologyFactsheet", "morphHistogram",
-		   "modelFittingEphys"],
-		"class name": ["morpho-viewer", "stimuli-list"]
+		"checks": [
+			[["id", "memodelAnatomyFactsheet"]],
+			[["id", "memodelPhysiologyFactsheet"]],
+			[["id", "memodelExpMorphList"]],
+			[["id", "mtypeAnatomyFactsheet"]],
+			[["id", "mtypePhysiologyFactsheet"]],
+			[["id", "morphHistogram"]],
+			[["id", "modelFittingEphys"]],
+			[["class name", "morpho-viewer"]],
+			[["class name", "stimuli-list"]]
+		]
 	}
 }

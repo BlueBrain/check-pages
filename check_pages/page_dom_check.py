@@ -122,7 +122,7 @@ def write_errors(filename, site, url, errors):
         fileout.write(f"{site} -> {url}: {errors}\n")
 
 
-def check_url(site, domain, url, elements, wait, screenshots, output):
+def check_url(site, domain, url, checks, wait, screenshots, output):
     """Function to check a single URL."""
     has_error = False
 
@@ -143,16 +143,21 @@ def check_url(site, domain, url, elements, wait, screenshots, output):
     accept_cookies(driver)
 
     # Wait a maximum of 'wait' seconds for an element to appear
-    elements_check = {element: False for element in elements}
+    check_result = {name: False for name in checks.keys()}
     counter = 0
     for _ in range(wait):
-        # Check missing elements
-        for element in elements:
-            if not elements_check[element]:
-                elements_check[element] = find_element(driver, *element)
+        # Check all elements
+        for name, check in checks.items():
+            if not check_result[name]:
+                found = False
+                for element in check:
+                    if find_element(driver, *element):
+                        found = True
+                        break
+                check_result[name] = found
 
         # Check if we found all elements
-        if all(elements_check.values()):
+        if all(check_result.values()):
             print(f"All elements found after {counter} s, URL: {url}")
             break
 
@@ -167,7 +172,7 @@ def check_url(site, domain, url, elements, wait, screenshots, output):
         print(f"ERROR for '{url}':")
 
         errors = []
-        for element, found in elements_check.items():
+        for element, found in check_result.items():
             if not found:
                 errors.append(element)
                 print(f"    Not found: {element}")
@@ -248,12 +253,8 @@ def page_check(domain, use_all, number, wait, params, group, output, screenshots
             selected_urls = random.sample(urls, number)
         print(f"\nAnalyzing {len(selected_urls)} URLs for {site}")
 
-        # Compile all elements to be checked for this set of URLs
-        elements = []
-        selectors = ["id", "class name", "css selector"]
-        for selector in selectors:
-            if selector in page:
-                elements.extend([(selector, element) for element in page[selector]])
+        # Create hashable keys
+        checks = {"_".join(check[0]): check for check in page["checks"]}
 
         # Now check all elements in the given page
         for url in selected_urls:
@@ -263,7 +264,7 @@ def page_check(domain, use_all, number, wait, params, group, output, screenshots
                 counter += 1
                 print(f"Try {counter} for {url}.")
                 try:
-                    has_error |= check_url(site, domain, url, elements, wait, screenshots, output)
+                    has_error |= check_url(site, domain, url, checks, wait, screenshots, output)
                     break
                 except exceptions.WebDriverException as e:
                     print(f"UNEXPECTED ERROR {e}. Trying again.")
