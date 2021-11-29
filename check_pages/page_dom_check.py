@@ -142,10 +142,14 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
     # Allow cookies
     accept_cookies(driver)
 
-    # Wait a maximum of 'wait' seconds for an element to appear
+    # Prepare the check dict
     check_result = {name: False for name in checks.keys()}
+
+    # Wait a maximum of 'wait' seconds for all element to appear
+    timeout = False
     counter = 0
-    for _ in range(wait):
+    t_end = time.time() + wait
+    while True:
         # Check all elements
         for name, check in checks.items():
             if not check_result[name]:
@@ -166,9 +170,14 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
         # Make full screenshot if required
         if screenshots:
             make_full_screenshot(driver, f"screenshots/{savename}_{counter}.png")
-    else:
+
+        # Check if wait time has elapsed
+        if time.time() > t_end:
+            timeout = True
+            break
+
+    if timeout:
         # Not all elements found after time limit: we have a missing element
-        has_error = True
         print(f"ERROR for '{url}':")
 
         errors = []
@@ -179,7 +188,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
         write_errors(output, site, url, errors)
 
     driver.quit()
-    return has_error
+    return timeout
 
 
 @click.command()
