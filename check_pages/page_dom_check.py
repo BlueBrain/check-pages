@@ -124,7 +124,6 @@ def write_errors(filename, site, url, errors):
 
 def check_url(site, domain, url, checks, wait, screenshots, output):
     """Function to check a single URL."""
-    has_error = False
 
     # Initialize selenium driver
     chrome_options = Options()
