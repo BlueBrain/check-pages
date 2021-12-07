@@ -35,7 +35,7 @@ lint:
     - echo -e "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome
     - chmod 755 /opt/google/chrome/google-chrome
     - google-chrome --version
-    - wget https://chromedriver.storage.googleapis.com/93.0.4577.15/chromedriver_linux64.zip && unzip chromedriver_linux64.zip
+    - wget https://chromedriver.storage.googleapis.com/94.0.4606.113/chromedriver_linux64.zip && unzip chromedriver_linux64.zip
     - export PATH=`pwd`:${PATH}
     - pip install -r requirements.txt
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
@@ -90,7 +90,7 @@ check_dom_sscx:
     - *setup-env
     - mkdir -p screenshots
     - exit_code=0
-    - page_dom_check -n 5 -p resources/SSCX_Portal/sscx_dom_check.json -d http://sscx-portal.ocp.bbp.epfl.ch/sscx-portal --screenshots || exit_code=1
+    - page_dom_check -n 5 -p resources/SSCX_Portal/sscx_dom_check.json -d http://sscx-portal.ocp.bbp.epfl.ch/sscx-portal || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
   artifacts:
     paths:

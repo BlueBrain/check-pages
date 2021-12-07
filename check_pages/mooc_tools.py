@@ -145,6 +145,8 @@ class MoocChecker:
             result = json.loads(text)
             if "grade" in result:
                 testok = bool(result["grade"]["value"] == 1)
+            else:
+                testok = False
         except json.JSONDecodeError:
             testok = False
 
