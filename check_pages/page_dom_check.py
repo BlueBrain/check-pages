@@ -271,16 +271,16 @@ def page_check(domain, use_all, number, wait, params, group, output, screenshots
         # Now check all elements in the given page
         for url in selected_urls:
 
-            counter = 0
+            counter = 1
             while counter < 5:
-                counter += 1
-                print(f"Try {counter} for {url}.")
                 try:
                     has_error |= check_url(site, domain, url, checks, wait, screenshots, output)
                     break
                 except exceptions.WebDriverException as e:
-                    print(f"UNEXPECTED ERROR {e}. Trying again.")
+                    print(f"UNEXPECTED ERROR: {e}")
                     time.sleep(1)
+                counter += 1
+                print(f"There was an error, trying again (#{counter}) for {url}.")
 
     # User output
     if has_error:

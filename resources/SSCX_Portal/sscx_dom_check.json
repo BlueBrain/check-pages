@@ -2,9 +2,9 @@
 	"exp_LayerAnatomy": {
 		"urls": "resources/SSCX_Portal/exp_LayerAnatomy.txt",
 		"checks": [
-			["id", "layerThickness"],
-			["id", "neuronDensity"],
-			["id", "layerAnatomySummary"]
+			[["id", "layerThickness"]],
+			[["id", "neuronDensity"]],
+			[["id", "layerAnatomySummary"]]
 		]
 	},
 	"exp_neuronMorphology": {
@@ -24,7 +24,7 @@
 			[["id", "metadata"]],
 			[["id", "expTraceTable"]],
 			[["class name", "stimuli-list"]],
-			[["css_selector", "#expTraceTable tr"]]
+			[["css selector", "#expTraceTable tr"]]
 		]
 	},
 	"digRec_BrainRegions": {
