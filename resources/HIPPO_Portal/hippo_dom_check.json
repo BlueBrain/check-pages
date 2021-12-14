@@ -11,15 +11,15 @@
 	"expData_NeuronElectrophysiology": {
 		"urls": "resources/HIPPO_Portal/expData_NeuronElectro.txt",
 		"checks": [
-			[["ids", "expTraceTable"]],
+			[["id", "expTraceTable"]],
 			[["class name", "stimuli-list"]]
 		]
 	},	
     "dirRec_Neurons": {
 		"urls": "resources/HIPPO_Portal/digRec_Neurons.txt",
 		"checks": [
-			[["ids", "modelMorphologyFactsheet"]],
-			[["ids", "etypeFactsheet"]],
+			[["id", "modelMorphologyFactsheet"]],
+			[["id", "etypeFactsheet"]],
 			[["class name", "morpho-viewer"]]
 		]
 	}
