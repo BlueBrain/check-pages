@@ -49,7 +49,6 @@ def get_requests(url, interceptor):
             }
             request_list.append(myreq)
     driver.quit()
-    print(f"** Analyzing {url.strip()} created {len(request_list)} requests.")
     return request_list
 
 
@@ -138,8 +137,10 @@ def linkchecker(domain, file, folder, number, header, output, url):
 
     # Check each URL
     errors = []
-    for use_url in selected_urls:
+    n = len(selected_urls)
+    for index, use_url in enumerate(selected_urls):
         req = get_requests(use_url, interceptor)
+        print(f"Analyzed {index}/{n} -> {use_url.strip()}")
         for request in req:
             if request["status"] >= 400 and request["status"] != 403:
                 msg = f"ERROR {request['status']} -> {request['url']}  from {use_url}"
