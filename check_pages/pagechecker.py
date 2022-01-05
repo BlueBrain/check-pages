@@ -5,6 +5,7 @@ import sys
 import glob
 import time
 import random
+from concurrent import futures
 
 import click
 from seleniumwire import webdriver
@@ -45,7 +46,7 @@ def get_requests(url, interceptor):
                 "url": request.url,
                 "headers": dict(request.headers),
                 "method": request.method,
-                "status": request.response.status_code
+                "status": request.response.status_code,
             }
             request_list.append(myreq)
     driver.quit()
@@ -53,20 +54,9 @@ def get_requests(url, interceptor):
 
 
 @click.command()
-@click.option(
-    "-d",
-    "--domain",
-    help="Defines the domain URL.",
-)
-@click.option(
-    "-f",
-    "--file",
-    help="Defines a file with a list of URL's.",
-)
-@click.option(
-    "--folder",
-    help="Defines a folder containing files with URL lists.",
-)
+@click.option("-d", "--domain", help="Defines the domain URL.")
+@click.option("-f", "--file", help="Defines a file with a list of URL's.")
+@click.option("--folder", help="Defines a folder containing files with URL lists.")
 @click.option(
     "-n",
     "--number",
@@ -80,15 +70,9 @@ def get_requests(url, interceptor):
     help="Adds a header used for each request in the format KEY:VALUE.",
 )
 @click.option(
-    "-o",
-    "--output",
-    help="Defines the output filename.",
-    default="pagechecker.log"
+    "-o", "--output", help="Defines the output filename.", default="pagechecker.log"
 )
-@click.argument(
-    "url",
-    required=False
-)
+@click.argument("url", required=False)
 def linkchecker(domain, file, folder, number, header, output, url):
     """Main linkchecker method.
 
@@ -116,7 +100,9 @@ def linkchecker(domain, file, folder, number, header, output, url):
             with open(filename) as filein:
                 urls.extend(filein.readlines())
     else:
-        raise ValueError("Must specify either an url, or one of the option 'urls' or 'folder'.")
+        raise ValueError(
+            "Must specify either an url, or one of the option 'urls' or 'folder'."
+        )
 
     # Add the domain
     if domain:
@@ -135,17 +121,24 @@ def linkchecker(domain, file, folder, number, header, output, url):
         selected_urls = random.sample(urls, number)
     print(f"Analyzing {len(selected_urls)} URL's")
 
-    # Check each URL
     errors = []
     n = len(selected_urls)
-    for index, use_url in enumerate(selected_urls):
-        req = get_requests(use_url, interceptor)
-        print(f"Analyzed {index}/{n} -> {use_url.strip()}")
-        for request in req:
-            if request["status"] >= 400 and request["status"] != 403:
-                msg = f"ERROR {request['status']} -> {request['url']}  from {use_url}"
-                print(msg)
-                errors.append(msg)
+    with futures.ThreadPoolExecutor() as executor:
+        # Put the functions calls into the pool
+        url_requests = [
+            executor.submit(get_requests, use_url, interceptor) for use_url in selected_urls
+        ]
+        # Check the results
+        for index, url_request, use_url in zip(range(n), url_requests, selected_urls):
+            print(f"Analyzed {index}/{n} -> {use_url.strip()}")
+            req = url_request.result()
+            for request in req:
+                if request["status"] >= 400 and request["status"] != 403:
+                    msg = (
+                        f"ERROR {request['status']} -> {request['url']}  from {use_url}"
+                    )
+                    print(msg)
+                    errors.append(msg)
 
     with open(output, "w") as fileout:
         for error in errors:
