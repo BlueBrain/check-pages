@@ -77,7 +77,7 @@ check_pages_hippo:
   script:
     - *setup-env
     - exit_code=0
-    - pagechecker  --folder resources/HIPPO_Portal/  --domain "https://www.hippocampushub.eu/" -n 5 || exit_code=1
+    - pagechecker  --folder resources/HIPPO_Portal/  --domain "https://www.hippocampushub.eu" -n 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Page Check" --filename pagechecker.log --status $exit_code
 
 check_dom_sscx:
