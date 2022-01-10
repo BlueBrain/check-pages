@@ -5,6 +5,7 @@ import sys
 import glob
 import time
 import random
+import urllib
 from concurrent import futures
 
 import click
@@ -106,7 +107,7 @@ def linkchecker(domain, file, folder, number, header, output, url):
 
     # Add the domain
     if domain:
-        urls = [domain + url for url in urls]
+        urls = [urllib.parse.urljoin(domain, url) for url in urls]
 
     # Define the interceptor to inject headers into each request
     def interceptor(request):
