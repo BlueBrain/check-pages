@@ -4,6 +4,7 @@ import time
 
 from seleniumbase import BaseCase
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import ElementNotVisibleException
 
 URL = (
     "https://courseware.epfl.ch/courses/course-v1:EPFL+SimNeuro2+2019_2/"
@@ -63,6 +64,7 @@ class AppTests(BaseCase):
 
     def test_pspapp(self):
         """Test the PSP Validation by starting a validation and checking it is running."""
+        screenshot_name = "screenshots/pspapp_{}.png"
         # Login
         self.init()
 
@@ -80,14 +82,35 @@ class AppTests(BaseCase):
         id_ = f"{time.time():.0f}"
         self.type("//input[@placeholder='Job name']", id_)
         self.click('//button/span[contains(text(),"Launch")]', by=By.XPATH)
+        self.save_screenshot(screenshot_name.format("launch"))
 
         # Open list page
         self.open("https://bbp-mooc-sim-neuro.epfl.ch/psp-validation/list")
+        self.save_screenshot(screenshot_name.format("list"))
 
         # check id is there
         t0 = time.time()
-        self.assert_text(id_, timeout=60)
-        print(f"PSPApp Test ID visible after {time.time()-t0:.1f} seconds")
+        timeout = 1000
+        counter = 0
+        waiting = True
+        found_text = False
+        while waiting:
+            counter += 1
+            print(f"Waiting step {counter}")
+            self.save_screenshot(screenshot_name.format(f"wait_{counter:02d}"))
+
+            try:
+                self.find_text(id_, timeout=1)
+                found_text = True
+            except ElementNotVisibleException:
+                pass
+            if found_text or time.time()>t0+timeout:
+                waiting = False
+
+        if found_text:
+            print(f"PSPApp Test ID visible after {time.time()-t0:.1f} seconds")
+        else:
+            raise ElementNotVisibleException(f"PSPApp Test ID NOT visible after {timeout} seconds")
 
         # check status of each job to be either READY or SUCCESFUL
         xpath = "//span[contains(@class, 'status-text')]"
