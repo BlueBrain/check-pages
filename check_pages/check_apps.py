@@ -95,16 +95,12 @@ class AppTests(BaseCase):
         waiting = True
         found_text = False
         while waiting:
+            time.sleep(1)
             counter += 1
             print(f"Waiting step {counter}")
             self.save_screenshot(screenshot_name.format(f"wait_{counter:02d}"))
-
-            try:
-                self.find_text(id_, timeout=1)
-                found_text = True
-            except ElementNotVisibleException:
-                pass
-            if found_text or time.time()>t0+timeout:
+            found_text = self.is_text_visible(id_)
+            if found_text or time.time() > t0 + timeout:
                 waiting = False
 
         if found_text:
