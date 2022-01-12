@@ -34,8 +34,23 @@ class AppTests(BaseCase):
         )
         self.click(edx_button, by=By.XPATH)
 
+    def text_visible(self, text, filename, timeout=1000):
+        """Checks that the text is visible, and making screenshots along the way"""
+        # Check that text RUNNING is visible
+        t0 = time.time()
+        timeout = 1000
+        while time.time() - t0 < timeout:
+            time.sleep(5)
+            time_passed = time.time() - t0
+            print(f"Time passed: {time_passed:.1f} s")
+            self.save_screenshot(filename.format(f"{time_passed:03.0f}"))
+            if self.is_text_visible(text):
+                return True
+        return False
+
     def test_simui(self):
         """Test the SimUI by starting a simulation and checking it is running."""
+        screenshot_name = "screenshots/simui_{}.png"
         # Login
         self.init()
 
@@ -56,11 +71,14 @@ class AppTests(BaseCase):
         id_ = f"{time.time():.0f}"
         self.type("//input[@placeholder='Title']", id_)
         self.click('//button/span[contains(text(),"Run Simulation")]', by=By.XPATH)
+        self.save_screenshot(screenshot_name.format("launch"))
 
-        # Check RUNNING is visible on the page
+        # Wait for the text RUNNING to appear
         t0 = time.time()
-        self.assert_text("RUNNING", timeout=200)
-        print(f"SimUI Test OK after {time.time()-t0:.1f} seconds")
+        if self.text_visible("RUNNING", screenshot_name.format("wait_{}")):
+            print(f"SimUI Test OK after {time.time()-t0:.1f} seconds")
+        else:
+            raise ElementNotVisibleException(f"PSPApp Text ID {id_} NOT visible after timeout")
 
     def test_pspapp(self):
         """Test the PSP Validation by starting a validation and checking it is running."""
@@ -88,22 +106,9 @@ class AppTests(BaseCase):
         self.open("https://bbp-mooc-sim-neuro.epfl.ch/psp-validation/list")
         self.save_screenshot(screenshot_name.format("list"))
 
-        # check id is there
+        # Wait for the ID to appear
         t0 = time.time()
-        timeout = 1000
-        counter = 0
-        waiting = True
-        found_text = False
-        while waiting:
-            time.sleep(1)
-            counter += 1
-            print(f"Waiting step {counter}")
-            self.save_screenshot(screenshot_name.format(f"wait_{counter:02d}"))
-            found_text = self.is_text_visible(id_)
-            if found_text or time.time() > t0 + timeout:
-                waiting = False
-
-        if found_text:
+        if self.text_visible(id_, screenshot_name.format("wait_{}")):
             print(f"PSPApp Test ID visible after {time.time()-t0:.1f} seconds")
         else:
             raise ElementNotVisibleException(f"PSPApp Test ID NOT visible after {timeout} seconds")
