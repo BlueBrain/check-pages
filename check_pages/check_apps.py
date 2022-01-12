@@ -111,7 +111,7 @@ class AppTests(BaseCase):
         if self.text_visible(id_, screenshot_name.format("wait_{}")):
             print(f"PSPApp Test ID visible after {time.time()-t0:.1f} seconds")
         else:
-            raise ElementNotVisibleException(f"PSPApp Test ID NOT visible after {timeout} seconds")
+            raise ElementNotVisibleException("PSPApp Test ID NOT visible after timeout")
 
         # check status of each job to be either READY or SUCCESFUL
         xpath = "//span[contains(@class, 'status-text')]"
