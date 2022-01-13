@@ -104,9 +104,12 @@ class MoocChecker:
             wait = 5
 
         # Click on next test
+        driver = self.browser.selenium_webdriver
         time.sleep(5)
+        driver.save_screenshot(f"screenshots/test_{name}_1.png")
         self.browser.get_button(partial_text=params["test"]).click()
         time.sleep(5)
+        driver.save_screenshot(f"screenshots/test_{name}_2.png")
 
         # Switch to new tab
         driver = self.browser.selenium_webdriver
@@ -117,6 +120,7 @@ class MoocChecker:
             element = self.browser.get_element(**params["element"], wait=wait)
         except NoSuchElementError:
             element = None
+        driver.save_screenshot(f"screenshots/test_{name}_3.png")
 
         # Close tab and go back to main tab
         driver.close()
