@@ -76,9 +76,12 @@ class AppTests(BaseCase):
         # Wait for the text RUNNING to appear
         t0 = time.time()
         if self.text_visible("RUNNING", screenshot_name.format("wait_{}")):
-            print(f"SimUI Test OK after {time.time()-t0:.1f} seconds")
+            time_visible = time.time()-t0
+            print(f"SimUI Test OK after {time_visible:.1f} seconds")
         else:
             raise ElementNotVisibleException(f"PSPApp Text ID {id_} NOT visible after timeout")
+
+        return time_visible
 
     def test_pspapp(self):
         """Test the PSP Validation by starting a validation and checking it is running."""
@@ -109,7 +112,8 @@ class AppTests(BaseCase):
         # Wait for the ID to appear
         t0 = time.time()
         if self.text_visible(id_, screenshot_name.format("wait_{}")):
-            print(f"PSPApp Test ID visible after {time.time()-t0:.1f} seconds")
+            time_visible = time.time()-t0
+            print(f"PSPApp Test ID visible after {time_visible:.1f} seconds")
         else:
             raise ElementNotVisibleException("PSPApp Test ID NOT visible after timeout")
 
@@ -119,6 +123,8 @@ class AppTests(BaseCase):
         correct_text = ["READY", "SUCCESSFUL"]
         for element in elements:
             assert element.text in correct_text
+
+        return time_visible
 
 
 def run_test(test_name, headless):
@@ -193,7 +199,7 @@ def run_test(test_name, headless):
     sb.setUp()
     testok = True
     try:
-        getattr(sb, test_name)()
+        time_visible = getattr(sb, test_name)()
         time.sleep(5)
     except Exception as e:
         print(f"ERROR: {e}")
@@ -203,7 +209,10 @@ def run_test(test_name, headless):
         del sb
 
     if testok:
-        msg = f"{test_name} ... OK\n"
+        time_info = ""
+        if time_visible:
+            time_info = f"  {time_visible:.1f} seconds"
+        msg = f"{test_name} ... OK {time_info}\n"
     else:
         msg = f"{test_name} ... TEST FAILED\n"
     return testok, msg
