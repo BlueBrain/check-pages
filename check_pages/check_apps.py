@@ -76,7 +76,7 @@ class AppTests(BaseCase):
         # Wait for the text RUNNING to appear
         t0 = time.time()
         if self.text_visible("RUNNING", screenshot_name.format("wait_{}")):
-            time_visible = time.time()-t0
+            time_visible = time.time() - t0
             print(f"SimUI Test OK after {time_visible:.1f} seconds")
         else:
             raise ElementNotVisibleException(f"PSPApp Text ID {id_} NOT visible after timeout")
@@ -112,7 +112,7 @@ class AppTests(BaseCase):
         # Wait for the ID to appear
         t0 = time.time()
         if self.text_visible(id_, screenshot_name.format("wait_{}")):
-            time_visible = time.time()-t0
+            time_visible = time.time() - t0
             print(f"PSPApp Test ID visible after {time_visible:.1f} seconds")
         else:
             raise ElementNotVisibleException("PSPApp Test ID NOT visible after timeout")
