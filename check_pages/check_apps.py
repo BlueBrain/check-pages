@@ -75,7 +75,7 @@ class AppTests(BaseCase):
 
         # Wait for the text RUNNING to appear
         t0 = time.time()
-        if self.text_visible("RUNNING", screenshot_name.format("wait_{}")):
+        if self.text_visible("QUEUED", screenshot_name.format("wait_{}")):
             time_visible = time.time() - t0
             print(f"SimUI Test OK after {time_visible:.1f} seconds")
         else:
