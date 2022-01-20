@@ -88,7 +88,7 @@ class AppTests(BaseCase):
         self.save_screenshot(screenshot_name.format("status"))
 
         # Check if the text SUCCESSFUL appears on the page
-        if self.text_visible("SUCCESSFUL", screenshot_name.format("wait_{}"), timeout=60000):
+        if self.text_visible("SUCCESSFUL", screenshot_name.format("wait_{}"), timeout=60):
             print(f"SimUI Check OK")
         else:
             raise ElementNotVisibleException(f"SIMUI not successfull")
@@ -114,13 +114,11 @@ class AppTests(BaseCase):
         self.save_screenshot(screenshot_name.format("clicked"))
 
         # Check if the text SUCCESSFUL appears on the page
-        if self.text_visible("SUCCESSFUL", screenshot_name.format("wait_{}"), timeout=60000):
+        if self.text_visible("SUCCESSFUL", screenshot_name.format("wait_{}"), timeout=60):
             print(f"SimUI Check OK")
         else:
             self.save_screenshot(screenshot_name.format("failure"))
             raise ElementNotVisibleException(f"SIMUI not successfull")
-
-        return True
 
     def start_simui(self):
         """Test the SimUI by starting a simulation and checking it is running."""
@@ -266,8 +264,8 @@ def run_test(test_name, headless):
 
     sb.setUp()
     testok = True
+    print(f"Running test {test_name}")
     try:
-        print(f"Running test {test_name}")
         time_visible = getattr(sb, test_name)()
         time.sleep(5)
     except Exception as e:
