@@ -1,6 +1,8 @@
 """Running tests on applications."""
 import os
 import time
+import traceback
+from urllib.parse import urlparse
 
 from seleniumbase import BaseCase
 from selenium.webdriver.common.by import By
@@ -29,6 +31,7 @@ class AppTests(BaseCase):
         # Perform the login
         self.type("#login-email", username)
         self.type("#login-password", password)
+        self.save_screenshot("screenshots/login.png")
         edx_button = (
             "/html/body/div[3]/div[2]/div/main/div/div/section[1]/div/form/button"
         )
@@ -38,7 +41,6 @@ class AppTests(BaseCase):
         """Checks that the text is visible, and making screenshots along the way"""
         # Check that text RUNNING is visible
         t0 = time.time()
-        timeout = 1000
         while time.time() - t0 < timeout:
             time.sleep(5)
             time_passed = time.time() - t0
@@ -48,17 +50,81 @@ class AppTests(BaseCase):
                 return True
         return False
 
-    def test_simui(self):
-        """Test the SimUI by starting a simulation and checking it is running."""
-        screenshot_name = "screenshots/simui_{}.png"
+    @staticmethod
+    def write_info(filename, info):
+        """Write information for the next round."""
+        with open(filename, "w") as fileout:
+            fileout.write(info)
+
+    @staticmethod
+    def read_info(filename):
+        """Read information from the previous round."""
+        with open(filename) as filein:
+            return filein.read().strip()
+
+    def open_page(self, pagename):
+        """Opens the page of the app, and returns the authentification token."""
+        screenshot_name = f"screenshots/open_{pagename}_{{}}.png"
         # Login
         self.init()
+        self.save_screenshot(screenshot_name.format("init"))
 
-        # Choose the SimUI App
-        self.click("//button[contains(text(),'AppSim')]", by=By.XPATH)
-
-        # Switch to new tab
+        # Choose the page and retrieve the auth token from the page URL (???)
+        self.click(f"//button[contains(text(),'{pagename}')]", by=By.XPATH)
         self.switch_to_newest_window()
+        return self.get_current_url().split("?")[1]
+
+    def check_simui(self):
+        """Verify the previous run of the simulation."""
+        screenshot_name = "screenshots/check_simui_{}.png"
+
+        # open the SimUI page and get the auth token (????)
+        auth = self.open_page("AppSim")
+
+        # Read SimUI progress page URL and open it
+        url = self.read_info("SIMUI.INFO") + "?" + auth
+        self.open(url)
+        self.save_screenshot(screenshot_name.format("status"))
+
+        # Check if the text SUCCESSFUL appears on the page
+        if self.text_visible("SUCCESSFUL", screenshot_name.format("wait_{}"), timeout=60000):
+            print(f"SimUI Check OK")
+        else:
+            raise ElementNotVisibleException(f"SIMUI not successfull")
+
+    def check_pspapp(self):
+        """Verify the previous run of the simulation."""
+        screenshot_name = "screenshots/check_pspapp_{}.png"
+
+        # Open the SimUI page and get the auth token (????)
+        auth = self.open_page("AppPSP")
+        self.save_screenshot(screenshot_name.format("open"))
+
+        # Read the name of the job to check
+        job_name = self.read_info("PSPAPP.INFO")
+
+        # Open the overview page
+        url_list = "https://bbp-mooc-sim-neuro.epfl.ch/psp-validation/list" + "?" + auth
+        self.open(url_list)
+        self.save_screenshot(screenshot_name.format("overview"))
+
+        self.click(f"//span[contains(text(),'{job_name}')]", by=By.XPATH)
+        self.save_screenshot(screenshot_name.format("clicked"))
+
+        # Check if the text SUCCESSFUL appears on the page
+        if self.text_visible("SUCCESSFUL", screenshot_name.format("wait_{}"), timeout=60000):
+            print(f"SimUI Check OK")
+        else:
+            self.save_screenshot(screenshot_name.format("failure"))
+            raise ElementNotVisibleException(f"SIMUI not successfull")
+
+        return True
+
+    def start_simui(self):
+        """Test the SimUI by starting a simulation and checking it is running."""
+        screenshot_name = "screenshots/start_simui_{}.png"
+        # Open the page
+        self.open_page("AppSim")
 
         # Choose the mc1 column as the population
         self.click("//input[@placeholder='Select']", by=By.XPATH)
@@ -67,13 +133,13 @@ class AppTests(BaseCase):
         # Click continue
         self.click("//button/span[contains(text(),'Continue')]", by=By.XPATH)
 
-        # Set title and click on "Sun Simulation"
+        # Set title and click on "Run Simulation"
         id_ = f"{time.time():.0f}"
         self.type("//input[@placeholder='Title']", id_)
         self.click('//button/span[contains(text(),"Run Simulation")]', by=By.XPATH)
         self.save_screenshot(screenshot_name.format("launch"))
 
-        # Wait for the text RUNNING to appear
+        # Wait for the text QUEUED to appear
         t0 = time.time()
         if self.text_visible("QUEUED", screenshot_name.format("wait_{}")):
             time_visible = time.time() - t0
@@ -81,32 +147,36 @@ class AppTests(BaseCase):
         else:
             raise ElementNotVisibleException(f"PSPApp Text ID {id_} NOT visible after timeout")
 
+        # Write SimUI progress page URL to file
+        url = urlparse(self.get_current_url())
+        self.write_info("SIMUI.INFO", f"{url.scheme}://{url.netloc}{url.path}")
+
         return time_visible
 
-    def test_pspapp(self):
+    def start_pspapp(self):
         """Test the PSP Validation by starting a validation and checking it is running."""
-        screenshot_name = "screenshots/pspapp_{}.png"
-        # Login
-        self.init()
+        screenshot_name = "screenshots/start_pspapp_{}.png"
+        # open the PSPApp page and get the auth token (????)
+        self.open_page("AppPSP")
 
-        # Choose the PSP Validation App
-        self.click('//button[contains(text(),"AppPSP")]', by=By.XPATH)
-
-        # Switch to new tab
-        self.switch_to_newest_window()
-
-        # Click on Continue ansd to run the app
+        # Click on Continue ansd to run the apptime.
+        time.sleep(5)
+        self.save_screenshot(screenshot_name.format("screen1"))
         self.click('//button/span[contains(text(),"Continue")]', by=By.XPATH)
+        time.sleep(5)
+        self.save_screenshot(screenshot_name.format("screen2"))
         self.click('//button/span[contains(text(),"Run PSP")]', by=By.XPATH)
 
         # Set title and click on "Sun Simulation"
         id_ = f"{time.time():.0f}"
         self.type("//input[@placeholder='Job name']", id_)
-        self.click('//button/span[contains(text(),"Launch")]', by=By.XPATH)
+        time.sleep(5)
         self.save_screenshot(screenshot_name.format("launch"))
+        self.click('//button/span[contains(text(),"Launch")]', by=By.XPATH)
 
         # Open list page
         self.open("https://bbp-mooc-sim-neuro.epfl.ch/psp-validation/list")
+        time.sleep(5)
         self.save_screenshot(screenshot_name.format("list"))
 
         # Wait for the ID to appear
@@ -117,12 +187,8 @@ class AppTests(BaseCase):
         else:
             raise ElementNotVisibleException("PSPApp Test ID NOT visible after timeout")
 
-        # check status of each job to be either READY or SUCCESFUL
-        xpath = "//span[contains(@class, 'status-text')]"
-        elements = self.find_elements(xpath, by=By.XPATH)
-        correct_text = ["READY", "SUCCESSFUL"]
-        for element in elements:
-            assert element.text in correct_text
+        # Write PSPApp ID to file
+        self.write_info("PSPAPP.INFO", id_)
 
         return time_visible
 
@@ -202,7 +268,9 @@ def run_test(test_name, headless):
         time_visible = getattr(sb, test_name)()
         time.sleep(5)
     except Exception as e:
-        print(f"ERROR: {e}")
+        print(f"APP-ERROR: {repr(e)}")
+        traceback.print_exc()
+        print(100 * "#")
         testok = False
     finally:
         sb.tearDown()

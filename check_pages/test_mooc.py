@@ -61,7 +61,7 @@ def test_mooc_service(testparam, headless):
     assert success
 
 
-@pytest.mark.parametrize("appname", ["test_simui", "test_pspapp"])
+@pytest.mark.parametrize("appname", ["check_simui", "check_pspapp", "start_simui", "start_pspapp"])
 def test_apps(appname, headless):
     """Tests a service by starting the application and wait until it is running."""
 
