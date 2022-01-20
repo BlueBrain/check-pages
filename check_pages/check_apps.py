@@ -83,6 +83,7 @@ class AppTests(BaseCase):
 
         # Read SimUI progress page URL and open it
         url = self.read_info("SIMUI.INFO") + "?" + auth
+        print(f"check_simui: {url=}")
         self.open(url)
         self.save_screenshot(screenshot_name.format("status"))
 
@@ -102,6 +103,7 @@ class AppTests(BaseCase):
 
         # Read the name of the job to check
         job_name = self.read_info("PSPAPP.INFO")
+        print(f"check_pspapp: {job_name=}")
 
         # Open the overview page
         url_list = "https://bbp-mooc-sim-neuro.epfl.ch/psp-validation/list" + "?" + auth
@@ -265,6 +267,7 @@ def run_test(test_name, headless):
     sb.setUp()
     testok = True
     try:
+        print(f"Running test {test_name}")
         time_visible = getattr(sb, test_name)()
         time.sleep(5)
     except Exception as e:
