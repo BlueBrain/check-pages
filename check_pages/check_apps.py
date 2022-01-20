@@ -75,7 +75,7 @@ class AppTests(BaseCase):
         return self.get_current_url().split("?")[1]
 
     def check_simui(self):
-        """Verify the previous run of the simulation."""
+        """Verify the previous run of a SimUI job."""
         screenshot_name = "screenshots/check_simui_{}.png"
 
         # open the SimUI page and get the auth token (????)
@@ -94,7 +94,7 @@ class AppTests(BaseCase):
             raise ElementNotVisibleException(f"SIMUI not successfull")
 
     def check_pspapp(self):
-        """Verify the previous run of the simulation."""
+        """Verify the previous run of a pspapp job."""
         screenshot_name = "screenshots/check_pspapp_{}.png"
 
         # Open the SimUI page and get the auth token (????)
@@ -115,10 +115,10 @@ class AppTests(BaseCase):
 
         # Check if the text SUCCESSFUL appears on the page
         if self.text_visible("SUCCESSFUL", screenshot_name.format("wait_{}"), timeout=60):
-            print(f"SimUI Check OK")
+            print(f"PSPApp Check OK")
         else:
             self.save_screenshot(screenshot_name.format("failure"))
-            raise ElementNotVisibleException(f"SIMUI not successfull")
+            raise ElementNotVisibleException(f"PSPApp not successfull")
 
     def start_simui(self):
         """Test the SimUI by starting a simulation and checking it is running."""
