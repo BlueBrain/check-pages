@@ -56,6 +56,7 @@ class AppTests(BaseCase):
     @staticmethod
     def write_info(filename, info):
         """Write information for the next round."""
+        print(f"Writing to file {filename}: '{info}'")
         with open(filename, "w") as fileout:
             fileout.write(info)
 
@@ -64,6 +65,7 @@ class AppTests(BaseCase):
         """Read information from the previous round."""
         with open(filename) as filein:
             return filein.read().strip()
+        print(f"Reading from file {filename}: '{info}'")
 
     def open_page(self, pagename):
         """Opens the page of the app, and returns the authentification token."""
