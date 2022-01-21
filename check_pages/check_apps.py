@@ -64,8 +64,9 @@ class AppTests(BaseCase):
     def read_info(filename):
         """Read information from the previous round."""
         with open(filename) as filein:
-            return filein.read().strip()
+            info = filein.read().strip()
         print(f"Reading from file {filename}: '{info}'")
+        return info
 
     def open_page(self, pagename):
         """Opens the page of the app, and returns the authentification token."""
