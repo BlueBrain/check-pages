@@ -195,7 +195,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
             if not found:
                 errors.append(element)
                 print(f"    Not found: {element}")
-        write_errors(output, site, url, errors)
+        write_errors(output, site, complete_url, errors)
 
     driver.quit()
     return timeout
