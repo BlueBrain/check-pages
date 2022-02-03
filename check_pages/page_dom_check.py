@@ -196,6 +196,9 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
                 errors.append(element)
                 print(f"    Not found: {element}")
         write_errors(output, site, complete_url, errors)
+    else:
+        filename = f"screenshots/{savename}_{time.time()-time0:.1f}_ok.png"
+        make_full_screenshot(driver, filename)
 
     driver.quit()
     return timeout
