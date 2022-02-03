@@ -82,6 +82,7 @@ check_pages_hippo:
 
 check_dom_sscx:
   stage: page_checks
+  timeout: 2 hours
   rules:
     - if: $PIPELINE_SELECT == "daily1"
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
