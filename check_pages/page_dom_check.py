@@ -266,7 +266,7 @@ def page_check(domain, use_all, number, wait, params, group, output, screenshots
         if use_all:
             selected_urls = urls
         else:
-            selected_urls = random.sample(urls, number)
+            selected_urls = random.sample(urls, min(len(urls), number))
         print(f"\nAnalyzing {len(selected_urls)} URLs for {site}")
 
         # Create hashable keys
