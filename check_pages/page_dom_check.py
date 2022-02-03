@@ -22,7 +22,7 @@ def make_full_screenshot(driver, savename):
     """
     print(f"Taking full screenshot: {savename}")
     # initiate value
-    img_li = []  # to store image fragment
+    img_list = []  # to store image fragment
     offset = 0  # where to start
 
     # js to get height of the window
@@ -50,31 +50,34 @@ def make_full_screenshot(driver, savename):
     header_height = 0
     while offset < max_window_height:
         driver.execute_script(f"window.scrollTo(0, {offset});")
-        time.sleep(2)
+        time.sleep(1)
 
         # get the screenshot of the current window
-        print("   ... taking snapshot")
+        print(f"   ... taking snapshot with offset {offset}")
         img = Image.open(BytesIO((driver.get_screenshot_as_png())))
-        img_li.append(img)
+        img_list.append(img)
         offset += height - header_height
 
     # Stitch image into one, set up the full screen frame
-    img_frame_height = sum([img_frag.size[1] for img_frag in img_li])
-    img_frame = Image.new("RGB", (img_li[0].size[0], img_frame_height))
-    offset = 0
-    counter = 0
-    for img_frag in img_li:
+    img_frame_height = sum([img_frag.size[1] for img_frag in img_list])
+    img_frame = Image.new("RGB", (img_list[0].size[0], img_frame_height))
+
+    offset = 0   # offset used to create the snapshots
+    img_loc = 0  # offset used to create the final image
+    for img_frag in img_list:
         # image fragment must be cropped in case the page is a jupyter notebook;
         # also make sure the last image fragment gets added correctly to avoid overlap.
-        offset1 = offset + img_frag.size[1]
+        offset1 = offset + height
         if offset1 > max_window_height:
-            top_offset = img_frag.size[1] - max_window_height + offset
+            top_offset = offset + height - max_window_height
             box = (0, top_offset, img_frag.size[0], img_frag.size[1])
         else:
             box = (0, header_height, img_frag.size[0], img_frag.size[1])
-        img_frame.paste(img_frag.crop(box), (0, offset))
-        offset += img_frag.size[1] - header_height
-        counter += 1
+        img_frame.paste(img_frag.crop(box), (0, img_loc))
+        img_loc += img_frag.size[1] - header_height
+        offset += height - header_height
+
+    # Save the final image
     img_frame.save(savename)
 
 
@@ -182,6 +185,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
     if timeout:
         # Not all elements found after time limit: we have a missing element
         print(f"ERROR for '{url}':")
+        make_full_screenshot(driver, f"screenshots/{savename}_error.png")
 
         errors = []
         for element, found in check_result.items():
@@ -286,4 +290,4 @@ def page_check(domain, use_all, number, wait, params, group, output, screenshots
     if has_error:
         print("Errors have been found")
         sys.exit(1)
-    print("Page check was OK")
+    print("\npage_dom_check was OK")
