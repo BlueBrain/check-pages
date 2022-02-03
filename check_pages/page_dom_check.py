@@ -143,6 +143,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
 
     # Call selenium method to open URL
     driver.get(complete_url)
+    time0 = time.time()
     time.sleep(5)
 
     # Allow cookies
@@ -175,7 +176,8 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
         counter += 1
         # Make full screenshot if required
         if screenshots:
-            make_full_screenshot(driver, f"screenshots/{savename}_{counter}.png")
+            filename = f"screenshots/{savename}_{time.time()-time0:.1f}_{counter}.png"
+            make_full_screenshot(driver, filename)
 
         # Check if wait time has elapsed
         if time.time() > t_end:
@@ -185,7 +187,8 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
     if timeout:
         # Not all elements found after time limit: we have a missing element
         print(f"ERROR for '{url}':")
-        make_full_screenshot(driver, f"screenshots/{savename}_error.png")
+        filename = f"screenshots/{savename}_{time.time()-time0:.1f}_error.png"
+        make_full_screenshot(driver, filename)
 
         errors = []
         for element, found in check_result.items():
