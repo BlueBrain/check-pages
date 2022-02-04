@@ -77,8 +77,11 @@ class AppTests(BaseCase):
 
         # Choose the page and retrieve the auth token from the page URL (???)
         self.click(f"//button[contains(text(),'{pagename}')]", by=By.XPATH)
+        time.sleep(5)
         self.switch_to_newest_window()
-        return self.get_current_url().split("?")[1]
+        url = self.get_current_url()
+        print(f"Clicking on {pagename}  ->  {url}")
+        return url.split("?")[1]
 
     def check_simui(self):
         """Verify the previous run of a SimUI job."""
@@ -89,7 +92,7 @@ class AppTests(BaseCase):
 
         # Read SimUI progress page URL and open it
         url = self.read_info(SIMUI_NAME) + "?" + auth
-        print(f"check_simui: {url=}")
+        print(f"CHECK_SIMUI URL: {url}")
         self.open(url)
         self.save_screenshot(screenshot_name.format("status"))
 
@@ -110,11 +113,11 @@ class AppTests(BaseCase):
 
         # Read the name of the job to check
         job_name = self.read_info(PSPAPP_NAME)
-        print(f"check_pspapp: {job_name=}")
+        print(f"CHECK_PSPAPP job name: {job_name}")
 
         # Open the overview page
         url = "https://bbp-mooc-sim-neuro.epfl.ch/psp-validation/list" + "?" + auth
-        print(f"check_pspapp: {url=}")
+        print(f"CHECK_PSPAPP list URL: {url}")
         self.open(url)
         time.sleep(5)
         self.save_screenshot(screenshot_name.format("overview"))
