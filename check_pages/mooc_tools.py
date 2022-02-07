@@ -137,7 +137,11 @@ class MoocChecker:
         """Checks if the grade submission works."""
 
         # Get and set grader key
-        key = self.get_grader_key()
+        try:
+            key = self.get_grader_key()
+        except NoSuchElementError:
+            return self.report_check(False, "Grade Submission (Grader Key)")
+
         self.browser.get_element(xpath="//input[@id='vizKey']", wait=5).fill(key)
         # Click on submit button with the 'correct' answer already filled in
         self.browser.get_element(xpath="//button[text()='Submit']").click()
