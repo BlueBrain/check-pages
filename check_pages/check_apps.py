@@ -35,10 +35,7 @@ class AppTests(BaseCase):
         self.type("#login-email", username)
         self.type("#login-password", password)
         self.save_screenshot("screenshots/login.png")
-        edx_button = (
-            "/html/body/div[3]/div[2]/div/main/div/div/section[1]/div/form/button"
-        )
-        self.click(edx_button, by=By.XPATH)
+        self.driver.find_element_by_xpath("//button[contains(text(),'Sign in')]").click()
 
     def text_visible(self, text, filename, timeout=10):
         """Checks that the text is visible, and making screenshots along the way"""

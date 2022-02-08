@@ -14,6 +14,7 @@ from selenium.common.exceptions import (
     StaleElementReferenceException,
 )
 
+# https://courseware.epfl.ch/login?next=/courses/course-v1%3AEPFL%2BSimNeuro2%2B2019_2/courseware/ba6f8be8f0bb4956a94147f7a09e4cf4/fc4b687d340a4c69a862661e110970b1/1
 
 class MoocChecker:
     """Defines the MOOC Checking class."""
@@ -53,11 +54,8 @@ class MoocChecker:
             self.browser.get_input(id="login-password").fill(password)
             time.sleep(1)
 
-            edx_button = (
-                "/html/body/div[3]/div[2]/div/main/div/div/section[1]/div/form/button"
-            )
             try:
-                self.browser.get_element(xpath=edx_button).click()
+                self.browser.get_button(occurrence=3, partial_text="Sign in").click()
             except (
                 ElementClickInterceptedException,
                 NoSuchElementError,
