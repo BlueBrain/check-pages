@@ -84,7 +84,7 @@ check_dom_sscx:
   stage: page_checks
   timeout: 2 hours
   rules:
-    - if: $PIPELINE_SELECT == "daily1"
+    - if: $PIPELINE_SELECT == "daily_even"
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
@@ -100,7 +100,7 @@ check_dom_sscx:
 check_dom_hippo:
   stage: page_checks
   rules:
-    - if: $PIPELINE_SELECT == "daily1"
+    - if: $PIPELINE_SELECT == "daily_even"
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
@@ -113,7 +113,7 @@ check_dom_hippo:
 check_dom_ngv:
   stage: page_checks
   rules:
-    - if: $PIPELINE_SELECT == "daily1"
+    - if: $PIPELINE_SELECT == "daily_even"
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:

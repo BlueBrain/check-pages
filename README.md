@@ -65,7 +65,13 @@ On the free plan 4 URLs can be tested from 4 free locations per day which are:
 As this is a performance test, the results are added to a [google spreadsheet](https://docs.google.com/spreadsheets/d/17BIK3-sR0gxRzrYgtsg4LnmKpg9Sff_50eC6B0PBaLc/edit)
 .
 
+### `py.test`
 
+This test setup is used to run selenium tests to check several pages and services as defined in `resources/Mooc/mooc_tests.json` in addition to extensive tests for the SimUI and PSPAPP. This test logs in to edX and opens a special page where all the services are linked. For the tests listed in `mooc_tests.json` the code only verifies the existance of a certain element. 
+
+For the tests of SimUI and PSPAPP, two tests (`start_simui` and `start_pspapp`) will start a simple job on the GUI and stored the job-ID or result-URL in the file `SIMUI.INFO` and `PSPAPP.INFO`.
+
+When the CI job is run again, the two tests `check_simui` and `check_pspapp` pick up these job-ID and result-URL and check if the job as been completed successfully. 
 
 ### slack_reporter
 
@@ -74,7 +80,13 @@ This is just a helper tool used for the first two tools to automatically report 
 
 ## CI
 
-In the CI in gitlab of this repository there are currently 4 jobs that are scheduled to run automatically.
+In the CI in gitlab of this repository there are currently 10 jobs that are scheduled to run automatically.
+
+### `check_ngvviewer`
+
+  * testing: NGV Viewer Status (https://bbp.epfl.ch/ngv-viewer/status)
+  * schedule: daily
+  * code: none (curl)
 
 ### `check_pages_sscx`
 
@@ -82,10 +94,28 @@ In the CI in gitlab of this repository there are currently 4 jobs that are sched
   * schedule: weekly
   * code: pagechecker
 
+### `check_pages_hippo`
+
+  * testing: Hippocampus Portal
+  * schedule: weekly
+  * code: pagechecker
+
 ### `check_dom_sscx`
 
-  * testing: SSCX Portal
-  * schedule: weekly
+  * testing: SSCX Portal (DOM elements)
+  * schedule: daily_even (every even day)
+  * code: page_dom_check
+
+### `check_dom_hippo`
+
+  * testing: Hippocampus Portal (DOM elements)
+  * schedule: daily_even (every even day)
+  * code: page_dom_check
+
+### `check_dom_ngv`
+
+  * testing: NGV Portal (DOM elements)
+  * schedule: daily_even (every even day)
   * code: page_dom_check
 
 ### `check_links`
@@ -96,7 +126,19 @@ In the CI in gitlab of this repository there are currently 4 jobs that are sched
 
 ### `location_testing_sscx`
 
+  * testing: SSCX Portal
+  * schedule: daily_odd (odd days)
+  * code: location_test
+
+### `location_testing_hippo`
 
   * testing: SSCX Portal
-  * schedule: daily
+  * schedule: daily_even (even days)
   * code: location_test
+
+### `check_mooc`
+
+  * testing: MOOC Services (SimUI, PSPAPP, grader etc.)
+  * schedule: daily
+  * code: py.test
+  * remark: each CI-job starts a job for simui/pspapp, which gets verified on the next CI-job
