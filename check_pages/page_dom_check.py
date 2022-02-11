@@ -20,7 +20,6 @@ def make_full_screenshot(driver, savename):
     """Performs a full screenshot of the entire page.
     Taken from https://gist.github.com/fabtho/13e4a2e7cfbfde671b8fa81bbe9359fb
     """
-    print(f"Taking full screenshot: {savename}")
     # initiate value
     img_list = []  # to store image fragment
     offset = 0  # where to start
@@ -128,6 +127,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
     """Function to check a single URL."""
 
     # Initialize selenium driver
+    time.sleep(5)
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
@@ -153,7 +153,6 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
 
     # Wait a maximum of 'wait' seconds for all element to appear
     timeout = False
-    counter = 0
     t_end = time.time() + wait
     while True:
         # Check all elements
@@ -168,24 +167,22 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
 
         # Check if we found all elements
         if all(check_result.values()):
-            print(f"All elements found after {counter} s, URL: {url}")
+            print(f"    All elements found after {time.time()-time0:.1f} s")
             break
 
-        time.sleep(1)
-        counter += 1
         # Make full screenshot if required
         if screenshots:
-            filename = f"screenshots/{savename}_{time.time()-time0:.1f}_{counter}.png"
+            filename = f"screenshots/{savename}_{time.time()-time0:.1f}.png"
             make_full_screenshot(driver, filename)
 
         # Check if wait time has elapsed
+        time.sleep(1)
         if time.time() > t_end:
             timeout = True
             break
 
     if timeout:
-        # Not all elements found after time limit: we have a missing element
-        print(f"ERROR for '{url}':")
+        # Not all elements found after time limit
         filename = f"screenshots/{savename}_{time.time()-time0:.1f}_error.png"
         make_full_screenshot(driver, filename)
 
@@ -193,7 +190,8 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
         for element, found in check_result.items():
             if not found:
                 errors.append(element)
-                print(f"    Not found: {element}")
+
+        print(f"    ERROR: Elements missing after {time.time()-time0:.1f} s: {errors}")
         write_errors(output, site, complete_url, errors)
     else:
         filename = f"screenshots/{savename}_{time.time()-time0:.1f}_ok.png"
@@ -279,6 +277,7 @@ def page_check(domain, use_all, number, wait, params, group, output, screenshots
 
         # Now check all elements in the given page
         for url in selected_urls:
+            print(f"Checking {url}")
 
             counter = 1
             while counter < 5:
@@ -286,10 +285,8 @@ def page_check(domain, use_all, number, wait, params, group, output, screenshots
                     has_error |= check_url(site, domain, url, checks, wait, screenshots, output)
                     break
                 except exceptions.WebDriverException as e:
-                    print(f"UNEXPECTED ERROR: {e}")
-                    time.sleep(1)
+                    print(f"    #{counter}  UNEXPECTED ERROR: {e}")
                 counter += 1
-                print(f"There was an error, trying again (#{counter}) for {url}.")
 
     # User output
     if has_error:
