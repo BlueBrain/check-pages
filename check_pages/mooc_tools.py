@@ -9,10 +9,6 @@ import elemental
 from elemental.exceptions import NoSuchElementError
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import (
-    ElementClickInterceptedException,
-    StaleElementReferenceException,
-)
 
 
 class MoocChecker:
@@ -48,20 +44,15 @@ class MoocChecker:
         username = os.environ["EDX_LOGIN"]
         password = os.environ["EDX_PW"]
 
-        while "Sign in or Register" in self.browser.title:
-            self.browser.get_input(id="login-email").fill(username)
-            self.browser.get_input(id="login-password").fill(password)
-            time.sleep(1)
+        # Click on the edu-ID button
+        self.browser.get_button(partial_text="SWITCH edu-ID").click()
 
-            try:
-                self.browser.get_button(occurrence=3, partial_text="Sign in").click()
-            except (
-                ElementClickInterceptedException,
-                NoSuchElementError,
-                StaleElementReferenceException,
-            ):
-                time.sleep(1)
-            time.sleep(2)
+        # Set username and password
+        self.browser.get_input(id="username").fill(username)
+        self.browser.get_input(id="password").fill(password)
+
+        # Click on login
+        self.browser.get_button(id="login-button").click()
 
         self.report_check(True, "EDX Login")
 
