@@ -31,11 +31,15 @@ class AppTests(BaseCase):
         username = os.environ["EDX_LOGIN"]
         password = os.environ["EDX_PW"]
 
-        # Perform the login
-        self.type("#login-email", username)
-        self.type("#login-password", password)
-        self.save_screenshot("screenshots/login.png")
-        self.driver.find_element_by_xpath("//button[contains(text(),'Sign in')]").click()
+        # Click on the edu-ID button
+        self.click('button:contains("SWITCH edu-ID")')
+
+        # Set username and password\
+        self.type("#username", username)
+        self.type("#password", password)
+
+        # Click on login
+        self.click("login-button", by=By.ID)
 
     def text_visible(self, text, filename, timeout=10):
         """Checks that the text is visible, and making screenshots along the way"""

@@ -95,7 +95,7 @@ class MoocChecker:
         driver = self.browser.selenium_webdriver
         time.sleep(5)
         driver.save_screenshot(f"screenshots/test_{name}_1.png")
-        self.browser.get_button(partial_text=params["test"]).click()
+        self.browser.get_button(partial_text=params["test"], wait=15).click()
         time.sleep(5)
         driver.save_screenshot(f"screenshots/test_{name}_2.png")
 
