@@ -100,6 +100,12 @@ In the CI in gitlab of this repository there are currently 10 jobs that are sche
   * schedule: weekly
   * code: pagechecker
 
+### `check_pages_nmc`
+
+  * testing: NMC Portal (only a subset)
+  * schedule: daily
+  * code: pagechecker
+
 ### `check_dom_sscx`
 
   * testing: SSCX Portal (DOM elements)
