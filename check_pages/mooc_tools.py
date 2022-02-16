@@ -45,7 +45,7 @@ class MoocChecker:
         password = os.environ["EDX_PW"]
 
         # Click on the edu-ID button
-        self.browser.get_button(partial_text="SWITCH edu-ID").click()
+        self.browser.get_button(partial_text="SWITCH edu-ID", wait=30).click()
 
         # Set username and password
         self.browser.get_input(id="username").fill(username)
@@ -95,7 +95,7 @@ class MoocChecker:
         driver = self.browser.selenium_webdriver
         time.sleep(5)
         driver.save_screenshot(f"screenshots/test_{name}_1.png")
-        self.browser.get_button(partial_text=params["test"], wait=15).click()
+        self.browser.get_button(partial_text=params["test"], wait=30).click()
         time.sleep(5)
         driver.save_screenshot(f"screenshots/test_{name}_2.png")
 
