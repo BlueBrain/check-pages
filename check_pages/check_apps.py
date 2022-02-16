@@ -77,7 +77,7 @@ class AppTests(BaseCase):
         self.save_screenshot(screenshot_name.format("init"))
 
         # Choose the page and retrieve the auth token from the page URL (???)
-        self.click(f"//button[contains(text(),'{pagename}')]", by=By.XPATH)
+        self.click(f"//button[contains(text(),'{pagename}')]", by=By.XPATH, timeout=30)
         time.sleep(5)
         self.switch_to_newest_window()
         url = self.get_current_url()
