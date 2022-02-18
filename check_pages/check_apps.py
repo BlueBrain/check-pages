@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 
 from seleniumbase import BaseCase
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import ElementNotVisibleException
+from selenium.common.exceptions import ElementNotVisibleException, NoSuchElementException
 
 URL = (
     "https://courseware.epfl.ch/courses/course-v1:EPFL+SimNeuro2+2019_2/"
@@ -77,12 +77,18 @@ class AppTests(BaseCase):
         self.save_screenshot(screenshot_name.format("init"))
 
         # Choose the page and retrieve the auth token from the page URL (???)
-        self.click(f"//button[contains(text(),'{pagename}')]", by=By.XPATH, timeout=30)
+        try:
+            self.click(f"//button[contains(text(),'{pagename}')]", by=By.XPATH, timeout=60)
+        except NoSuchElementException:
+             self.save_screenshot(screenshot_name.format("error"))
+             raise
+
         time.sleep(5)
         self.switch_to_newest_window()
         url = self.get_current_url()
         print(f"Clicking on {pagename}  ->  {url}")
         return url.split("?")[1]
+        time.sleep(10)
 
     def check_simui(self):
         """Verify the previous run of a SimUI job."""
