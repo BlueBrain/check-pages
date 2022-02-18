@@ -32,14 +32,14 @@ class AppTests(BaseCase):
         password = os.environ["EDX_PW"]
 
         # Click on the edu-ID button
-        self.click('button:contains("SWITCH edu-ID")', timeout=30)
+        self.click('button:contains("SWITCH edu-ID")', timeout=60)
 
         # Set username and password\
         self.type("#username", username)
         self.type("#password", password)
 
         # Click on login
-        self.click("login-button", by=By.ID)
+        self.click("login-button", by=By.ID, timeout=60)
 
     def text_visible(self, text, filename, timeout=10):
         """Checks that the text is visible, and making screenshots along the way"""
