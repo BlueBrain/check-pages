@@ -32,7 +32,7 @@ class AppTests(BaseCase):
         password = os.environ["EDX_PW"]
 
         # Click on the edu-ID button
-        self.click('button:contains("SWITCH edu-ID")')
+        self.click('button:contains("SWITCH edu-ID")', timeout=30)
 
         # Set username and password\
         self.type("#username", username)

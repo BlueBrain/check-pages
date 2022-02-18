@@ -33,6 +33,8 @@ class MoocChecker:
         driver.implicitly_wait(60)
         driver.set_page_load_timeout(60)
 
+        self.timing = time.time()
+
         self.browser = elemental.Browser(selenium_webdriver=driver)
         self.browser.visit(self.URL)
 
@@ -45,14 +47,16 @@ class MoocChecker:
         password = os.environ["EDX_PW"]
 
         # Click on the edu-ID button
-        self.browser.get_button(partial_text="SWITCH edu-ID", wait=30).click()
+        self.browser.get_button(partial_text="SWITCH edu-ID", wait=60).click()
+        print(f"{time.time() - self.timing:.1f}: Clicking on SWITCH edu-ID")
 
         # Set username and password
         self.browser.get_input(id="username").fill(username)
         self.browser.get_input(id="password").fill(password)
 
         # Click on login
-        self.browser.get_button(id="login-button").click()
+        self.browser.get_button(id="login-button", wait=60).click()
+        print(f"{time.time() - self.timing:.1f} Clicking on Login")
 
         self.report_check(True, "EDX Login")
 
@@ -60,6 +64,7 @@ class MoocChecker:
         """Get and returns the current grader key for the demo exercise."""
         time.sleep(5)
         self.browser.get_button(partial_text="KeyGrading").click()
+        print(f"{time.time() - self.timing:.1f} KeyGrading")
         time.sleep(5)
 
         # Switch to new tab
