@@ -80,15 +80,14 @@ class AppTests(BaseCase):
         try:
             self.click(f"//button[contains(text(),'{pagename}')]", by=By.XPATH, timeout=60)
         except NoSuchElementException:
-             self.save_screenshot(screenshot_name.format("error"))
-             raise
+            self.save_screenshot(screenshot_name.format("error"))
+            raise
 
         time.sleep(5)
         self.switch_to_newest_window()
         url = self.get_current_url()
         print(f"Clicking on {pagename}  ->  {url}")
         return url.split("?")[1]
-        time.sleep(10)
 
     def check_simui(self):
         """Verify the previous run of a SimUI job."""
