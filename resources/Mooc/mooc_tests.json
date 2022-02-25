@@ -1,8 +1,8 @@
 {
-	"SimulationApp": {"test": "AppSim", "element": {"xpath": "//h1"}},
-	"PSPApp": {"test": "AppPSP", "element": {"xpath": "//span[contains(text(),'Hippocampus MOOC Microcircuit')]"}},
-	"BryansApp": {"test": "AppBryan", "element": {"xpath": "//div[contains(text(),'Load model into the scene')]"}, "wait":100},
-	"JupyterApp": {"test": "AppJupyter", "element": {"id": "jp-main-dock-panel"}, "wait":100},
-	"FetchKey": {"test": "KeyFetch", "element": {"id": "submissionKey"}},
-	"GradingKey": {"test": "KeyGrading", "element": {"id": "submissionKey"}}
+	"SimulationApp": {"test": "AppSim", "element": {"by":"xpath", "element": "//h1"}},
+	"PSPApp": {"test": "AppPSP", "element": {"by":"xpath", "element":"//span[contains(text(),'Hippocampus MOOC Microcircuit')]"}},
+	"BryansApp": {"test": "AppBryan", "element": {"by":"xpath", "element": "//div[contains(text(),'Load model into the scene')]"}, "wait":100},
+	"JupyterApp": {"test": "AppJupyter", "element": {"by":"id", "element": "jp-main-dock-panel"}, "wait":100},
+	"FetchKey": {"test": "KeyFetch", "element": {"by":"id", "element": "submissionKey"}},
+	"GradingKey": {"test": "KeyGrading", "element": {"by":"id", "element": "submissionKey"}}
 }
