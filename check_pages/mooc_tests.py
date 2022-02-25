@@ -45,6 +45,8 @@ class MoocTests:
     SIMUI_NAME = "SIMUI.INFO"
     PSPAPP_NAME = "PSPAPP.INFO"
 
+    OUTPUT = "debug"
+
     def __init__(self, driver):
         """Initializes this test object with the seleniumbase-seleniumwire webdriver."""
         # The driver
@@ -100,14 +102,14 @@ class MoocTests:
 
         # Just checking
         time.sleep(5)
-        self.driver.save_screenshot(f"screenshots/test_{name}_1.png")
+        self.driver.save_screenshot(f"{self.OUTPUT}/test_{name}_1.png")
 
         # Click on the next test
         text = params["test"]
         self.next("Test: Waiting for button")
         self.driver.click(f"button:contains('{text}')", timeout=30)
         self.debug("Button for test has been clicked")
-        self.driver.save_screenshot(f"screenshots/test_{name}_2.png")
+        self.driver.save_screenshot(f"{self.OUTPUT}test_{name}_2.png")
 
         # Switching to the new tab
         self.driver.switch_to_window(1)
@@ -119,7 +121,7 @@ class MoocTests:
             by=params["element"]["by"],
             timeout=timeout
         )
-        self.driver.save_screenshot(f"screenshots/test_{name}_3.png")
+        self.driver.save_screenshot(f"{self.OUTPUT}/test_{name}_3.png")
 
         # Go back to main tab
         self.driver.switch_to_window(0)
@@ -133,7 +135,7 @@ class MoocTests:
         self.next("Test: Waiting for 'KeyGrading' button")
         self.driver.click(f"button:contains('KeyGrading')", timeout=30)
         self.debug("Button for 'KeyGrading' has been clicked")
-        self.driver.save_screenshot(f"screenshots/test_grade_submission_1.png")
+        self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_1.png")
 
         # Switching to the new tab
         self.driver.switch_to_window(1)
@@ -159,7 +161,7 @@ class MoocTests:
         self.driver.type("//input[@id='vizKey']", key)
         self.driver.click("//button[text()='Submit']")
         self.debug("Clicked on submit")
-        self.driver.save_screenshot(f"screenshots/test_grade_submission_2.png")
+        self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_2.png")
 
         # Check result; sleep is required because element can be found, but it is empty
         time.sleep(10)
@@ -199,7 +201,7 @@ class MoocTests:
 
     def open_page(self, pagename):
         """Opens the page of the app, and returns the authentification token."""
-        screenshot_name = f"screenshots/open_{pagename}.png"
+        screenshot_name = f"{self.OUTPUT}/open_{pagename}.png"
 
         # Choose the page and retrieve the auth token from the page URL (???)
         self.next(f"Clicking on '{pagename}'")
@@ -216,7 +218,7 @@ class MoocTests:
 
     def check_simui(self):
         """Verify the previous run of a SimUI job."""
-        screenshot_name = "screenshots/check_simui_{}.png"
+        screenshot_name = "{self.OUTPUT}/check_simui_{}.png"
 
         # open the SimUI page and get the auth token (TODO: Why is this needed? Anymore?)
         auth = self.open_page("AppSim")
@@ -235,7 +237,7 @@ class MoocTests:
 
     def check_pspapp(self):
         """Verify the previous run of a pspapp job."""
-        screenshot_name = "screenshots/check_pspapp_{}.png"
+        screenshot_name = "{self.OUTPUT}/check_pspapp_{}.png"
 
         # Open the SimUI page and get the auth token (????)
         auth = self.open_page("AppPSP")
@@ -267,7 +269,7 @@ class MoocTests:
 
     def start_simui(self):
         """Test the SimUI by starting a simulation and checking it is running."""
-        screenshot_name = "screenshots/start_simui_{}.png"
+        screenshot_name = "{self.OUTPUT}/start_simui_{}.png"
 
         # Open the page
         self.open_page("AppSim")
@@ -300,7 +302,7 @@ class MoocTests:
 
     def start_pspapp(self):
         """Test the PSP Validation by starting a validation and checking it is running."""
-        screenshot_name = "screenshots/start_pspapp_{}.png"
+        screenshot_name = "{self.OUTPUT}/start_pspapp_{}.png"
         # open the PSPApp page
         self.open_page("AppPSP")
 
@@ -336,7 +338,7 @@ class MoocTests:
                     "date_request": str(request.date)
                 }
                 request_list.append(myreq)
-        with open(f"screenshots/request_{name}.json", "w") as json_out:
+        with open(f"{self.OUTPUT}/request_{name}.json", "w") as json_out:
             json.dump(request_list, json_out)
 
     def perform_test(self, method, name, *params):
@@ -362,7 +364,7 @@ class MoocTests:
             print(100 * "-")
 
             # Final screenshot
-            self.driver.save_screenshot(f"screenshots/test_{name}_ERROR.png")
+            self.driver.save_screenshot(f"{self.OUTPUT}/test_{name}_ERROR.png")
 
             # Set output for summary
             success = False
