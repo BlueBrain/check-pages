@@ -360,7 +360,7 @@ class MoocTests:
             # Handle the error
             print(f"ERROR for step: {self.step}")
             print(100 * "-")
-            traceback.print_exc()
+            print(traceback.format_exc())
             print(100 * "-")
 
             # Final screenshot
