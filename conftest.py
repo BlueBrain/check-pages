@@ -83,6 +83,15 @@ def pytest_report_teststatus(report):
     return (category, short, verbose)
 
 
+def pytest_sessionfinish(session, exitstatus):
+    if not pytest.test_success:
+        session.exitstatus = 1
+        print("\n\n")
+        print(100 * "=")
+        print("THERE WERE FAILED TESTS")
+        print(100 * "=")
+
+
 class BaseTestCase(BaseCase):
     """Defines the seleniumbase driver class."""
 
