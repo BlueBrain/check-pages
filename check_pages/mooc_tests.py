@@ -218,7 +218,7 @@ class MoocTests:
 
     def check_simui(self):
         """Verify the previous run of a SimUI job."""
-        screenshot_name = "{self.OUTPUT}/check_simui_{}.png"
+        screenshot_name = f"{self.OUTPUT}/check_simui_{{}}.png"
 
         # open the SimUI page and get the auth token (TODO: Why is this needed? Anymore?)
         auth = self.open_page("AppSim")
@@ -237,7 +237,7 @@ class MoocTests:
 
     def check_pspapp(self):
         """Verify the previous run of a pspapp job."""
-        screenshot_name = "{self.OUTPUT}/check_pspapp_{}.png"
+        screenshot_name = f"{self.OUTPUT}/check_pspapp_{{}}.png"
 
         # Open the SimUI page and get the auth token (????)
         auth = self.open_page("AppPSP")
@@ -269,7 +269,7 @@ class MoocTests:
 
     def start_simui(self):
         """Test the SimUI by starting a simulation and checking it is running."""
-        screenshot_name = "{self.OUTPUT}/start_simui_{}.png"
+        screenshot_name = f"{self.OUTPUT}/start_simui_{{}}.png"
 
         # Open the page
         self.open_page("AppSim")
@@ -302,7 +302,7 @@ class MoocTests:
 
     def start_pspapp(self):
         """Test the PSP Validation by starting a validation and checking it is running."""
-        screenshot_name = "{self.OUTPUT}/start_pspapp_{}.png"
+        screenshot_name = f"{self.OUTPUT}/start_pspapp_{{}}.png"
         # open the PSPApp page
         self.open_page("AppPSP")
 
