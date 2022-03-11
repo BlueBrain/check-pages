@@ -53,7 +53,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     # required to make the function a generator
     yield
 
-    with open("mooc_results.txt", "w") as fileout:
+    with open("service_results.txt", "w") as fileout:
         fileout.write(pytest.test_output)
 
 
