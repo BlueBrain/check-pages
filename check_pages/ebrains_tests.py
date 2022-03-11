@@ -136,6 +136,7 @@ class EbrainsTests:
         self.next("Set title and click Run Simulation")
         id_ = f"{time.time():.0f}"
         self.driver.type("//input[@placeholder='Title']", id_)
+        self.driver.type("//input[@placeholder='Node to allocate']", "4")
         self.driver.click(
             '//button/span[contains(text(),"Run Simulation")]', by=By.XPATH
         )
