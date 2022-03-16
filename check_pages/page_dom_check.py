@@ -7,8 +7,8 @@ import sys
 import json
 import time
 import random
-import psutil
 from io import BytesIO
+import psutil
 from PIL import Image
 
 import click
