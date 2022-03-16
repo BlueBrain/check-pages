@@ -4,4 +4,4 @@ requests
 elemental
 pytest
 seleniumbase
-selenium==3.141.0
+selenium
