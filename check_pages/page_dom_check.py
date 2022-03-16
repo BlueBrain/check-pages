@@ -7,6 +7,7 @@ import sys
 import json
 import time
 import random
+import psutil
 from io import BytesIO
 from PIL import Image
 
@@ -125,6 +126,9 @@ def write_errors(filename, site, url, errors):
 
 def check_url(site, domain, url, checks, wait, screenshots, output):
     """Function to check a single URL."""
+
+    ram = float(psutil.virtual_memory().available) / 1048576.0
+    print(f"available ram: {ram:.1f} MB")
 
     # Initialize selenium driver
     time.sleep(5)

@@ -1,5 +1,6 @@
 selenium-wire
 click
+psutil
 requests
 elemental
 pytest
