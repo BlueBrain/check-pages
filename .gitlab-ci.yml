@@ -221,6 +221,7 @@ check_ebrains:
     - exit_code=0
     - py.test -s check_pages/ebrains_tests.py --headless || exit_code=1
     - cat service_results.txt
+    - ls -ltr
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "EBRAINS Check" --filename service_results.txt --status $exit_code
   artifacts:
     paths:
