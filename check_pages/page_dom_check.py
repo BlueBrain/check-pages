@@ -15,6 +15,7 @@ import click
 from selenium import webdriver
 from selenium.common import exceptions
 from selenium.webdriver.chrome.options import Options
+from seleniumbase import get_driver
 
 
 def make_full_screenshot(driver, savename):
@@ -132,13 +133,15 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
 
     # Initialize selenium driver
     time.sleep(5)
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--dns-prefetch-disable")
-    driver = webdriver.Chrome(options=chrome_options)
+    # chrome_options = Options()
+    # chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--no-sandbox")
+    # chrome_options.add_argument("--disable-dev-shm-usage")
+    # chrome_options.add_argument("--disable-gpu")
+    # chrome_options.add_argument("--dns-prefetch-disable")
+    # driver = webdriver.Chrome(options=chrome_options)
+
+    driver = get_driver("chrome", headless=True)
 
     # Create the names used
     complete_url = domain + url
