@@ -218,6 +218,7 @@ check_ebrains:
     - export https_proxy=http://bbpproxy.epfl.ch:80/
     - export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
     - mkdir debug
+    - ls -ltr
     - exit_code=0
     - py.test -s check_pages/ebrains_tests.py --headless || exit_code=1
     - cat service_results.txt
