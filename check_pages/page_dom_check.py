@@ -15,6 +15,8 @@ import click
 from selenium import webdriver
 from selenium.common import exceptions
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
 from seleniumbase import get_driver
 
 
@@ -29,7 +31,8 @@ def make_full_screenshot(driver, savename):
     # js to get height of the window
     try:
         height = driver.execute_script(
-            "return Math.max(" "document.documentElement.clientHeight, window.innerHeight);"
+            "return Math.max("
+            "document.documentElement.clientHeight, window.innerHeight);"
         )
     except exceptions.WebDriverException:
         return
@@ -62,7 +65,7 @@ def make_full_screenshot(driver, savename):
     img_frame_height = sum([img_frag.size[1] for img_frag in img_list])
     img_frame = Image.new("RGB", (img_list[0].size[0], img_frame_height))
 
-    offset = 0   # offset used to create the snapshots
+    offset = 0  # offset used to create the snapshots
     img_loc = 0  # offset used to create the final image
     for img_frag in img_list:
         # image fragment must be cropped in case the page is a jupyter notebook;
@@ -83,7 +86,7 @@ def make_full_screenshot(driver, savename):
 
 def get_savename(text):
     """Return a simplified name for saving."""
-    for ch in ['/', '-', '=', '?', '&']:
+    for ch in ["/", "-", "=", "?", "&"]:
         if ch in text:
             text = text.replace(ch, "_")
     text = text.replace("-", "")
@@ -131,17 +134,25 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
     ram = float(psutil.virtual_memory().available) / 1048576.0
     print(f"available ram: {ram:.1f} MB")
 
+    # enable browser logging
+    d = DesiredCapabilities.CHROME
+    d["loggingPrefs"] = {"browser": "ALL"}
+
     # Initialize selenium driver
     time.sleep(5)
-    # chrome_options = Options()
-    # chrome_options.add_argument("--headless")
-    # chrome_options.add_argument("--no-sandbox")
-    # chrome_options.add_argument("--disable-dev-shm-usage")
-    # chrome_options.add_argument("--disable-gpu")
-    # chrome_options.add_argument("--dns-prefetch-disable")
-    # driver = webdriver.Chrome(options=chrome_options)
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--dns-prefetch-disable")
+    driver = webdriver.Chrome(
+        options=chrome_options,
+        desired_capabilities=d,
+        service_args=["--verbose", "--log-path=chromedriver.log"],
+    )
 
-    driver = get_driver("chrome", headless=True)
+    # driver = get_driver("chrome", headless=True)
 
     # Create the names used
     complete_url = domain + url
@@ -209,16 +220,8 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
 
 
 @click.command()
-@click.option(
-    "-d",
-    "--domain",
-    help="Defines the domain URL.",
-)
-@click.option(
-    "--use_all",
-    is_flag=True,
-    help="Will check all URLs.",
-)
+@click.option("-d", "--domain", help="Defines the domain URL.")
+@click.option("--use_all", is_flag=True, help="Will check all URLs.")
 @click.option(
     "-n",
     "--number",
@@ -242,16 +245,9 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
     help="Defines the group to be tested. Only pages from this group will be tested.",
 )
 @click.option(
-    "-o",
-    "--output",
-    help="Defines the output filename.",
-    default="page_dom_check.log"
+    "-o", "--output", help="Defines the output filename.", default="page_dom_check.log"
 )
-@click.option(
-    "--screenshots",
-    is_flag=True,
-    help="Will make screenshots.",
-)
+@click.option("--screenshots", is_flag=True, help="Will make screenshots.")
 def page_check(domain, use_all, number, wait, params, group, output, screenshots):
     """The main code to check elements in some/all URL's of a portal.
     """
@@ -289,7 +285,9 @@ def page_check(domain, use_all, number, wait, params, group, output, screenshots
             counter = 1
             while counter < 5:
                 try:
-                    has_error |= check_url(site, domain, url, checks, wait, screenshots, output)
+                    has_error |= check_url(
+                        site, domain, url, checks, wait, screenshots, output
+                    )
                     break
                 except exceptions.WebDriverException as e:
                     print(f"    #{counter}  UNEXPECTED ERROR: {e}")
