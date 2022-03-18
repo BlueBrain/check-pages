@@ -8,7 +8,6 @@ import json
 import time
 import random
 from io import BytesIO
-import psutil
 from PIL import Image
 
 import click
@@ -16,8 +15,6 @@ from selenium import webdriver
 from selenium.common import exceptions
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-
-from seleniumbase import get_driver
 
 
 def make_full_screenshot(driver, savename):
@@ -130,29 +127,29 @@ def write_errors(filename, site, url, errors):
 
 def check_url(site, domain, url, checks, wait, screenshots, output):
     """Function to check a single URL."""
-
-    ram = float(psutil.virtual_memory().available) / 1048576.0
-    print(f"available ram: {ram:.1f} MB")
-
-    # enable browser logging
+    # Enable browser logging
     d = DesiredCapabilities.CHROME
     d["loggingPrefs"] = {"browser": "ALL"}
 
     # Initialize selenium driver
+    # Configure the driver options according to
+    # https://stackoverflow.com/questions/48450594/selenium-timed-out-receiving-message-from-renderer
     time.sleep(5)
     chrome_options = Options()
+    chrome_options.add_argument("start-maximized")
+    chrome_options.add_argument("enable-automation")
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-infobars")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-browser-side-navigation")
     chrome_options.add_argument("--dns-prefetch-disable")
     driver = webdriver.Chrome(
         options=chrome_options,
         desired_capabilities=d,
         service_args=["--verbose", "--log-path=chromedriver.log"],
     )
-
-    # driver = get_driver("chrome", headless=True)
 
     # Create the names used
     complete_url = domain + url

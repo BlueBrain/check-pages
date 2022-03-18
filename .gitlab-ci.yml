@@ -93,6 +93,9 @@ check_pages_nmc:
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NMC Page Check" --filename pagechecker.log --status $exit_code
 
 check_dom_sscx:
+  variables:
+    KUBERNETES_MEMORY_LIMIT: 3Gi
+    KUBERNETES_MEMORY_REQUEST: 3Gi  
   stage: page_checks
   timeout: 2 hours
   rules:
