@@ -108,6 +108,7 @@ check_dom_sscx:
   artifacts:
     paths:
       - screenshots
+      - chromedriver.log
 
 check_dom_hippo:
   stage: page_checks
