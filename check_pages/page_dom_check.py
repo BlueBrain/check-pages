@@ -15,6 +15,7 @@ from selenium import webdriver
 from selenium.common import exceptions
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from xvfbwrapper import Xvfb
 
 
 def make_full_screenshot(driver, savename):
@@ -138,7 +139,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
     chrome_options = Options()
     chrome_options.add_argument("start-maximized")
     chrome_options.add_argument("enable-automation")
-    chrome_options.add_argument("--headless")
+    #chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-infobars")
     chrome_options.add_argument("--disable-dev-shm-usage")
@@ -281,13 +282,14 @@ def page_check(domain, use_all, number, wait, params, group, output, screenshots
 
             counter = 1
             while counter < 5:
-                try:
-                    has_error |= check_url(
-                        site, domain, url, checks, wait, screenshots, output
-                    )
-                    break
-                except exceptions.WebDriverException as e:
-                    print(f"    #{counter}  UNEXPECTED ERROR: {e}")
+                with Xvfb() as xvfb:
+                    try:
+                        has_error |= check_url(
+                            site, domain, url, checks, wait, screenshots, output
+                        )
+                        break
+                    except exceptions.WebDriverException as e:
+                        print(f"    #{counter}  UNEXPECTED ERROR: {e}")
                 counter += 1
 
     # User output
