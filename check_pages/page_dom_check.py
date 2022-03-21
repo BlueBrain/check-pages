@@ -282,14 +282,14 @@ def page_check(domain, use_all, number, wait, params, group, output, screenshots
 
             counter = 1
             while counter < 5:
-                with Xvfb() as xvfb:
-                    try:
-                        has_error |= check_url(
-                            site, domain, url, checks, wait, screenshots, output
-                        )
-                        break
-                    except exceptions.WebDriverException as e:
-                        print(f"    #{counter}  UNEXPECTED ERROR: {e}")
+                #with Xvfb() as xvfb:
+                try:
+                    has_error |= check_url(
+                        site, domain, url, checks, wait, screenshots, output
+                    )
+                    break
+                except exceptions.WebDriverException as e:
+                    print(f"    #{counter}  UNEXPECTED ERROR: {e}")
                 counter += 1
 
     # User output
