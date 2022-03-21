@@ -15,7 +15,7 @@ from selenium import webdriver
 from selenium.common import exceptions
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from xvfbwrapper import Xvfb
+#from xvfbwrapper import Xvfb
 
 
 def make_full_screenshot(driver, savename):
