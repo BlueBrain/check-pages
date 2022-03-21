@@ -11,10 +11,11 @@ from io import BytesIO
 from PIL import Image
 
 import click
-from selenium import webdriver
+#from selenium import webdriver
 from selenium.common import exceptions
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from seleniumwire import webdriver
 #from xvfbwrapper import Xvfb
 
 
@@ -149,7 +150,8 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
     driver = webdriver.Chrome(
         options=chrome_options,
         desired_capabilities=d,
-        service_args=["--verbose", "--log-path=chromedriver.log"],
+        service_args=["--verbose", "--log-path=output/chromedriver.log"],
+        seleniumwire_options={"enable_har": True}
     )
 
     # Create the names used
@@ -188,7 +190,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
 
         # Make full screenshot if required
         if screenshots:
-            filename = f"screenshots/{savename}_{time.time()-time0:.1f}.png"
+            filename = f"output/{savename}_{time.time()-time0:.1f}.png"
             make_full_screenshot(driver, filename)
 
         # Check if wait time has elapsed
@@ -199,7 +201,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
 
     if timeout:
         # Not all elements found after time limit
-        filename = f"screenshots/{savename}_{time.time()-time0:.1f}_error.png"
+        filename = f"output/{savename}_{time.time()-time0:.1f}_error.png"
         make_full_screenshot(driver, filename)
 
         errors = []
@@ -210,8 +212,15 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
         print(f"    ERROR: Elements missing after {time.time()-time0:.1f} s: {errors}")
         write_errors(output, site, complete_url, errors)
     else:
-        filename = f"screenshots/{savename}_{time.time()-time0:.1f}_ok.png"
+        filename = f"output/{savename}_{time.time()-time0:.1f}_ok.png"
         make_full_screenshot(driver, filename)
+
+    browser_log = driver.get_log("browser")
+    with open(f"output/{savename}.json", "w") as outfile:
+        json.dump(browser_log, outfile)
+    print(browser_log)
+    with open(f"output/{savename}.har", "w") as outfile:
+        json.dump(driver.har, outfile)
 
     driver.quit()
     return timeout
