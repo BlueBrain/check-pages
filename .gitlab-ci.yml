@@ -97,7 +97,7 @@ check_dom_sscx:
     KUBERNETES_MEMORY_LIMIT: 3Gi
     KUBERNETES_MEMORY_REQUEST: 3Gi  
   stage: page_checks
-  timeout: 2 hours
+  timeout: 3 hours
   rules:
     - if: $PIPELINE_SELECT == "daily_even"
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
@@ -108,7 +108,7 @@ check_dom_sscx:
     - exit_code=0
     - Xvfb :99 &
     - export DISPLAY=:99
-    - page_dom_check -n 50 -p resources/SSCX_Portal/sscx_dom_check.json -d http://sscx-portal.ocp.bbp.epfl.ch/sscx-portal --group digRec_Neurons || exit_code=1
+    - page_dom_check -n 20 -p resources/SSCX_Portal/sscx_dom_check.json -d http://sscx-portal.ocp.bbp.epfl.ch/sscx-portal --group digRec_Neurons || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
   artifacts:
     paths:
