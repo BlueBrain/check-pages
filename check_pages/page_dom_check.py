@@ -287,8 +287,8 @@ def page_check(domain, use_all, number, wait, params, group, output, screenshots
         checks = {"_".join(check[0]): check for check in page["checks"]}
 
         # Now check all elements in the given page
-        for url in selected_urls:
-            print(f"Checking {url}")
+        for index, url in enumerate(selected_urls):
+            print(f"{site} {index+1}/{number} - Checking {url}")
 
             counter = 1
             while counter < 5:
