@@ -94,8 +94,8 @@ check_pages_nmc:
 
 check_dom_sscx:
   variables:
-    KUBERNETES_MEMORY_LIMIT: 3Gi
-    KUBERNETES_MEMORY_REQUEST: 3Gi  
+    KUBERNETES_MEMORY_LIMIT: 5Gi
+    KUBERNETES_MEMORY_REQUEST: 5Gi  
   stage: page_checks
   timeout: 3 hours
   rules:
