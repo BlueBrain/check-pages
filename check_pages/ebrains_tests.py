@@ -31,7 +31,7 @@ class EbrainsTests:
         "MICRO": "https://simulation-launcher-bsp-epfl.apps.hbp.eu/index.html#"
                  "/circuits/hippo_mooc_sa_microcircuit",
     }
-    POPULATION = {"CA1": "slice10", "MICRO": "mc1_Column"}
+    POPULATION = {"CA1": "slice69", "MICRO": "mc1_Column"}
     SIMUI_NAME = "SIMUI_{}.INFO"
     OUTPUT = "debug"
 
@@ -126,7 +126,7 @@ class EbrainsTests:
         self.next(f"Select popluation {population}")
         self.driver.type("//input[@placeholder='Duration']", 30)
         self.driver.click("//input[@placeholder='Select']", by=By.XPATH)
-        self.driver.click(f"//ul/li/div[text()='{population}']", by=By.XPATH, timeout=60)  # SP
+        self.driver.click(f"//ul/li/div[text()='{population}']", by=By.XPATH)
 
         # Click continue
         self.next("Click Continue")
