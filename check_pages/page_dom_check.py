@@ -131,7 +131,8 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
     """Function to check a single URL."""
     # Enable browser logging
     d = DesiredCapabilities.CHROME
-    d["loggingPrefs"] = {"browser": "ALL"}
+    d["goog:loggingPrefs"] = {"browser": "ALL"}
+    # see https://stackoverflow.com/questions/20907180/getting-console-log-output-from-chrome-with-selenium-python-api-bindings
 
     # Initialize selenium driver
     # Configure the driver options according to
@@ -151,8 +152,10 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
         options=chrome_options,
         desired_capabilities=d,
         service_args=["--verbose", "--log-path=output/chromedriver.log"],
-        seleniumwire_options={"enable_har": True}
+        seleniumwire_options={"enable_har": True, "disable_encoding": True}
     )
+    # The latter option is to disable compressed responses using Brotli encoding. 
+    # https://github.com/wkeeling/selenium-wire/issues/108
 
     # Create the names used
     complete_url = domain + url
@@ -218,7 +221,6 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
     browser_log = driver.get_log("browser")
     with open(f"output/{savename}.json", "w") as outfile:
         json.dump(browser_log, outfile)
-    print(browser_log)
     with open(f"output/{savename}.har", "w") as outfile:
         json.dump(driver.har, outfile)
 
