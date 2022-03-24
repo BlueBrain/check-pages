@@ -103,8 +103,13 @@ class EbrainsTests:
         """Verify the previous run of a SimUI job."""
         screenshot_name = f"{self.OUTPUT}/check_simui_{{}}.png"
 
-        # Read SimUI progress page URL and open it
+        # Read SimUI progress page URL
         url = self.read_info(self.SIMUI_NAME.format(circuit))  # + "?" + auth
+        if not url.startswith("http"):
+            self.debug(f"SKIPPING TEST: URL does not start with http: '{url}'")
+            return
+
+        # Open that page
         self.next(f"Open CHECK_SIMUI URL: {url}")
         self.driver.open(url)
         self.driver.open(url)
