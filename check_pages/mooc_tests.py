@@ -288,7 +288,7 @@ class MoocTests:
         id_ = f"{time.time():.0f}"
         self.driver.type("//input[@placeholder='Title']", id_)
         self.driver.click('//button/span[contains(text(),"Run Simulation")]', by=By.XPATH)
-        self.debug("Run Simulation has been clicked.")
+        self.debug(f"Clicked on 'Run Simulation'. Jobtitle: {id_}")
         self.driver.save_screenshot(screenshot_name.format("launch"))
 
         # Wait for the text QUEUED to appear
@@ -318,7 +318,7 @@ class MoocTests:
         self.driver.type("//input[@placeholder='Job name']", id_)
         self.driver.save_screenshot(screenshot_name.format("launch"))
         self.driver.click('//button/span[contains(text(),"Launch")]', by=By.XPATH)
-        self.debug("Clicked on 'Run Simulation'")
+        self.debug(f"Clicked on 'Run Simulation'. Jobtitle: {id_}")
 
         # Write PSPApp ID to file
         self.write_info(self.PSPAPP_NAME, id_)
