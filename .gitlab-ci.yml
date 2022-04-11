@@ -202,6 +202,8 @@ check_mooc:
   cache:
     key: $CI_COMMIT_REF_SLUG
     paths:
+      - SIMUI_CA1.INFO
+      - SIMUI_MICRO.INFO
       - SIMUI.INFO
       - PSPAPP.INFO
 
@@ -232,3 +234,5 @@ check_ebrains:
     paths:
       - SIMUI_CA1.INFO
       - SIMUI_MICRO.INFO
+      - SIMUI.INFO
+      - PSPAPP.INFO
