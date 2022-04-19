@@ -257,7 +257,7 @@ class MoocTests:
         self.driver.save_screenshot(screenshot_name.format("2-overview"))
 
         self.next(f"Click on the job name {job_name}")
-        self.driver.click(f"//span[contains(text(),'{job_name}')]", by=By.XPATH)
+        self.driver.click(f"//span[contains(text(),'{job_name}')]", by=By.XPATH, timeout=20)
         time.sleep(5)
         self.debug(f"Clicked on the job name {job_name}")
         self.driver.save_screenshot(screenshot_name.format("3-clickedjob"))
