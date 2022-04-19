@@ -33,9 +33,10 @@ class PickNeuronTests:
 
         # Check image properties
         image = self.driver.find_element(xpath, by=By.XPATH)
-        assert image.get_attribute("src").endswith(".jpeg")
-        print("Image size: ", image.size)
-        # assert image.size["height"] == 750
+        image_src = image.get_attribute("src")
+        assert image_src.endswith(".jpeg")
+        print(f"Image source: {image_src}   Image size: {image.size}")
+        assert image.size["height"] > 300
 
         # Click on image
         self.driver.click(xpath)
@@ -53,6 +54,7 @@ class PickNeuronTests:
     def perform_test(self):
         """Performs the actual test by opening the page and clicking on two images."""
         self.open()
+        print("\n")
 
         # Click on correct image
         self.click_image(True)
