@@ -35,7 +35,7 @@ class PickNeuronTests:
         image = self.driver.find_element(xpath, by=By.XPATH)
         assert image.get_attribute("src").endswith(".jpeg")
         print("Image size: ", image.size)
-        #assert image.size["height"] == 750
+        # assert image.size["height"] == 750
 
         # Click on image
         self.driver.click(xpath)
