@@ -236,3 +236,19 @@ check_ebrains:
       - SIMUI_MICRO.INFO
       - SIMUI.INFO
       - PSPAPP.INFO
+
+check_pickneuron:
+  stage: page_checks
+  rules:
+    - if: $PIPELINE_SELECT == "pickneuron"
+    - if: $PIPELINE_SELECT == $CI_JOB_NAME
+  image: bbpgitlab.epfl.ch:5050/nse/repo-checker-group/check-pages
+  script:
+    - pip install -r requirements.txt
+    - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
+    - export http_proxy=http://bbpproxy.epfl.ch:80/
+    - export https_proxy=http://bbpproxy.epfl.ch:80/
+    - export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
+    - exit_code=0
+    - py.test -s check_pages/pick_test.py --headless || exit_code=1
+    - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "PICK-NEURON Check" --status $exit_code
