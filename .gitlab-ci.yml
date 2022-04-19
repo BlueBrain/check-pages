@@ -246,9 +246,6 @@ check_pickneuron:
   script:
     - pip install -r requirements.txt
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
-    - export http_proxy=http://bbpproxy.epfl.ch:80/
-    - export https_proxy=http://bbpproxy.epfl.ch:80/
-    - export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
     - exit_code=0
     - py.test -s check_pages/pick_test.py --headless || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "PICK-NEURON Check" --status $exit_code
