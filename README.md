@@ -67,11 +67,23 @@ As this is a performance test, the results are added to a [google spreadsheet](h
 
 ### `py.test`
 
+Several `py.test` tests are defined to check some services/apps.
+
+#### mooc_tests.py
+
 This test setup is used to run selenium tests to check several pages and services as defined in `resources/Mooc/mooc_tests.json` in addition to extensive tests for the SimUI and PSPAPP. This test logs in to edX and opens a special page where all the services are linked. For the tests listed in `mooc_tests.json` the code only verifies the existance of a certain element. 
 
 For the tests of SimUI and PSPAPP, two tests (`start_simui` and `start_pspapp`) will start a simple job on the GUI and stored the job-ID or result-URL in the file `SIMUI.INFO` and `PSPAPP.INFO`.
 
 When the CI job is run again, the two tests `check_simui` and `check_pspapp` pick up these job-ID and result-URL and check if the job as been completed successfully. 
+
+#### ebrains_tests.py
+
+This test setup us used to run selenium tests to check two SimUI ebrains services. Like the test before this test stats two SimUI runs (on circuit `CA1` and circuit `MICROCIRCUIT`) and stores the ID's in the files `SIMUI_CA1.INFO` and `SIMUI_MICRO.INFO`. In the next run of the job the results are verified.
+
+#### pick_test.py
+
+This test setup checks the `pick-real-neuron` app by opening the page and clicking on a correct and on an incorrect image. The overlay text is verified as well as the counter.
 
 ### slack_reporter
 
@@ -145,6 +157,19 @@ In the CI in gitlab of this repository there are currently 10 jobs that are sche
 ### `check_mooc`
 
   * testing: MOOC Services (SimUI, PSPAPP, grader etc.)
-  * schedule: daily
-  * code: py.test
+  * schedule: daily at 5:05
+  * code: py.test / mooc_tests.py
   * remark: each CI-job starts a job for simui/pspapp, which gets verified on the next CI-job
+
+### `check_ebrains`
+
+  * testing: ebrains Services (SimUI)
+  * schedule: daily at 5:35
+  * code: py.test / ebrains_tests.py
+  * remark: each CI-job starts a job for both simui circuits, which gets verified on the next CI-job
+
+### `check_pickneuron`
+
+  * testing: pick-the-neuron app
+  * schedule: daily at 6:05
+  * code: py.test / pick_test.py
