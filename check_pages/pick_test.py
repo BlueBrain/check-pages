@@ -56,13 +56,18 @@ class PickNeuronTests:
         self.open()
         print("\n")
 
-        # Click on correct image
-        self.click_image(True)
-        self.check_score(2)
+        for trial in range(5):
+            # Click on correct image
+            self.check_score(2 * trial + 1)
+            self.click_image(True)
 
-        # Click on incorrect image
-        self.click_image(False)
-        self.check_score(3)
+            # Click on incorrect image
+            self.check_score(2 * trial + 2)
+            self.click_image(False)
+
+        # Check the final score is shown
+        assert self.driver.assert_text("Score", timeout=10)
+        assert self.driver.assert_text("5 / 10")
 
         # Quit the browser
         self.driver.tearDown()
