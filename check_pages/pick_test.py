@@ -7,7 +7,7 @@ class PickNeuronTests:
     """Defines the Testing class for 'pick-real-neuron'."""
 
     # These URL lead to the simui pages.
-    URL = "https://bbp.epfl.ch/pick-real-neuron/"
+    URL = "https://bbp.epfl.ch/pick-real-neuron?test=true"
     TEXT_REAL = "that is a real neuron"
     TEXT_SYNTH = "that is a synthesized neuron"
 
@@ -34,7 +34,7 @@ class PickNeuronTests:
         # Check image properties
         image = self.driver.find_element(xpath, by=By.XPATH)
         image_src = image.get_attribute("src")
-        assert image_src.endswith(".jpeg")
+        assert image_src.endswith(".png")
         print(f"Image source: {image_src}   Image size: {image.size}")
         assert image.size["height"] > 300
 
