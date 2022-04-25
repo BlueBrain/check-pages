@@ -216,7 +216,6 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
         filename = f"output/{savename}_{time.time()-time0:.1f}_ok.png"
         make_full_screenshot(driver, filename)
 
-    print("TEST")
     browser_log = driver.get_log("browser")
     with open(f"output/{savename}.json", "w") as outfile:
         json.dump(browser_log, outfile)

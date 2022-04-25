@@ -108,7 +108,7 @@ check_dom_sscx:
     - exit_code=0
     - Xvfb :99 &
     - export DISPLAY=:99
-    - page_dom_check -n 2 -p resources/SSCX_Portal/sscx_dom_check.json -d https://sscx-portal.kcp.bbp.epfl.ch/sscx-portal  || exit_code=1
+    - page_dom_check -n 20 -p resources/SSCX_Portal/sscx_dom_check.json -d https://sscx-portal.kcp.bbp.epfl.ch/sscx-portal  || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
   artifacts:
     paths:
