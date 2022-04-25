@@ -11,12 +11,10 @@ from io import BytesIO
 from PIL import Image
 
 import click
-#from selenium import webdriver
 from selenium.common import exceptions
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from seleniumwire import webdriver
-#from xvfbwrapper import Xvfb
 
 
 def make_full_screenshot(driver, savename):
@@ -132,7 +130,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
     # Enable browser logging
     d = DesiredCapabilities.CHROME
     d["goog:loggingPrefs"] = {"browser": "ALL"}
-    # see https://stackoverflow.com/questions/20907180/getting-console-log-output-from-chrome-with-selenium-python-api-bindings
+    # see https://stackoverflow.com/questions/20907180/getting-console-log-output-from-chrome-with-selenium-python-api-bindings # noqa # pylint: disable=line-too-long
 
     # Initialize selenium driver
     # Configure the driver options according to
@@ -141,7 +139,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
     chrome_options = Options()
     chrome_options.add_argument("start-maximized")
     chrome_options.add_argument("enable-automation")
-    #chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-infobars")
     chrome_options.add_argument("--disable-dev-shm-usage")
@@ -154,7 +152,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
         service_args=["--verbose", "--log-path=output/chromedriver.log"],
         seleniumwire_options={"enable_har": True, "disable_encoding": True}
     )
-    # The latter option is to disable compressed responses using Brotli encoding. 
+    # The latter option is to disable compressed responses using Brotli encoding.
     # https://github.com/wkeeling/selenium-wire/issues/108
 
     # Create the names used
@@ -218,11 +216,17 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
         filename = f"output/{savename}_{time.time()-time0:.1f}_ok.png"
         make_full_screenshot(driver, filename)
 
+    print("TEST")
     browser_log = driver.get_log("browser")
     with open(f"output/{savename}.json", "w") as outfile:
         json.dump(browser_log, outfile)
     with open(f"output/{savename}.har", "w") as outfile:
         json.dump(driver.har, outfile)
+
+    if timeout:
+        for entry in browser_log:
+            if entry['level'] == "SEVERE":
+                print(f"    console: {entry['level']}  {entry['source']}: {entry['message']}")
 
     driver.quit()
     return timeout
@@ -294,7 +298,6 @@ def page_check(domain, use_all, number, wait, params, group, output, screenshots
 
             counter = 1
             while counter < 5:
-                #with Xvfb() as xvfb:
                 try:
                     has_error |= check_url(
                         site, domain, url, checks, wait, screenshots, output

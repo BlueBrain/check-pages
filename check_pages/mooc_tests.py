@@ -322,7 +322,7 @@ class MoocTests:
 
         # Write PSPApp ID to file
         self.write_info(self.PSPAPP_NAME, id_)
-        time.sleep(10)
+        time.sleep(5)
         self.debug("Test Success")
 
     def save_requests(self, name):
