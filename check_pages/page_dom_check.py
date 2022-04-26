@@ -304,6 +304,7 @@ def page_check(domain, use_all, number, wait, params, group, output, screenshots
                     break
                 except exceptions.WebDriverException as e:
                     print(f"    #{counter}  UNEXPECTED ERROR: {e}")
+                    has_error = True
                 counter += 1
 
     # User output
