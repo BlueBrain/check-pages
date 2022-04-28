@@ -115,6 +115,9 @@ check_dom_sscx:
       - output
 
 check_dom_hippo:
+  variables:
+    KUBERNETES_MEMORY_LIMIT: 5Gi
+    KUBERNETES_MEMORY_REQUEST: 5Gi 
   stage: page_checks
   rules:
     - if: $PIPELINE_SELECT == "daily_even"
@@ -124,10 +127,18 @@ check_dom_hippo:
     - *setup-env
     - mkdir -p output
     - exit_code=0
+    - Xvfb :99 &
+    - export DISPLAY=:99
     - page_dom_check -n 5 -p resources/HIPPO_Portal/hippo_dom_check.json -d https://www.hippocampushub.eu --screenshots  || exit_code=1
-    - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Dom Check" --filename page_dom_check.log --status $exit_code
+    - echo slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Dom Check" --filename page_dom_check.log --status $exit_code
+  artifacts:
+    paths:
+      - output
 
 check_dom_ngv:
+  variables:
+    KUBERNETES_MEMORY_LIMIT: 5Gi
+    KUBERNETES_MEMORY_REQUEST: 5Gi 
   stage: page_checks
   rules:
     - if: $PIPELINE_SELECT == "daily_even"
@@ -137,8 +148,13 @@ check_dom_ngv:
     - *setup-env
     - mkdir -p output
     - exit_code=0
-    - page_dom_check -n 3 -p resources/NGV_Portal/ngv_dom_check.json -d http://ngv-portal.ocp.bbp.epfl.ch/ngv-portal --screenshots  || exit_code=1
+    - Xvfb :99 &
+    - export DISPLAY=:99
+    - page_dom_check -n 3 -p resources/NGV_Portal/ngv_dom_check.json -d http://ngv-portal.kcp.bbp.epfl.ch/ngv-portal --screenshots  || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NGV Dom Check" --filename page_dom_check.log --status $exit_code
+  artifacts:
+    paths:
+      - output
 
 check_links:
   stage: page_checks
