@@ -162,7 +162,6 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
     # Call selenium method to open URL
     driver.get(complete_url)
     time0 = time.time()
-    time.sleep(5)
 
     # Allow cookies
     accept_cookies(driver)
@@ -213,8 +212,9 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
         print(f"    ERROR: Elements missing after {time.time()-time0:.1f} s: {errors}")
         write_errors(output, site, complete_url, errors)
     else:
-        filename = f"output/{savename}_{time.time()-time0:.1f}_ok.png"
-        make_full_screenshot(driver, filename)
+        if screenshots:
+            filename = f"output/{savename}_{time.time()-time0:.1f}_ok.png"
+            make_full_screenshot(driver, filename)
 
     browser_log = driver.get_log("browser")
     with open(f"output/{savename}.json", "w") as outfile:
