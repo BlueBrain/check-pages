@@ -96,6 +96,8 @@ check_dom_sscx:
   variables:
     KUBERNETES_MEMORY_LIMIT: 5Gi
     KUBERNETES_MEMORY_REQUEST: 5Gi  
+    KUBERNETES_CPU_REQUEST: 2
+    KUBERNETES_CPU_LIMIT: 2
   stage: page_checks
   timeout: 3 hours
   rules:
