@@ -125,7 +125,7 @@ def write_errors(filename, site, url, errors):
         fileout.write(f"{site} -> {url}: {errors}\n")
 
 
-def check_url(site, domain, url, checks, wait, screenshots, output):
+def check_url(site, domain, url, checks, wait, screenshots, output, headless):
     """Function to check a single URL."""
     # Enable browser logging
     d = DesiredCapabilities.CHROME
@@ -139,7 +139,8 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
     chrome_options = Options()
     chrome_options.add_argument("start-maximized")
     chrome_options.add_argument("enable-automation")
-    # chrome_options.add_argument("--headless")
+    if headless:
+        chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-infobars")
     chrome_options.add_argument("--disable-dev-shm-usage")
@@ -259,8 +260,11 @@ def check_url(site, domain, url, checks, wait, screenshots, output):
 @click.option(
     "-o", "--output", help="Defines the output filename.", default="page_dom_check.log"
 )
+@click.option(
+    "--headless", is_flag=True,help="Runs the tests without browser.",
+)
 @click.option("--screenshots", is_flag=True, help="Will make screenshots.")
-def page_check(domain, use_all, number, wait, params, group, output, screenshots):
+def page_check(domain, use_all, number, wait, params, group, output, headless, screenshots):
     """The main code to check elements in some/all URL's of a portal.
     """
     has_error = False
@@ -299,7 +303,7 @@ def page_check(domain, use_all, number, wait, params, group, output, screenshots
             while counter < 5:
                 try:
                     has_error |= check_url(
-                        site, domain, url, checks, wait, screenshots, output
+                        site, domain, url, checks, wait, screenshots, output, headless
                     )
                     break
                 except exceptions.WebDriverException as e:
