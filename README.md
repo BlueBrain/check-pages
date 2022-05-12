@@ -62,8 +62,16 @@ On the free plan 4 URLs can be tested from 4 free locations per day which are:
   * San Antonio, US
   * Hong Kong, CN
 
-As this is a performance test, the results are added to a [google spreadsheet](https://docs.google.com/spreadsheets/d/17BIK3-sR0gxRzrYgtsg4LnmKpg9Sff_50eC6B0PBaLc/edit)
-.
+As this is a performance test, the results are added to a [google spreadsheet](https://docs.google.com/spreadsheets/d/17BIK3-sR0gxRzrYgtsg4LnmKpg9Sff_50eC6B0PBaLc/edit).
+
+The location tests are done for the following portals:
+
+ * SSCX: 4 URL's from 4 locations (every odd day)
+ * HIPPO: 3 URL's from 4 locations (every even day)
+ * NGV: 1 URL from 4 locations (every even day)
+
+With a free account on gtmetrix a user has 10 credits per day. Each of the above tests cost 0.6 credits (see [API documentation](https://gtmetrix.com/api/docs/2.0/)), so when testing 4 URL's from 4 locations these are 16 tests, costing 9.6 credits.
+
 
 ### `py.test`
 

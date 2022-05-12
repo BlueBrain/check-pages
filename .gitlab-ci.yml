@@ -202,6 +202,17 @@ location_testing_hippo:
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
     - location_test -p resources/perf_hippo.json --portal hippo
 
+location_testing_ngv:
+  stage: location_test
+  rules:
+    - if: $PIPELINE_SELECT == "daily_even"
+    - if: $PIPELINE_SELECT == $CI_JOB_NAME
+  image: python:3.8-buster
+  script:
+    - pip install click requests
+    - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
+    - location_test -p resources/perf_ngv.json --portal ngv
+
 check_mooc:
   stage: page_checks
   rules:
