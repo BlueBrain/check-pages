@@ -2,6 +2,7 @@
 
 The code will load random pages and checks for expected DOM elements.
 """
+# pylint: disable=R0913
 
 import sys
 import json
@@ -261,7 +262,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
     "-o", "--output", help="Defines the output filename.", default="page_dom_check.log"
 )
 @click.option(
-    "--headless", is_flag=True,help="Runs the tests without browser.",
+    "--headless", is_flag=True, help="Runs the tests without browser."
 )
 @click.option("--screenshots", is_flag=True, help="Will make screenshots.")
 def page_check(domain, use_all, number, wait, params, group, output, headless, screenshots):

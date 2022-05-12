@@ -65,7 +65,8 @@ class MoocTests:
         """Print out some infos."""
         print(f"... {time.time()-self.time0:.2f}: {text}")
 
-    def timestamp(self):
+    @staticmethod
+    def timestamp():
         """Returns the current time in human readable format."""
         return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
