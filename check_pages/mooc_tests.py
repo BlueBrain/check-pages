@@ -11,6 +11,7 @@ import os
 import json
 import time
 import traceback
+import datetime
 from urllib.parse import urlparse
 
 
@@ -63,6 +64,10 @@ class MoocTests:
     def debug(self, text):
         """Print out some infos."""
         print(f"... {time.time()-self.time0:.2f}: {text}")
+
+    def timestamp(self):
+        """Returns the current time in human readable format."""
+        return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def login_edx(self):
         """Open the main QA page and login."""
@@ -345,14 +350,16 @@ class MoocTests:
     def perform_test(self, method, name, *params):
         """Performs a selenium test in a safe environment."""
         # Print the name of the test
-        print(f"\nRunning test {name}")
+        print(f"\nRunning test {name} at {self.timestamp()}")
 
         try:
             # Log in to edX
             self.login_edx()
 
             # Call the actual test method
+            print(f"-> Test start at {self.timestamp()}")
             method(*params)
+            print(f"-> Test end at {self.timestamp()}")
 
             # Set output for summary
             success = True
