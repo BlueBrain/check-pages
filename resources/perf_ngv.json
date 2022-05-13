@@ -1,6 +1,6 @@
 {
 	"domain": "https://bbp.epfl.ch/ngv-portal",
 	"urls":[
-		"/",
+		"/"
 	]
 }
