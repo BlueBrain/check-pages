@@ -7,7 +7,7 @@ class PickNeuronTests:
     """Defines the Testing class for 'pick-real-neuron'."""
 
     # These URL lead to the simui pages.
-    URL = "https://bbp.epfl.ch/pick-real-neuron?test=true"
+    URL = "https://bbp.epfl.ch/therealneuronchallenge?test=test"
     TEXT_REAL = "that is a real neuron"
     TEXT_SYNTH = "that is a synthesized neuron"
 
