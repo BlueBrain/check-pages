@@ -63,12 +63,12 @@ class MoocTests:
 
     def debug(self, text):
         """Print out some infos."""
-        print(f"... {time.time()-self.time0:.2f}: {text}")
+        print(f"... {self.timestamp()} {text}")
 
     @staticmethod
     def timestamp():
         """Returns the current time in human readable format."""
-        return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
 
     def login_edx(self):
         """Open the main QA page and login."""
@@ -367,7 +367,7 @@ class MoocTests:
             output = f"{name} ... OK\n"
         except (NoSuchElementException, ElementNotVisibleException, IndexError):
             # Handle the error
-            print(f"ERROR for step: {self.step}")
+            self.debug(f"ERROR for step: {self.step}")
             print(100 * "-")
             print(traceback.format_exc())
             print(100 * "-")
