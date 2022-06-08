@@ -1,6 +1,5 @@
 [MESSAGES CONTROL]
-disable=bad-continuation,
-        fixme,
+disable=fixme,
         invalid-name,
         len-as-condition,
         no-else-return,
@@ -16,7 +15,8 @@ disable=bad-continuation,
         too-many-instance-attributes,
         too-many-statements,
         broad-except,
-        f-string-without-interpolation
+        f-string-without-interpolation,
+        consider-using-generator
 
 [FORMAT]
 # Maximum number of characters on a single line.
@@ -32,8 +32,6 @@ ignored-argument-names=_.*
 max-locals=15
 # Maximum number of return / yield for function / method body
 max-returns=6
-# Maximum number of branch for function / method body
-max-branchs=12
 # Maximum number of statements in function / method body
 max-statements=50
 # Maximum number of parents for a class (see R0901).
