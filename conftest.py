@@ -35,6 +35,10 @@ def headless(request):
     """Returns True if driver should run headless."""
     return request.config.getoption("--headless")
 
+@pytest.fixture
+def testfile(request):
+    """Returns True if driver should run headless."""
+    return request.config.getoption("--tests")
 
 @pytest.fixture(scope="function")
 def selbase(headless):
@@ -107,7 +111,7 @@ class BaseTestCase(BaseCase):
         options.add_argument('--start-maximized')
         if self.headless:
             options.add_argument("--headless")
-        return webdriver.Chrome(options=options)
+        return webdriver.Chrome(options=options, service_args=["--verbose", "--log-path=chromedriver.log"])
 
 
 def get_driver(headless):
