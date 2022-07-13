@@ -14,6 +14,7 @@ from PIL import Image
 import click
 from selenium.common import exceptions
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from seleniumwire import webdriver
 
@@ -94,7 +95,7 @@ def get_savename(text):
 def accept_cookies(driver):
     """Safely accepting the possible cookies popup."""
     try:
-        driver.find_element_by_xpath("//*[text()='Allow']").click()
+        driver.find_element(By.XPATH, "//*[text()='Allow']").click()
     except exceptions.NoSuchElementException:
         pass
 
