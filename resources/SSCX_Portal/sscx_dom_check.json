@@ -38,22 +38,19 @@
 		"urls": "resources/SSCX_Portal/digRec_Microcircuit.txt",
 		"checks": [
 			[["id", "layerAnatomyFactsheet"]],
-			[["id", "layerPhysiologyFactsheet"]],
 			[["id", "subregionMicrocircuitFactsheet"]]
 		]
 	},
 	"digRec_Pathways": {
 		"urls": "resources/SSCX_Portal/digRec_Pathways.txt",
 		"checks": [
-			[["id", "pathwayAnatomyFactsheet"]],
-			[["id", "pathwayPhysiologyFactsheet"]]	
+			[["id", "pathwayAnatomyFactsheet"]]
 		]
 	},
 	"digRec_Neurons": {
 		"urls": "resources/SSCX_Portal/digRec_Neurons.txt",
 		"checks": [
 			[["id", "memodelAnatomyFactsheet"]],
-			[["id", "memodelPhysiologyFactsheet"]],
 			[["id", "memodelExpMorphList"]],
 			[["id", "mtypeAnatomyFactsheet"]],
 			[["id", "mtypePhysiologyFactsheet"]],
