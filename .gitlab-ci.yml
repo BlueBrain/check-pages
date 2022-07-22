@@ -243,7 +243,7 @@ check_mooc:
       - SIMUI.INFO
       - PSPAPP.INFO
 
-test_mooc:
+specific_mooc_test:
   stage: page_checks
   rules:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
