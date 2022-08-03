@@ -101,7 +101,7 @@ class EbrainsTests:
 
     def check_simui(self, circuit):
         """Verify the previous run of a SimUI job."""
-        screenshot_name = f"{self.OUTPUT}/check_simui_{{}}.png"
+        screenshot_name = f"{self.OUTPUT}/check_simui_{circuit}_{{}}.png"
 
         # Read SimUI progress page URL
         url = self.read_info(self.SIMUI_NAME.format(circuit))  # + "?" + auth
@@ -124,7 +124,7 @@ class EbrainsTests:
 
     def start_simui(self, circuit):
         """Test the SimUI by starting a simulation and checking it is queued."""
-        screenshot_name = f"{self.OUTPUT}/start_simui_{{}}.png"
+        screenshot_name = f"{self.OUTPUT}/start_simui_{circuit}_{{}}.png"
 
         # Choose the mc1 column as the population
         population = self.POPULATION[circuit]
