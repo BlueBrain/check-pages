@@ -174,8 +174,9 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
 
     # Wait a maximum of 'wait' seconds for all element to appear
     timeout = False
-    t_end = time.time() + wait
     while True:
+        time_passed = time.time() - time0
+
         # Check all elements
         for name, check in checks.items():
             if not check_result[name]:
@@ -188,8 +189,12 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
 
         # Check if we found all elements
         if all(check_result.values()):
-            print(f"    All elements found after {time.time()-time0:.1f} s")
+            print(f"    At {time_passed:.1f} all elements have been found.")
             break
+
+        # If not, print the missing elements
+        missing_elements = [name for name, check in check_result.items() if not check]
+        print(f"    At {time_passed:.1f} missing elements: {missing_elements}.")
 
         # Make full screenshot if required
         if screenshots:
@@ -197,10 +202,11 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
             make_full_screenshot(driver, filename)
 
         # Check if wait time has elapsed
-        time.sleep(1)
-        if time.time() > t_end:
+        if time_passed > wait:
             timeout = True
             break
+
+        time.sleep(1)
 
     if timeout:
         # Not all elements found after time limit
