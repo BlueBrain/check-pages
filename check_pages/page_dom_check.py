@@ -13,12 +13,10 @@ from PIL import Image
 
 import click
 from selenium.common import exceptions
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from seleniumwire import webdriver
 from seleniumbase import BaseCase
-
+from seleniumbase.config import settings
 
 
 def make_full_screenshot(driver, savename):
@@ -112,7 +110,7 @@ def find_element(driver, method, name):
     try:
         # self.assert_element_present(ELEMENT))
         time0 = time.time()
-        driver.assert_element_present(name, by=method, timeout = 1.0)
+        driver.assert_element_present(name, by=method, timeout=1.0)
         time_passed = time.time() - time0
         print(f"    {time_passed:.1f}  find_element {name} with method {method}")
         if time_passed > 1:
@@ -136,6 +134,7 @@ def write_errors(filename, site, url, errors):
 
 
 def debug(time0, text):
+    """Debugging helper method."""
     print(f"Debug {time.time() - time0:.1f}: {text}")
 
 
@@ -163,7 +162,7 @@ class BaseTestCase(BaseCase):
             desired_capabilities=d,
             service_args=["--verbose", "--log-path=chromedriver.log"],
             seleniumwire_options={"enable_har": True, "disable_encoding": True}
-            )
+        )
 
 
 def get_driver(headless):
@@ -176,7 +175,6 @@ def get_driver(headless):
     # see https://github.com/seleniumbase/SeleniumBase/blob/master/examples/raw_parameter_script.py
     # see https://github.com/seleniumbase/SeleniumBase/blob/master/help_docs/how_it_works.md
 
-    from seleniumbase.config import settings
     settings.SKIP_JS_WAITS = True
 
     sb = BaseTestCase()
@@ -274,7 +272,7 @@ def get_driver(headless):
 
 def check_url(site, domain, url, checks, wait, screenshots, output, headless):
     """Function to check a single URL."""
-    # Get the seleniumbase driver   
+    # Get the seleniumbase driver
     driver = get_driver(headless)
 
     # Create the names used
