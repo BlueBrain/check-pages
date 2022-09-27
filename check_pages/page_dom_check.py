@@ -107,17 +107,12 @@ def find_element(driver, method, name):
         method (string): Name of the selenium method to find an element.
         name (string): Name of the element to find.
     """
+    found = True
     try:
-        # self.assert_element_present(ELEMENT))
-        time0 = time.time()
         driver.assert_element_present(name, by=method, timeout=1.0)
-        time_passed = time.time() - time0
-        print(f"    {time_passed:.1f}  find_element {name} with method {method}")
-        if time_passed > 1:
-            print("    " + 100 * "=")
-        return True
     except exceptions.NoSuchElementException:
-        return False
+        found = False
+    return found
 
 
 def write_errors(filename, site, url, errors):
@@ -297,13 +292,24 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
             if not check_result[name]:
                 found = False
                 for element in check:
+                    time_find = time.time()
                     if find_element(driver, *element):
                         found = True
                         break
+
+                    # Increase the 'wait' time by the execution time of 'find_element'
+                    # which sometimes can be
+                    delay_find = time.time() - time_find
+                    print(f"    Element {element[1]} not found, method took {delay_find:.1f} s.")
+                    wait += delay_find
+
+                # Store the result
                 check_result[name] = found
+
+        # Get the total time passed for the check of the URL
         time_passed = time.time() - time0
 
-        # Check if we found all elements
+        # Check if all elements have been found
         if all(check_result.values()):
             print(f"    At {time_passed:.1f} all elements have been found.")
             break
@@ -329,11 +335,11 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
         filename = f"output/{savename}_{time.time()-time0:.1f}_error.png"
         make_full_screenshot(driver, filename)
 
+        # Create an error output
         errors = []
         for element, found in check_result.items():
             if not found:
                 errors.append(element)
-
         print(f"    ERROR: Elements missing after {time.time()-time0:.1f} s: {errors}")
         write_errors(output, site, complete_url, errors)
     else:
@@ -341,6 +347,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
             filename = f"output/{savename}_{time.time()-time0:.1f}_ok.png"
             make_full_screenshot(driver, filename)
 
+    # Get all the log outputs
     browser_log = driver.driver.get_log("browser")
     with open(f"output/{savename}.json", "w") as outfile:
         json.dump(browser_log, outfile)
