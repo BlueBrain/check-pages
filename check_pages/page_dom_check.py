@@ -325,6 +325,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
 
         # Check if wait time has elapsed
         if time_passed > wait:
+            print(f"    Timeout after {time_passed:.1f} s (wait time: {wait:1.f} s.")
             timeout = True
             break
 
