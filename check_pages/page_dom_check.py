@@ -278,6 +278,9 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
     driver.open(complete_url)
     time0 = time.time()
 
+    def debug(text):
+        print(f"      {time.time()-time0:.1f} {str(text)}")
+
     # Allow cookies
     accept_cookies(driver)
 
@@ -287,49 +290,63 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
     # Wait a maximum of 'wait' seconds for all element to appear
     timeout = False
     while True:
+        debug(0)
         # Check all elements
         for name, check in checks.items():
             if not check_result[name]:
                 found = False
+                debug(1)
                 for element in check:
                     time_find = time.time()
+                    debug(2)
                     if find_element(driver, *element):
                         found = True
                         break
+                    debug(3)
 
                     # Increase the 'wait' time by the execution time of 'find_element'
                     # which sometimes can be
                     delay_find = time.time() - time_find
                     print(f"    Element {element[1]} not found, method took {delay_find:.1f} s.")
                     wait += delay_find
+                    debug(4)
 
                 # Store the result
                 check_result[name] = found
+                debug(5)
 
         # Get the total time passed for the check of the URL
         time_passed = time.time() - time0
+        debug(6)
 
         # Check if all elements have been found
         if all(check_result.values()):
             print(f"    At {time_passed:.1f} all elements have been found.")
             break
+        debug(7)
 
         # If not, print the missing elements
         missing_elements = [name for name, check in check_result.items() if not check]
         print(f"    At {time_passed:.1f} missing elements: {missing_elements}.")
+        debug(8)
 
         # Make full screenshot if required
         if screenshots:
             filename = f"output/{savename}_{time.time()-time0:.1f}.png"
             make_full_screenshot(driver, filename)
+        debug(9)
 
         # Check if wait time has elapsed
         if time_passed > wait:
             print(f"    Timeout after {time_passed:.1f} s (wait time: {wait:.1f} s).")
             timeout = True
             break
+        debug(10)
 
         time.sleep(1)
+        debug(11)
+
+    debug(12)
 
     if timeout:
         # Not all elements found after time limit
