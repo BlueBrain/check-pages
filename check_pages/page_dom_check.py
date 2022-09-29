@@ -299,16 +299,26 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
                 for element in check:
                     time_find = time.time()
                     debug(2)
-                    if find_element(driver, *element):
-                        found = True
-                        break
+                    found = find_element(driver, *element)
                     debug(3)
-
                     # Increase the 'wait' time by the execution time of 'find_element'
                     # which sometimes can be
                     delay_find = time.time() - time_find
-                    print(f"    Element {element[1]} not found, method took {delay_find:.1f} s.")
+                    print(f"    For element {element[1]} method took {delay_find:.1f} s. Found: {found}")
                     wait += delay_find
+
+                    if found:
+                        break
+
+                        #found = True
+                        #break
+                    #debug(3)
+
+                    # Increase the 'wait' time by the execution time of 'find_element'
+                    # which sometimes can be
+                    #delay_find = time.time() - time_find
+                    #print(f"    Element {element[1]} not found, method took {delay_find:.1f} s.")
+                    #wait += delay_find
                     debug(4)
 
                 # Store the result
