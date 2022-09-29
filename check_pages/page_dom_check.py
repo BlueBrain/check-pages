@@ -185,7 +185,7 @@ def make_full_screenshot(driver, savename):
         time.sleep(1)
 
         # get the screenshot of the current window
-        img = Image.open(BytesIO((driver.get_screenshot_as_png())))
+        img = Image.open(BytesIO((driver.driver.get_screenshot_as_png())))
         img_list.append(img)
         offset += height - header_height
 
