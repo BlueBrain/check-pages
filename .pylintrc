@@ -16,7 +16,9 @@ disable=fixme,
         too-many-statements,
         broad-except,
         f-string-without-interpolation,
-        consider-using-generator
+        consider-using-generator,
+        missing-timeout,
+        unused-argument
 
 [FORMAT]
 # Maximum number of characters on a single line.

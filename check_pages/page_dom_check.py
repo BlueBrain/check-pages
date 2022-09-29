@@ -13,10 +13,139 @@ from PIL import Image
 
 import click
 from selenium.common import exceptions
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from seleniumwire import webdriver
+from seleniumbase import BaseCase
+
+
+class BaseTestCase(BaseCase):
+    """Defines the seleniumbase driver class."""
+
+    def get_new_driver(self, *args, **kwargs):
+        """ This method overrides get_new_driver() from BaseCase. """
+        # Enable browser logging
+        d = DesiredCapabilities.CHROME
+        d["goog:loggingPrefs"] = {"browser": "ALL"}
+
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option(
+            "excludeSwitches", ["enable-automation"]
+        )
+        options.add_experimental_option("useAutomationExtension", False)
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--start-maximized')
+        if self.headless:
+            options.add_argument("--headless")
+        return webdriver.Chrome(
+            options=options,
+            desired_capabilities=d,
+            service_args=["--verbose", "--log-path=chromedriver.log"],
+            seleniumwire_options={"enable_har": True, "disable_encoding": True}
+        )
+
+
+def get_driver(headless):
+    """Runs a single test outside of the py.test environment.
+
+    Replaced elements:
+        sb.headless = headless
+        sb.page_load_strategy = "none"
+    """
+    # see https://github.com/seleniumbase/SeleniumBase/blob/master/examples/raw_parameter_script.py
+    # see https://github.com/seleniumbase/SeleniumBase/blob/master/help_docs/how_it_works.md
+    sb = BaseTestCase()
+
+    sb.browser = "chrome"
+    sb.is_behave = False
+    sb.headless = headless
+    sb.headed = False
+    sb.xvfb = False
+    sb.start_page = None
+    sb.locale_code = None
+    sb.protocol = "http"
+    sb.servername = "localhost"
+    sb.port = 4444
+    sb.data = None
+    sb.var1 = None
+    sb.var2 = None
+    sb.var3 = None
+    sb.variables = {}
+    sb.account = None
+    sb.environment = "test"
+    sb.user_agent = None
+    sb.incognito = False
+    sb.guest_mode = False
+    sb.devtools = False
+    sb.mobile_emulator = False
+    sb.device_metrics = None
+    sb.extension_zip = None
+    sb.extension_dir = None
+    sb.database_env = "test"
+    sb.log_path = "latest_logs/"
+    sb.archive_logs = False
+    sb.disable_csp = False
+    sb.disable_ws = False
+    sb.enable_ws = False
+    sb.enable_sync = False
+    sb.use_auto_ext = False
+    sb.undetectable = False
+    sb.no_sandbox = False
+    sb.disable_gpu = False
+    sb._multithreaded = False
+    sb._reuse_session = False
+    sb._crumbs = False
+    sb._final_debug = False
+    sb.visual_baseline = False
+    sb.window_size = None
+    sb.maximize_option = False
+    sb._disable_beforeunload = False
+    sb.save_screenshot_after_test = False
+    sb.page_load_strategy = "none"
+    sb.timeout_multiplier = None
+    sb.pytest_html_report = None
+    sb.with_db_reporting = False
+    sb.with_s3_logging = False
+    sb.js_checking_on = False
+    sb.recorder_mode = False
+    sb.recorder_ext = False
+    sb.record_sleep = False
+    sb.rec_behave = False
+    sb.rec_print = False
+    sb.report_on = False
+    sb.is_pytest = False
+    sb.slow_mode = False
+    sb.demo_mode = False
+    sb.time_limit = None
+    sb.demo_sleep = None
+    sb.dashboard = False
+    sb._dash_initialized = False
+    sb.message_duration = None
+    sb.block_images = False
+    sb.do_not_track = False
+    sb.external_pdf = False
+    sb.remote_debug = False
+    sb.settings_file = None
+    sb.user_data_dir = None
+    sb.chromium_arg = None
+    sb.firefox_arg = None
+    sb.firefox_pref = None
+    sb.proxy_string = None
+    sb.proxy_bypass_list = None
+    sb.proxy_pac_url = None
+    sb.swiftshader = False
+    sb.ad_block_on = False
+    sb.highlights = None
+    sb.interval = None
+    sb.cap_file = None
+    sb.cap_string = None
+
+    # Set up the driver
+    sb.setUp()
+
+    # return the driver
+    return sb
 
 
 def make_full_screenshot(driver, savename):
@@ -108,7 +237,7 @@ def find_element(driver, method, name):
         name (string): Name of the element to find.
     """
     try:
-        driver.find_element(method, name)
+        driver.find_element(name, by=method, timeout=1.0)
         return True
     except exceptions.NoSuchElementException:
         return False
@@ -129,34 +258,8 @@ def write_errors(filename, site, url, errors):
 
 def check_url(site, domain, url, checks, wait, screenshots, output, headless):
     """Function to check a single URL."""
-    # Enable browser logging
-    d = DesiredCapabilities.CHROME
-    d["goog:loggingPrefs"] = {"browser": "ALL"}
-    # see https://stackoverflow.com/questions/20907180/getting-console-log-output-from-chrome-with-selenium-python-api-bindings # noqa # pylint: disable=line-too-long
-
-    # Initialize selenium driver
-    # Configure the driver options according to
-    # https://stackoverflow.com/questions/48450594/selenium-timed-out-receiving-message-from-renderer
-    time.sleep(5)
-    chrome_options = Options()
-    chrome_options.add_argument("start-maximized")
-    chrome_options.add_argument("enable-automation")
-    if headless:
-        chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-infobars")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--disable-browser-side-navigation")
-    chrome_options.add_argument("--dns-prefetch-disable")
-    driver = webdriver.Chrome(
-        options=chrome_options,
-        desired_capabilities=d,
-        service_args=["--verbose", "--log-path=output/chromedriver.log"],
-        seleniumwire_options={"enable_har": True, "disable_encoding": True}
-    )
-    # The latter option is to disable compressed responses using Brotli encoding.
-    # https://github.com/wkeeling/selenium-wire/issues/108
+    # Get the seleniumbase driver
+    driver = get_driver(headless)
 
     # Create the names used
     complete_url = domain + url
@@ -175,17 +278,26 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
     # Wait a maximum of 'wait' seconds for all element to appear
     timeout = False
     while True:
-        time_passed = time.time() - time0
 
         # Check all elements
         for name, check in checks.items():
             if not check_result[name]:
                 found = False
                 for element in check:
-                    if find_element(driver, *element):
-                        found = True
+                    time_method = time.time()
+                    found = find_element(driver, *element)
+                    # Increase the 'wait' time by the execution time of 'find_element'
+                    # which sometimes can be much longer than the actual timeout.
+                    delay_find = time.time() - time_method
+                    print(f"    Finding `{element[1]}` took {delay_find:.1f} s. Found: {found}")
+                    wait += delay_find
+
+                    if found:
                         break
                 check_result[name] = found
+
+        # Get the total time passed for the check of the URL
+        time_passed = time.time() - time0
 
         # Check if we found all elements
         if all(check_result.values()):
@@ -194,7 +306,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
 
         # If not, print the missing elements
         missing_elements = [name for name, check in check_result.items() if not check]
-        print(f"    At {time_passed:.1f} missing elements: {missing_elements}.")
+        print(f"    At {time_passed:.1f} missing elements are: {missing_elements}.")
 
         # Make full screenshot if required
         if screenshots:
@@ -203,6 +315,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
 
         # Check if wait time has elapsed
         if time_passed > wait:
+            print(f"    Timeout after {time_passed:.1f} s (wait time: {wait:.1f} s).")
             timeout = True
             break
 
@@ -225,18 +338,18 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
             filename = f"output/{savename}_{time.time()-time0:.1f}_ok.png"
             make_full_screenshot(driver, filename)
 
-    browser_log = driver.get_log("browser")
+    browser_log = driver.driver.get_log("browser")
     with open(f"output/{savename}.json", "w") as outfile:
         json.dump(browser_log, outfile)
     with open(f"output/{savename}.har", "w") as outfile:
-        json.dump(driver.har, outfile)
+        json.dump(driver.driver.har, outfile)
 
     if timeout:
         for entry in browser_log:
             if entry['level'] == "SEVERE":
                 print(f"    console: {entry['level']}  {entry['source']}: {entry['message']}")
 
-    driver.quit()
+    driver.driver.quit()
     return timeout
 
 
