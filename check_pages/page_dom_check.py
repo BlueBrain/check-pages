@@ -325,7 +325,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
 
         # Check if wait time has elapsed
         if time_passed > wait:
-            print(f"    Timeout after {time_passed:.1f} s (wait time: {wait:.1f} s.")
+            print(f"    Timeout after {time_passed:.1f} s (wait time: {wait:.1f} s).")
             timeout = True
             break
 
@@ -400,6 +400,8 @@ def page_check(domain, use_all, number, wait, params, group, output, headless, s
     """The main code to check elements in some/all URL's of a portal.
     """
     has_error = False
+
+    print(f"Make screenshots: {screenshots}")
 
     # Read the page data from the given json
     with open(params) as json_file:
