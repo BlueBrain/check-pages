@@ -267,10 +267,15 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
 
     # Call selenium method to open URL
     driver.get(complete_url)
-    time0 = time.time()
 
     # Allow cookies
     accept_cookies(driver)
+
+    time0 = time.time()
+
+    def debug(txt):
+        time_now = time.time() - time0
+        print(f"    {time_now:.1f} - {txt}")
 
     # Prepare the check dict
     check_result = {name: False for name in checks.keys()}
@@ -280,6 +285,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
     while True:
 
         # Check all elements
+        debug("Trying to find the elements")
         for name, check in checks.items():
             if not check_result[name]:
                 found = False
@@ -289,33 +295,31 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
                     # Increase the 'wait' time by the execution time of 'find_element'
                     # which sometimes can be much longer than the actual timeout.
                     delay_find = time.time() - time_method
-                    print(f"    Finding `{element[1]}` took {delay_find:.1f} s. Found: {found}")
+                    debug(f"Finding `{element[1]}` took {delay_find:.1f} s. Found: {found}")
                     wait += delay_find
 
                     if found:
                         break
                 check_result[name] = found
 
-        # Get the total time passed for the check of the URL
-        time_passed = time.time() - time0
-
         # Check if we found all elements
         if all(check_result.values()):
-            print(f"    At {time_passed:.1f} all elements have been found.")
+            debug("All elements have been found. Exiting.")
             break
 
         # If not, print the missing elements
         missing_elements = [name for name, check in check_result.items() if not check]
-        print(f"    At {time_passed:.1f} missing elements are: {missing_elements}.")
+        debug(f"Missing elements are: {missing_elements}.")
 
         # Make full screenshot if required
         if screenshots:
+            debug("Making screenshot")
             filename = f"output/{savename}_{time.time()-time0:.1f}.png"
             make_full_screenshot(driver, filename)
 
         # Check if wait time has elapsed
-        if time_passed > wait:
-            print(f"    Timeout after {time_passed:.1f} s (wait time: {wait:.1f} s).")
+        if time.time() - time0 > wait:
+            debug(f"Timeout occurred after wait time: {wait:.1f} s. Exiting")
             timeout = True
             break
 
@@ -323,6 +327,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
 
     if timeout:
         # Not all elements found after time limit
+        debug("Making full screenshot because of timeout.")
         filename = f"output/{savename}_{time.time()-time0:.1f}_error.png"
         make_full_screenshot(driver, filename)
 
@@ -331,7 +336,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
             if not found:
                 errors.append(element)
 
-        print(f"    ERROR: Elements missing after {time.time()-time0:.1f} s: {errors}")
+        debug(f"ERROR: Elements missing after {time.time()-time0:.1f} s: {errors}")
         write_errors(output, site, complete_url, errors)
     else:
         if screenshots:
@@ -347,7 +352,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
     if timeout:
         for entry in browser_log:
             if entry['level'] == "SEVERE":
-                print(f"    console: {entry['level']}  {entry['source']}: {entry['message']}")
+                debug(f"console: {entry['level']}  {entry['source']}: {entry['message']}")
 
     driver.driver.quit()
     return timeout
