@@ -60,6 +60,7 @@ def get_driver(headless):
     sb.browser = "chrome"
     sb.is_behave = False
     sb.headless = headless
+    sb.headless2 = False
     sb.headed = False
     sb.xvfb = False
     sb.start_page = None
@@ -74,6 +75,7 @@ def get_driver(headless):
     sb.variables = {}
     sb.account = None
     sb.environment = "test"
+    sb.env = "test"  # should match sb.environment
     sb.user_agent = None
     sb.incognito = False
     sb.guest_mode = False
@@ -83,7 +85,7 @@ def get_driver(headless):
     sb.extension_zip = None
     sb.extension_dir = None
     sb.database_env = "test"
-    sb.log_path = "latest_logs/"
+    sb.log_path = "latest_logs"
     sb.archive_logs = False
     sb.disable_csp = False
     sb.disable_ws = False
@@ -91,7 +93,9 @@ def get_driver(headless):
     sb.enable_sync = False
     sb.use_auto_ext = False
     sb.undetectable = False
+    sb.uc_subprocess = False
     sb.no_sandbox = False
+    sb.disable_js = False
     sb.disable_gpu = False
     sb._multithreaded = False
     sb._reuse_session = False
