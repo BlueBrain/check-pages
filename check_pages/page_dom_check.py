@@ -4,152 +4,69 @@ The code will load random pages and checks for expected DOM elements.
 """
 # pylint: disable=R0913
 
-import sys
-import json
 import time
+import json
 import random
 from io import BytesIO
 from PIL import Image
 
-import click
+import pytest
 from selenium.common import exceptions
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from seleniumwire import webdriver
-from seleniumbase import BaseCase
 
 
-class BaseTestCase(BaseCase):
-    """Defines the seleniumbase driver class."""
-
-    def get_new_driver(self, *args, **kwargs):
-        """ This method overrides get_new_driver() from BaseCase. """
-        # Enable browser logging
-        d = DesiredCapabilities.CHROME
-        d["goog:loggingPrefs"] = {"browser": "ALL"}
-
-        options = webdriver.ChromeOptions()
-        options.add_experimental_option(
-            "excludeSwitches", ["enable-automation"]
-        )
-        options.add_experimental_option("useAutomationExtension", False)
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        options.add_argument('--start-maximized')
-        if self.headless:
-            options.add_argument("--headless")
-        return webdriver.Chrome(
-            options=options,
-            desired_capabilities=d,
-            service_args=["--verbose", "--log-path=chromedriver.log"],
-            seleniumwire_options={"enable_har": True, "disable_encoding": True}
-        )
+LOG_OUTPUT = "page_dom_check.log"
 
 
-def get_driver(headless):
-    """Runs a single test outside of the py.test environment.
+@pytest.hookimpl
+def pytest_generate_tests(metafunc):
+    """Sets the parameters dynamically for the fixture 'testparam' used for "test_mooc_service".
 
-    Replaced elements:
-        sb.headless = headless
-        sb.page_load_strategy = "none"
+    Whenever pytest calls a test function, and this function requires the fixture 'testparam',
+    a list of parameters are set that are being read from the json file.
     """
-    # see https://github.com/seleniumbase/SeleniumBase/blob/master/examples/raw_parameter_script.py
-    # see https://github.com/seleniumbase/SeleniumBase/blob/master/help_docs/how_it_works.md
-    sb = BaseTestCase()
+    if "testparam" in metafunc.fixturenames:
+        params_file = metafunc.config.option.params
+        group = metafunc.config.option.group
+        number = metafunc.config.option.number
+        use_all = metafunc.config.option.use_all
 
-    sb.browser = "chrome"
-    sb.is_behave = False
-    sb.headless = headless
-    sb.headless2 = False
-    sb.headed = False
-    sb.xvfb = False
-    sb.start_page = None
-    sb.locale_code = None
-    sb.protocol = "http"
-    sb.servername = "localhost"
-    sb.port = 4444
-    sb.data = None
-    sb.var1 = None
-    sb.var2 = None
-    sb.var3 = None
-    sb.variables = {}
-    sb.account = None
-    sb.environment = "test"
-    sb.env = "test"  # should match sb.environment
-    sb.user_agent = None
-    sb.incognito = False
-    sb.guest_mode = False
-    sb.devtools = False
-    sb.mobile_emulator = False
-    sb.device_metrics = None
-    sb.extension_zip = None
-    sb.extension_dir = None
-    sb.database_env = "test"
-    sb.log_path = "latest_logs"
-    sb.archive_logs = False
-    sb.disable_csp = False
-    sb.disable_ws = False
-    sb.enable_ws = False
-    sb.enable_sync = False
-    sb.use_auto_ext = False
-    sb.undetectable = False
-    sb.uc_subprocess = False
-    sb.no_sandbox = False
-    sb.disable_js = False
-    sb.disable_gpu = False
-    sb._multithreaded = False
-    sb._reuse_session = False
-    sb._crumbs = False
-    sb._final_debug = False
-    sb.visual_baseline = False
-    sb.window_size = None
-    sb.maximize_option = False
-    sb._disable_beforeunload = False
-    sb.save_screenshot_after_test = False
-    sb.page_load_strategy = "none"
-    sb.timeout_multiplier = None
-    sb.pytest_html_report = None
-    sb.with_db_reporting = False
-    sb.with_s3_logging = False
-    sb.js_checking_on = False
-    sb.recorder_mode = False
-    sb.recorder_ext = False
-    sb.record_sleep = False
-    sb.rec_behave = False
-    sb.rec_print = False
-    sb.report_on = False
-    sb.is_pytest = False
-    sb.slow_mode = False
-    sb.demo_mode = False
-    sb.time_limit = None
-    sb.demo_sleep = None
-    sb.dashboard = False
-    sb._dash_initialized = False
-    sb.message_duration = None
-    sb.block_images = False
-    sb.do_not_track = False
-    sb.external_pdf = False
-    sb.remote_debug = False
-    sb.settings_file = None
-    sb.user_data_dir = None
-    sb.chromium_arg = None
-    sb.firefox_arg = None
-    sb.firefox_pref = None
-    sb.proxy_string = None
-    sb.proxy_bypass_list = None
-    sb.proxy_pac_url = None
-    sb.swiftshader = False
-    sb.ad_block_on = False
-    sb.highlights = None
-    sb.interval = None
-    sb.cap_file = None
-    sb.cap_string = None
+        # Read the page data from the given json
+        with open(params_file) as json_file:
+            page_data = json.load(json_file)
 
-    # Set up the driver
-    sb.setUp()
+        # Select the group to be tested
+        if group:
+            print(f"Checking only group {group}.")
+            page_data = {group: page_data[group]}
 
-    # return the driver
-    return sb
+        # Loop over the page sections
+        tests = {}
+        for site, page in page_data.items():
+            # Read all URL's
+            with open(page["urls"]) as filein:
+                urls = filein.read().splitlines()
+
+            # Select the URL's to check
+            if use_all:
+                selected_urls = urls
+            else:
+                selected_urls = random.sample(urls, min(len(urls), number))
+                selected_urls = urls[:number]
+            print(f"\nAnalyzing {len(selected_urls)} URLs for {site}")
+
+            for index, url in enumerate(selected_urls):
+                # Create a unique test id (as key)
+                id_ = f"{site}_{index}"
+
+                # Create hashable keys for every check to be done for the given URL
+                checks = {"_".join(check[0]): check for check in page["checks"]}
+
+                # Add the test to the list of tests
+                test_data = (site, url, checks)
+                tests[id_] = test_data
+
+        # add parametrization for fixture
+        metafunc.parametrize("testparam", tests.items(), ids=tests.keys())
 
 
 def make_full_screenshot(driver, savename):
@@ -228,7 +145,9 @@ def get_savename(text):
 def accept_cookies(driver):
     """Safely accepting the possible cookies popup."""
     try:
-        driver.find_element(By.XPATH, "//*[text()='Allow']").click()
+        driver.click_xpath("//*[text()='Allow']")
+        # driver.find_element(By.XPATH, "//*[text()='Allow']").click()
+        # //*[@id="__next"]/div[6]/div/div[3]/a/span
     except exceptions.NoSuchElementException:
         pass
 
@@ -260,20 +179,8 @@ def write_errors(filename, site, url, errors):
         fileout.write(f"{site} -> {url}: {errors}\n")
 
 
-def check_url(site, domain, url, checks, wait, screenshots, output, headless):
+def check_url(driver, site, domain, url, checks, wait, screenshots):
     """Function to check a single URL."""
-    # Get the seleniumbase driver
-    driver = get_driver(headless)
-
-    # Create the names used
-    complete_url = domain + url
-    savename = get_savename(url[1:])
-
-    # Call selenium method to open URL
-    driver.get(complete_url)
-
-    # Allow cookies
-    accept_cookies(driver)
 
     time0 = time.time()
 
@@ -281,11 +188,23 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
         time_now = time.time() - time0
         print(f"    {time_now:.1f} - {txt}")
 
+    # Create the names used
+    complete_url = domain + url
+    savename = get_savename(url[1:])
+
+    # Call selenium method to open URL
+    debug(f"Opening URL {complete_url}")
+    driver.open(complete_url)
+
+    # Allow cookies
+    debug("Accepting cookies")
+    accept_cookies(driver)
+
     # Prepare the check dict
     check_result = {name: False for name in checks.keys()}
 
     # Wait a maximum of 'wait' seconds for all element to appear
-    timeout = False
+    success = True
     while True:
 
         # Check all elements
@@ -299,7 +218,9 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
                     # Increase the 'wait' time by the execution time of 'find_element'
                     # which sometimes can be much longer than the actual timeout.
                     delay_find = time.time() - time_method
-                    debug(f"Finding `{element[1]}` took {delay_find:.1f} s. Found: {found}")
+                    debug(
+                        f"Checking for `{element[1]}` took {delay_find:.1f} s. Found: {found}"
+                    )
                     wait += delay_find
 
                     if found:
@@ -324,12 +245,12 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
         # Check if wait time has elapsed
         if time.time() - time0 > wait:
             debug(f"Timeout occurred after wait time: {wait:.1f} s. Exiting")
-            timeout = True
+            success = False
             break
 
         time.sleep(1)
 
-    if timeout:
+    if not success:
         # Not all elements found after time limit
         debug("Making full screenshot because of timeout.")
         filename = f"output/{savename}_{time.time()-time0:.1f}_error.png"
@@ -341,7 +262,7 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
                 errors.append(element)
 
         debug(f"ERROR: Elements missing after {time.time()-time0:.1f} s: {errors}")
-        write_errors(output, site, complete_url, errors)
+        write_errors(LOG_OUTPUT, site, complete_url, errors)
     else:
         if screenshots:
             filename = f"output/{savename}_{time.time()-time0:.1f}_ok.png"
@@ -350,99 +271,51 @@ def check_url(site, domain, url, checks, wait, screenshots, output, headless):
     browser_log = driver.driver.get_log("browser")
     with open(f"output/{savename}.json", "w") as outfile:
         json.dump(browser_log, outfile)
-    with open(f"output/{savename}.har", "w") as outfile:
-        json.dump(driver.driver.har, outfile)
+    # Creation of the HAR file currently not possible
+    # with open(f"output/{savename}.har", "w") as outfile:
+    #     json.dump(driver.driver.har, outfile)
 
-    if timeout:
+    if not success:
         for entry in browser_log:
-            if entry['level'] == "SEVERE":
-                debug(f"console: {entry['level']}  {entry['source']}: {entry['message']}")
+            if entry["level"] == "SEVERE":
+                debug(
+                    f"console: {entry['level']}  {entry['source']}: {entry['message']}"
+                )
 
+    # Close the current driver
+    driver.driver.close()
     driver.driver.quit()
-    return timeout
+    return success
 
 
-@click.command()
-@click.option("-d", "--domain", help="Defines the domain URL.")
-@click.option("--use_all", is_flag=True, help="Will check all URLs.")
-@click.option(
-    "-n",
-    "--number",
-    default=5,
-    help="Defines the number of randomly selected URL's to check per site. Default: 5",
-)
-@click.option(
-    "-w",
-    "--wait",
-    default=20,
-    help="Defines the maximum time to wait for an element to appear [seconds]. Default: 20 s",
-)
-@click.option(
-    "-p",
-    "--params",
-    help="Defines the json files containing the parameters; the URLs and elements to check.",
-)
-@click.option(
-    "-g",
-    "--group",
-    help="Defines the group to be tested. Only pages from this group will be tested.",
-)
-@click.option(
-    "-o", "--output", help="Defines the output filename.", default="page_dom_check.log"
-)
-@click.option(
-    "--headless", is_flag=True, help="Runs the tests without browser."
-)
-@click.option("--screenshots", is_flag=True, help="Will make screenshots.")
-def page_check(domain, use_all, number, wait, params, group, output, headless, screenshots):
-    """The main code to check elements in some/all URL's of a portal.
-    """
-    has_error = False
+def test_sscx_dom(selbase, test_details, testparam):
+    """Runs the tests for the SSCX dom checks."""
+    success = True
+    wait = test_details["wait"]
+    domain = test_details["domain"]
 
-    # Read the page data from the given json
-    with open(params) as json_file:
-        page_data = json.load(json_file)
+    id_ = testparam[0]
+    site, url, checks = testparam[1]
 
-    # Select the group to be tested
-    if group:
-        print(f"Checking only group {group}.")
-        page_data = {group: page_data[group]}
+    print(f"Checking {id_}  ->  {url}")
+    try:
+        success &= check_url(
+            selbase,
+            site,
+            domain,
+            url,
+            checks,
+            wait,
+            test_details["screenshots"],
+        )
+    except exceptions.WebDriverException as e:
+        print(f"    UNEXPECTED ERROR: {e}")
+        success = False
 
-    # Loop over the page sections
-    for site, page in page_data.items():
-        # Read all URL's
-        with open(page["urls"]) as filein:
-            urls = filein.read().splitlines()
-
-        # Select the URL's to check
-        if use_all:
-            selected_urls = urls
-        else:
-            selected_urls = random.sample(urls, min(len(urls), number))
-            selected_urls = urls[:number]
-        print(f"\nAnalyzing {len(selected_urls)} URLs for {site}")
-
-        # Create hashable keys
-        checks = {"_".join(check[0]): check for check in page["checks"]}
-
-        # Now check all elements in the given page
-        for index, url in enumerate(selected_urls):
-            print(f"{site} {index+1}/{number} - Checking {url}")
-
-            counter = 1
-            while counter < 5:
-                try:
-                    has_error |= check_url(
-                        site, domain, url, checks, wait, screenshots, output, headless
-                    )
-                    break
-                except exceptions.WebDriverException as e:
-                    print(f"    #{counter}  UNEXPECTED ERROR: {e}")
-                    has_error = True
-                counter += 1
-
-    # User output
-    if has_error:
-        print("Errors have been found")
-        sys.exit(1)
-    print("\npage_dom_check was OK")
+    # Create the output information for this test
+    pytest.test_success &= success
+    if success:
+        pytest.test_output += f"pass {id_}\n"
+    else:
+        output = f"FAIL {id_} for URL {domain}{url}"
+        pytest.test_output += output + "\n"

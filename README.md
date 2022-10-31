@@ -75,7 +75,7 @@ With a free account on gtmetrix a user has 10 credits per day. Each of the above
 
 ### `py.test`
 
-Several `py.test` tests are defined to check some services/apps.
+Several `py.test` tests are defined to check some services/apps. 
 
 #### mooc_tests.py
 
@@ -92,6 +92,10 @@ This test setup us used to run selenium tests to check two SimUI ebrains service
 #### pick_test.py
 
 This test setup checks the `pick-real-neuron` app by opening the page and clicking on a correct and on an incorrect image. The overlay text is verified as well as the counter.
+
+### page_dom_check.py
+
+This test checks for certain DOM elements visible in the html page. See the description above. 
 
 ### slack_reporter
 

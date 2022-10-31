@@ -18,7 +18,11 @@ disable=fixme,
         f-string-without-interpolation,
         consider-using-generator,
         missing-timeout,
-        unused-argument
+        unused-argument,
+        useless-parent-delegation,
+        super-with-arguments,
+        unnecessary-pass
+
 
 [FORMAT]
 # Maximum number of characters on a single line.

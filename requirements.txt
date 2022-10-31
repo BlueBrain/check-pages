@@ -4,5 +4,6 @@ psutil
 requests
 elemental
 pytest
-seleniumbase
+pytest-repeat
+seleniumbase==3.3.3
 selenium

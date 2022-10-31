@@ -7,7 +7,7 @@
 """
 import pytest
 from seleniumbase import BaseCase
-from seleniumwire import webdriver
+#from seleniumwire import webdriver
 from selenium.webdriver.chrome.options import Options
 
 from check_pages import mooc_tests
@@ -33,6 +33,7 @@ def pytest_addoption(parser):
 @pytest.fixture
 def headless(request):
     """Returns True if driver should run headless."""
+    print("HEADLESS MAIN")
     return request.config.getoption("--headless")
 
 @pytest.fixture
