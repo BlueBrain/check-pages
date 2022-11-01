@@ -110,7 +110,7 @@ check_dom_sscx:
     - exit_code=0
     - Xvfb :99 &
     - export DISPLAY=:99
-    - py.test -s check_pages/page_dom_check.py  --number 20 --params resources/SSCX_Portal/sscx_dom_check.json --domain https://sscx-portal.kcp.bbp.epfl.ch/sscx-portal --headless || exit_code=1
+    - py.test -s check_pages/page_dom_check.py  --number 20 --params resources/SSCX_Portal/sscx_dom_check.json --domain https://sscx-portal.kcp.bbp.epfl.ch/sscx-portal  --enable-3d-apis --headed || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
   artifacts:
     paths:
@@ -131,7 +131,7 @@ check_dom_hippo:
     - exit_code=0
     - Xvfb :99 &
     - export DISPLAY=:99
-    - py.test -s check_pages/page_dom_check.py --number 5 --params resources/HIPPO_Portal/hippo_dom_check.json --domain https://www.hippocampushub.eu --screenshots  || exit_code=1
+    - py.test -s check_pages/page_dom_check.py --number 5 --params resources/HIPPO_Portal/hippo_dom_check.json --domain https://www.hippocampushub.eu --enable-3d-apis --headed  || exit_code=1
     - echo slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Dom Check" --filename page_dom_check.log --status $exit_code
   artifacts:
     paths:
@@ -152,7 +152,7 @@ check_dom_ngv:
     - exit_code=0
     - Xvfb :99 &
     - export DISPLAY=:99
-    - py.test -s check_pages/page_dom_check.py --number 3 --params resources/NGV_Portal/ngv_dom_check.json --domain http://ngv-portal.kcp.bbp.epfl.ch/ngv-portal --screenshots  || exit_code=1
+    - py.test -s check_pages/page_dom_check.py --number 3 --params resources/NGV_Portal/ngv_dom_check.json --domain http://ngv-portal.kcp.bbp.epfl.ch/ngv-portal --screenshots  --headed || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NGV Dom Check" --filename page_dom_check.log --status $exit_code
   artifacts:
     paths:
@@ -228,9 +228,9 @@ check_mooc:
     - export NO_PROXY="localhost,127.0.0.1,localaddress,.localdomain.com"
     - mkdir debug
     - exit_code=0
-    - py.test -s check_pages/mooc_tests.py --tests resources/Mooc/mooc_tests.json --headless || exit_code=1
+    - py.test -s check_pages/mooc_tests.py --tests resources/Mooc/mooc_tests.json --headless --wire || exit_code=1
     - cat service_results.txt
-    - cp chromedriver.log debug
+    - mv latest_logs debug
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "MOOC Check" --filename service_results.txt --status $exit_code
   artifacts:
     paths:
@@ -258,7 +258,7 @@ check_ebrains:
     - mkdir debug
     - ls -ltr
     - exit_code=0
-    - py.test -s check_pages/ebrains_tests.py --headless || exit_code=1
+    - py.test -s check_pages/ebrains_tests.py --headless --wire || exit_code=1
     - cat service_results.txt
     - ls -ltr
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "EBRAINS Check" --filename service_results.txt --status $exit_code

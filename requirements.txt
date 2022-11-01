@@ -5,5 +5,5 @@ requests
 elemental
 pytest
 pytest-repeat
-seleniumbase==3.3.3
+seleniumbase==4.7.0
 selenium
