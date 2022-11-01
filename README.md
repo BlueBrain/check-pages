@@ -185,3 +185,97 @@ In the CI in gitlab of this repository there are currently 10 jobs that are sche
   * testing: pick-the-neuron app
   * schedule: daily at 6:05
   * code: py.test / pick_test.py
+
+## .gitlab-ci.yml
+
+In this section the details of the used `.gitlab-ci.yml` file is explained.
+
+```
+.setup-env: &setup-env
+    - apt-get update
+    - apt-get install -y unzip curl software-properties-common  vim git python3-pip python3 xvfb
+    - curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub
+    - cat /tmp/google.pub | apt-key add -
+    - echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list
+    - mkdir -p /usr/share/desktop-directories
+    - wget --no-verbose -O /tmp/chrome.deb http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_107.0.5304.87-1_amd64.deb && apt install -y /tmp/chrome.deb && rm /tmp/chrome.deb
+    - dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome
+    - echo -e "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome
+    - chmod 755 /opt/google/chrome/google-chrome
+    - google-chrome --version
+    - wget --no-verbose https://chromedriver.storage.googleapis.com/107.0.5304.18/chromedriver_linux64.zip && unzip chromedriver_linux64.zip
+    - export PATH=`pwd`:${PATH}
+    - pip install -r requirements.txt
+    - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
+```
+
+This part creates the environment in which the selenium tests are being executed. 
+After installing the required linux packages the chrome browser and the matching chromedriver is installed. The latest version for chrome can be found on [Chrome Releases](https://chromereleases.googleblog.com/search/label/Stable%20updates) and for chromedriver [HERE](https://chromedriver.chromium.org/).
+
+
+```
+check_dom_sscx:
+  variables:
+    KUBERNETES_MEMORY_LIMIT: 10Gi
+    KUBERNETES_MEMORY_REQUEST: 10Gi  
+    KUBERNETES_CPU_REQUEST: 4
+    KUBERNETES_CPU_LIMIT: 4
+  stage: page_checks
+  timeout: 3 hours
+  rules:
+    - if: $PIPELINE_SELECT == "daily_even"
+    - if: $PIPELINE_SELECT == $CI_JOB_NAME
+  image: python:3.8-buster
+  script:
+    - *setup-env
+    - mkdir -p output
+    - exit_code=0
+    - Xvfb :99 &
+    - export DISPLAY=:99
+    - py.test -s check_pages/page_dom_check.py  --number 20 --params resources/SSCX_Portal/sscx_dom_check.json --domain https://sscx-portal.kcp.bbp.epfl.ch/sscx-portal --headless || exit_code=1
+    - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
+  artifacts:
+    paths:
+      - output
+```
+
+This example shows a job that is supposed to run every second day, which also can be triggered manually by setting the variable `PIPELINE_SELECT` to `check_dom_sscx` (which is the name of the job). This job also sets some increased memory and CPU limits.
+For the environment it uses the `python:3.8-buster` image and creates the environment as explained above.
+The parts with the `Xvfb` and `DISPLAY` are required when the tests are not run headless, i.e. with a GUI. In that case screenshots can also be made.
+Finally, the `artifacts` part defines a folder that is retained which can be downloaded after the test has run in order to see additional outputs or to debug in case of a failure.
+
+```
+check_mooc:
+  stage: page_checks
+  rules:
+    - if: $PIPELINE_SELECT == "mooc"
+    - if: $PIPELINE_SELECT == $CI_JOB_NAME
+  image: bbpgitlab.epfl.ch:5050/nse/repo-checker-group/check-pages
+  script:
+    - pip install -r requirements.txt
+    - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
+    - export http_proxy=http://bbpproxy.epfl.ch:80/
+    - export https_proxy=http://bbpproxy.epfl.ch:80/
+    - export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
+    - export NO_PROXY="localhost,127.0.0.1,localaddress,.localdomain.com"
+    - mkdir debug
+    - exit_code=0
+    - py.test -s check_pages/mooc_tests.py --tests resources/Mooc/mooc_tests.json --headless --wire || exit_code=1
+    - cat service_results.txt
+    - mv latest_logs debug
+    - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "MOOC Check" --filename service_results.txt --status $exit_code
+  artifacts:
+    paths:
+      - debug
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - SIMUI_CA1.INFO
+      - SIMUI_MICRO.INFO
+      - SIMUI.INFO
+      - PSPAPP.INFO
+```
+
+This job example shows an example of setting the proxies correctly to make the tests work. This job can be started by setting `PIPELINE_SELECT` to `check_mooc` or just `mooc`.
+In addition it uses the `cache` functionality of gitlab in order to cache some files for the next run of this job. This is useful as this job must be run twice for a complete successful test: the first time it runs it starts a simulation or a computation with the job ID or the job URL written to one of the files. The second time the job runs it takes this information from these files to verify if the calculations, which might take hours to complete, ended successfully.
+
