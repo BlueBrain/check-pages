@@ -389,20 +389,29 @@ class MoocTests:
         self.driver.tearDown()
 
 
-def test_mooc_grade_submission(selbase):
-    """Tests the grade submission backend."""
+# def test_mooc_grade_submission(selbase):
+#     """Tests the grade submission backend."""
+#     mooc = MoocTests(selbase)
+#     mooc.perform_test(mooc.grade_submission, "grade_submission")
+
+
+# def test_mooc_service(selbase, testparam):
+#     """Tests a Mooc service (like jupyter, Bryans, Keys etc.)"""
+#     mooc = MoocTests(selbase)
+#     mooc.perform_test(mooc.check_page, testparam[0], *testparam)
+
+
+# @pytest.mark.parametrize("appname", ["check_simui", "check_pspapp", "start_simui", "start_pspapp"])
+# def test_mooc_apps(selbase, appname):
+#     """Tests a service by starting the application and wait until it is running."""
+#     mooc = MoocTests(selbase)
+#     mooc.perform_test(getattr(mooc, appname), appname)
+
+
+def test_brayns(selbase):
+    """Tests starting Brayns"""
+    name = "BryansApp"
+    params = (name, {"test": "AppBryan", "element": {"by":"xpath", "element": "//div[contains(text(),'Load model into the scene')]"}, "wait":100})
     mooc = MoocTests(selbase)
-    mooc.perform_test(mooc.grade_submission, "grade_submission")
+    mooc.perform_test(mooc.check_page, name, *params)
 
-
-def test_mooc_service(selbase, testparam):
-    """Tests a Mooc service (like jupyter, Bryans, Keys etc.)"""
-    mooc = MoocTests(selbase)
-    mooc.perform_test(mooc.check_page, testparam[0], *testparam)
-
-
-@pytest.mark.parametrize("appname", ["check_simui", "check_pspapp", "start_simui", "start_pspapp"])
-def test_mooc_apps(selbase, appname):
-    """Tests a service by starting the application and wait until it is running."""
-    mooc = MoocTests(selbase)
-    mooc.perform_test(getattr(mooc, appname), appname)
