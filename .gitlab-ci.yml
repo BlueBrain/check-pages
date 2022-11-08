@@ -305,6 +305,7 @@ check_extra:
     - cat service_results.txt
     - mv latest_logs debug
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "MOOC Check" --filename service_results.txt --status $exit_code
+    - exit $exit_code
   artifacts:
     paths:
       - debug
