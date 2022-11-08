@@ -388,7 +388,7 @@ class MoocTests:
         # Quit the browser
         self.driver.tearDown()
 
-        assert True
+        assert False
 
 
 # def test_mooc_grade_submission(selbase):
