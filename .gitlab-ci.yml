@@ -67,6 +67,7 @@ check_pages_sscx:
     - exit_code=0
     - pagechecker  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Page Check" --filename pagechecker.log --status $exit_code
+    - exit $exit_code
 
 check_pages_hippo:
   stage: page_checks
@@ -79,6 +80,7 @@ check_pages_hippo:
     - exit_code=0
     - pagechecker  --folder resources/HIPPO_Portal/  --domain "https://www.hippocampushub.eu" -n 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Page Check" --filename pagechecker.log --status $exit_code
+    - exit $exit_code
 
 check_pages_nmc:
   stage: page_checks
@@ -91,6 +93,7 @@ check_pages_nmc:
     - exit_code=0
     - pagechecker  --folder resources/NMC_Portal/  --domain "https://bbp.epfl.ch/nmc-portal/microcircuit.html#" -n 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NMC Page Check" --filename pagechecker.log --status $exit_code
+    - exit $exit_code
 
 check_dom_sscx:
   variables:
@@ -112,7 +115,9 @@ check_dom_sscx:
     - export DISPLAY=:99
     - py.test -s check_pages/page_dom_check.py  --number 20 --params resources/SSCX_Portal/sscx_dom_check.json --domain https://sscx-portal.kcp.bbp.epfl.ch/sscx-portal  --enable-3d-apis --headed || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
+    - exit $exit_code
   artifacts:
+    when: always
     paths:
       - output
 
@@ -133,7 +138,9 @@ check_dom_hippo:
     - export DISPLAY=:99
     - py.test -s check_pages/page_dom_check.py --number 5 --params resources/HIPPO_Portal/hippo_dom_check.json --domain https://www.hippocampushub.eu --enable-3d-apis --headed  || exit_code=1
     - echo slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Dom Check" --filename page_dom_check.log --status $exit_code
+    - exit $exit_code
   artifacts:
+    when: always
     paths:
       - output
 
@@ -154,7 +161,9 @@ check_dom_ngv:
     - export DISPLAY=:99
     - py.test -s check_pages/page_dom_check.py --number 3 --params resources/NGV_Portal/ngv_dom_check.json --domain http://ngv-portal.kcp.bbp.epfl.ch/ngv-portal --screenshots  --headed || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NGV Dom Check" --filename page_dom_check.log --status $exit_code
+    - exit $exit_code
   artifacts:
+    when: always
     paths:
       - output
 
@@ -179,6 +188,7 @@ check_links:
     # and create the report to slack
     - python validate_converter.py linkreport.txt > report.txt
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "BBP Portal Links" --filename report.txt --status $exit_code
+    - exit $exit_code
 
 location_testing_sscx:
   stage: location_test
@@ -226,16 +236,21 @@ check_mooc:
     - export https_proxy=http://bbpproxy.epfl.ch:80/
     - export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
     - export NO_PROXY="localhost,127.0.0.1,localaddress,.localdomain.com"
+    - cat SIMUI.INFO
     - mkdir debug
     - exit_code=0
     - py.test -s check_pages/mooc_tests.py --tests resources/Mooc/mooc_tests.json --headless --wire || exit_code=1
     - cat service_results.txt
     - mv latest_logs debug
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "MOOC Check" --filename service_results.txt --status $exit_code
+    - cat SIMUI.INFO
+    - exit $exit_code
   artifacts:
+    when: always
     paths:
       - debug
   cache:
+    when: always
     key: $CI_COMMIT_REF_SLUG
     paths:
       - SIMUI_CA1.INFO
@@ -262,10 +277,13 @@ check_ebrains:
     - cat service_results.txt
     - ls -ltr
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "EBRAINS Check" --filename service_results.txt --status $exit_code
+    - exit $exit_code
   artifacts:
+    when: always
     paths:
       - debug
   cache:
+    when: always
     key: $CI_COMMIT_REF_SLUG
     paths:
       - SIMUI_CA1.INFO
@@ -285,3 +303,4 @@ check_pickneuron:
     - exit_code=0
     - py.test -s check_pages/pick_test.py --headless || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "PICK-NEURON Check" --status $exit_code
+    - exit $exit_code
