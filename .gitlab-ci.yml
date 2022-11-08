@@ -307,6 +307,7 @@ check_extra:
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "MOOC Check" --filename service_results.txt --status $exit_code
     - exit $exit_code
   artifacts:
+    when: always
     paths:
       - debug
 
