@@ -28,7 +28,7 @@ def get_requests(url, interceptor):
     driver.request_interceptor = interceptor
     try:
         driver.get(url)
-    except exceptions.WebDriverExceptio as err:
+    except exceptions.WebDriverException as err:
         print(err)
         print(f">> Webdriver exception for URL '{url}'   '{err}'")
 
