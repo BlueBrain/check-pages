@@ -89,7 +89,22 @@ check_pages_nmc:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *setup-env
+    - apt-get update
+    - apt-get install -y unzip curl software-properties-common  vim git python3-pip python3 xvfb
+    - curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub
+    - cat /tmp/google.pub | apt-key add -
+    - echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list
+    - mkdir -p /usr/share/desktop-directories
+    - wget --no-verbose -O /tmp/chrome.deb http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_107.0.5304.87-1_amd64.deb && apt install -y /tmp/chrome.deb && rm /tmp/chrome.deb
+    - dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome
+    - echo -e "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome
+    - chmod 755 /opt/google/chrome/google-chrome
+    - google-chrome --version
+    - wget --no-verbose https://chromedriver.storage.googleapis.com/107.0.5304.18/chromedriver_linux64.zip && unzip chromedriver_linux64.zip
+    - cat /etc/issue
+    - export PATH=`pwd`:${PATH}
+    - pip install -r requirements.txt
+    - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
     - exit_code=0
     - pagechecker  --folder resources/NMC_Portal/  --domain "https://bbp.epfl.ch/nmc-portal/microcircuit.html#" -n 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NMC Page Check" --filename pagechecker.log --status $exit_code
