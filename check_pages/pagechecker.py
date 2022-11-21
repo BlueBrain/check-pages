@@ -28,8 +28,9 @@ def get_requests(url, interceptor):
     driver.request_interceptor = interceptor
     try:
         driver.get(url)
-    except exceptions.WebDriverException:
-        print(f">> Webdriver exception for URL '{url}'")
+    except exceptions.WebDriverExceptio as err:
+        print(err)
+        print(f">> Webdriver exception for URL '{url}'   '{err}'")
 
     numbers = len(driver.requests)
     while True:
@@ -127,7 +128,7 @@ def linkchecker(domain, file, folder, number, header, output, url):
     with futures.ThreadPoolExecutor() as executor:
         # Put the functions calls into the pool
         url_requests = [
-            executor.submit(get_requests, use_url, interceptor) for use_url in selected_urls
+            executor.submit(get_requests, use_url.strip(), interceptor) for use_url in selected_urls
         ]
         # Check the results
         for index, url_request, use_url in zip(range(n), url_requests, selected_urls):
