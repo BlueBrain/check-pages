@@ -21,7 +21,7 @@ def get_requests(seldriver, url, interceptor):
         url (string): The URL to be checked.
         interceptor (function): Function to inject header elements for each request.
     """
-    # Get the original selenium-wire driver   
+    # Get the original selenium-wire driver
     driver = seldriver.driver
 
     # Set the function to inject header elements
@@ -112,7 +112,8 @@ def test_link_checking(selbase, test_details):
     with futures.ThreadPoolExecutor() as executor:
         # Put the functions calls into the pool
         url_requests = [
-            executor.submit(get_requests, selbase, use_url, interceptor) for use_url in selected_urls
+            executor.submit(get_requests, selbase, use_url, interceptor)
+            for use_url in selected_urls
         ]
         # Check the results
         for index, url_request, use_url in zip(range(n), url_requests, selected_urls):
