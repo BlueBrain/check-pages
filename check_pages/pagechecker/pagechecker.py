@@ -1,5 +1,5 @@
 """
-Code to check all or randomly selected URLs given in file(s).
+Code to check all or randomly selected URLs given in file(s) for 4xx/5xx errors.
 """
 import sys
 import glob
@@ -13,23 +13,26 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common import exceptions
 
 
-def get_requests(url, interceptor):
+def get_requests(seldriver, url, interceptor):
     """Returns all requests for the specified URL.
 
     Args:
+        seldriver: The seleniumbase driver instance.
         url (string): The URL to be checked.
         interceptor (function): Function to inject header elements for each request.
     """
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    driver = webdriver.Chrome(options=chrome_options)
+    # Get the original selenium-wire driver   
+    driver = seldriver.driver
 
-    # Load the URL
+    # Set the function to inject header elements
     driver.request_interceptor = interceptor
+
+    # Try to open the URL
     try:
         driver.get(url)
     except exceptions.WebDriverException:
         print(f">> Webdriver exception for URL '{url}'")
+        sys.exit(1)
 
     numbers = len(driver.requests)
     while True:
@@ -49,42 +52,23 @@ def get_requests(url, interceptor):
                 "status": request.response.status_code,
             }
             request_list.append(myreq)
-    driver.quit()
     return request_list
 
 
-@click.command()
-@click.option("-d", "--domain", help="Defines the domain URL.")
-@click.option("-f", "--file", help="Defines a file with a list of URL's.")
-@click.option("--folder", help="Defines a folder containing files with URL lists.")
-@click.option(
-    "-n",
-    "--number",
-    default=0,
-    help="Defines the number of randomly selected URL's to check. Default: 0 (all).",
-)
-@click.option(
-    "-H",
-    "--header",
-    multiple=True,
-    help="Adds a header used for each request in the format KEY:VALUE.",
-)
-@click.option(
-    "-o", "--output", help="Defines the output filename.", default="pagechecker.log"
-)
-@click.argument("url", required=False)
-def linkchecker(domain, file, folder, number, header, output, url):
+def test_link_checking(selbase, test_details):
     """Main linkchecker method.
 
     Args:
-        domain (string): The domain added to each URL.
-        file (string): Name of a file containing a list of URL's to test.
-        folder (string): Name of the folder containing URL files.
-        number (string): Number of URL's to check.
-        header (string): Optional header used for each request (e.g. for authorization)
-        output (string): Name for the output file.
-        url (string): Single URL (e.g. for testing purposes)
+        selbase: The seleniumbase driver.
+        test_details: A dictionary with details of the test to perform.
     """
+    domain = test_details["domain"]
+    file = test_details["file"]
+    folder = test_details["folder"]
+    number = test_details["number"]
+    header = test_details["header"]
+    output = test_details["output"]
+    url = test_details["url"]
 
     if folder:
         files = glob.glob(folder + "/*.txt")
@@ -111,9 +95,10 @@ def linkchecker(domain, file, folder, number, header, output, url):
 
     # Define the interceptor to inject headers into each request
     def interceptor(request):
-        for header_item in header:
-            key, value = header_item.split(":")
-            request.headers[key] = value
+        if header:
+            for header_item in header:
+                key, value = header_item.split(":")
+                request.headers[key] = value
 
     # Select the sample
     if number == 0:
@@ -127,7 +112,7 @@ def linkchecker(domain, file, folder, number, header, output, url):
     with futures.ThreadPoolExecutor() as executor:
         # Put the functions calls into the pool
         url_requests = [
-            executor.submit(get_requests, use_url, interceptor) for use_url in selected_urls
+            executor.submit(get_requests, selbase, use_url, interceptor) for use_url in selected_urls
         ]
         # Check the results
         for index, url_request, use_url in zip(range(n), url_requests, selected_urls):
@@ -141,6 +126,7 @@ def linkchecker(domain, file, folder, number, header, output, url):
                     print(msg)
                     errors.append(msg)
 
+    # Write any error to a file (for slack)
     with open(output, "w") as fileout:
         for error in errors:
             fileout.write(error + "\n")

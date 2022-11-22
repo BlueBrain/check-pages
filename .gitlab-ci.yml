@@ -65,7 +65,7 @@ check_pages_sscx:
   script:
     - *setup-env
     - exit_code=0
-    - pagechecker  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" -H "Authorization:Basic c3NjeDphZXc0b29TaA==" -n 5 || exit_code=1
+    - py.test -s check_pages/pagechecker/pagechecker.py --wire  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" --header "Authorization:Basic c3NjeDphZXc0b29TaA==" --number 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Page Check" --filename pagechecker.log --status $exit_code
     - exit $exit_code
 
@@ -78,7 +78,7 @@ check_pages_hippo:
   script:
     - *setup-env
     - exit_code=0
-    - pagechecker  --folder resources/HIPPO_Portal/  --domain "https://www.hippocampushub.eu" -n 5 || exit_code=1
+    - py.test -s check_pages/pagechecker/pagechecker.py --wire  --folder resources/HIPPO_Portal/  --domain "https://www.hippocampushub.eu" --number 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Page Check" --filename pagechecker.log --status $exit_code
     - exit $exit_code
 
@@ -91,7 +91,7 @@ check_pages_nmc:
   script:
     - *setup-env
     - exit_code=0
-    - pagechecker  --folder resources/NMC_Portal/  --domain "https://bbp.epfl.ch/nmc-portal/microcircuit.html#" -n 5 || exit_code=1
+    - py.test -s check_pages/pagechecker/pagechecker.py --wire --folder resources/NMC_Portal/  --domain "https://bbp.epfl.ch/nmc-portal/microcircuit.html#" --number 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NMC Page Check" --filename pagechecker.log --status $exit_code
     - exit $exit_code
 
