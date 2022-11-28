@@ -31,8 +31,7 @@ def get_requests(seldriver, url, interceptor):
     try:
         driver.get(url)
     except exceptions.WebDriverException:
-        print(f">> Webdriver exception for URL '{url}'")
-        sys.exit(1)
+        return f"WEBDRIVER EXCEPTION for URL '{url}'"
 
     numbers = len(driver.requests)
     while True:
@@ -119,13 +118,17 @@ def test_link_checking(selbase, test_details):
         for index, url_request, use_url in zip(range(n), url_requests, selected_urls):
             print(f"Analyzed {index}/{n} -> {use_url.strip()}")
             req = url_request.result()
-            for request in req:
-                if request["status"] >= 400 and request["status"] != 403:
-                    msg = (
-                        f"ERROR {request['status']} -> {request['url']}  from {use_url}"
-                    )
-                    print(msg)
-                    errors.append(msg)
+            if isinstance(req, str):
+                print(req)
+                errors.append(req)
+            else:
+                for request in req:
+                    if request["status"] >= 400 and request["status"] != 403:
+                        msg = (
+                            f"ERROR {request['status']} -> {request['url']}  from {use_url}"
+                        )
+                        print(msg)
+                        errors.append(msg)
 
     # Write any error to a file (for slack)
     with open(output, "w") as fileout:
