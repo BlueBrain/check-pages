@@ -78,7 +78,7 @@ check_pages_sscx-staging:
   script:
     - *setup-env
     - exit_code=0
-    - py.test -s check_pages/pagechecker/pagechecker.py --wire  --folder resources/SSCX_Portal/  --domain "https://sscx-portal.kcp.bbp.epfl.ch/sscx-portal-dev/" --number 0 || exit_code=1
+    - py.test -s check_pages/pagechecker/pagechecker.py --wire  --folder resources/SSCX_Portal/  --domain "https://sscx-portal.kcp.bbp.epfl.ch/sscx-portal-dev/" --number 50 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Page Check" --filename pagechecker.log --status $exit_code
     - exit $exit_code
 
