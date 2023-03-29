@@ -111,7 +111,7 @@ check_pages_nmc:
 check_dom_sscx:
   variables:
     KUBERNETES_MEMORY_LIMIT: 10Gi
-    KUBERNETES_MEMORY_REQUEST: 10Gi  
+    KUBERNETES_MEMORY_REQUEST: 10Gi
     KUBERNETES_CPU_REQUEST: 4
     KUBERNETES_CPU_LIMIT: 4
   stage: page_checks
@@ -127,6 +127,32 @@ check_dom_sscx:
     - Xvfb :99 &
     - export DISPLAY=:99
     - py.test -s check_pages/page_dom_check.py  --number 20 --params resources/SSCX_Portal/sscx_dom_check.json --domain https://sscx-portal.kcp.bbp.epfl.ch/sscx-portal  --enable-3d-apis --headed || exit_code=1
+    - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
+    - exit $exit_code
+  artifacts:
+    when: always
+    paths:
+      - output
+
+check_dom_sscx-staging:
+  variables:
+    KUBERNETES_MEMORY_LIMIT: 10Gi
+    KUBERNETES_MEMORY_REQUEST: 10Gi
+    KUBERNETES_CPU_REQUEST: 4
+    KUBERNETES_CPU_LIMIT: 4
+  stage: page_checks
+  timeout: 3 hours
+  rules:
+    - if: $PIPELINE_SELECT == "daily_even"
+    - if: $PIPELINE_SELECT == $CI_JOB_NAME
+  image: python:3.8-buster
+  script:
+    - *setup-env
+    - mkdir -p output
+    - exit_code=0
+    - Xvfb :99 &
+    - export DISPLAY=:99
+    - py.test -s check_pages/page_dom_check.py  --number 20 --params resources/SSCX_Portal/sscx_dom_check.json --domain https://sscx-portal.kcp.bbp.epfl.ch/sscx-portal-dev  --enable-3d-apis --headed || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
     - exit $exit_code
   artifacts:
