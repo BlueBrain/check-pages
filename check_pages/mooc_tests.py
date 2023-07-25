@@ -113,6 +113,7 @@ class MoocTests:
         # Click on the next test
         text = params["test"]
         self.next("Test: Waiting for button")
+        self.switch_to_iframe("unit-iframe")
         self.driver.click(f"button:contains('{text}')", timeout=30)
         self.debug("Button for test has been clicked")
         self.driver.save_screenshot(f"{self.OUTPUT}test_{name}_2.png")
@@ -133,13 +134,28 @@ class MoocTests:
         self.driver.switch_to_window(0)
         self.debug("Test: Success")
 
+    def switch_to_iframe(self, frame_id=None):
+        """
+        Switch to the given iFrame.
+        If frame_id is None, switch back to the default content
+        """
+        if frame_id is None:
+            self.debug('frame_id is None - switching to default content')
+            self.driver.driver.switch_to.default_content()
+        else:
+            self.debug(f'Trying to find iframe with ID {frame_id}')
+            iframe = self.driver.find_element(frame_id, by=By.ID, timeout=30)
+            self.debug('iFrame found - switching')
+            self.driver.driver.switch_to.frame(iframe)
+
     def get_grader_key(self):
         """Get and returns the current grader key for the demo exercise."""
         time.sleep(5)
 
         # Click on the next test
         self.next("Test: Waiting for 'KeyGrading' button")
-        self.driver.click(f"button:contains('KeyGrading')", timeout=30)
+        self.switch_to_iframe("unit-iframe")
+        self.driver.click("button:contains('KeyGrading')", timeout=30)
         self.debug("Button for 'KeyGrading' has been clicked")
         self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_1.png")
 
@@ -163,6 +179,7 @@ class MoocTests:
         key = self.get_grader_key()
 
         # Set the grader key and click on "submit" to submit the answer to the grader
+        self.switch_to_iframe("unit-iframe")
         self.next("Set the grader key and click on submit")
         self.driver.type("//input[@id='vizKey']", key)
         self.driver.click("//button[text()='Submit']")
@@ -211,6 +228,7 @@ class MoocTests:
 
         # Choose the page and retrieve the auth token from the page URL (???)
         self.next(f"Clicking on '{pagename}'")
+        self.switch_to_iframe("unit-iframe")
         self.driver.click(f"//button[contains(text(),'{pagename}')]", by=By.XPATH, timeout=60)
         self.debug(f"Clicked on '{pagename}'")
         self.driver.save_screenshot(screenshot_name)
@@ -365,9 +383,10 @@ class MoocTests:
             # Set output for summary
             success = True
             output = f"{name} ... OK\n"
-        except (NoSuchElementException, ElementNotVisibleException, IndexError):
+        except (NoSuchElementException, ElementNotVisibleException, IndexError) as e:
             # Handle the error
             self.debug(f"ERROR for step: {self.step}")
+            self.debug(f"Error is {e}")
             print(100 * "-")
             print(traceback.format_exc())
             print(100 * "-")
@@ -401,7 +420,7 @@ def test_mooc_service(selbase, testparam):
     mooc.perform_test(mooc.check_page, testparam[0], *testparam)
 
 
-@pytest.mark.parametrize("appname", ["check_simui", "check_pspapp", "start_simui", "start_pspapp"])
+@pytest.mark.parametrize("appname", ["check_simui", "start_simui", "start_pspapp", "check_pspapp"])
 def test_mooc_apps(selbase, appname):
     """Tests a service by starting the application and wait until it is running."""
     mooc = MoocTests(selbase)
