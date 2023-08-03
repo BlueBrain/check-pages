@@ -100,9 +100,20 @@ class GTMetrix:
             parameters["data"]["attributes"]["httpauth_username"] = auth[0]
             parameters["data"]["attributes"]["httpauth_password"] = auth[1]
 
-        # Run the post request
         response = requests.post(self.ACCESS_URL + "tests", headers=self.headers, json=parameters)
-        return response.json()["data"]["id"]
+
+        if response.status_code == 402:
+            print("Error: Insufficient API credits for this request.")
+            print("Next API credit refill:", response.json()["errors"][0]["detail"])
+            return None
+        else:
+            try:
+                test_id = response.json()["data"]["id"]
+            except KeyError as e:
+                print("Error: 'data' key not found in the API response.")
+                print("Response JSON: ", response.json())
+                raise e
+            return test_id
 
     def wait_test(self, test_id):
         """Waits until the test with the given test ID has finished
