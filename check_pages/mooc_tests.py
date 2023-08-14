@@ -14,7 +14,6 @@ import traceback
 import datetime
 from urllib.parse import urlparse
 
-
 import pytest
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException
@@ -75,6 +74,8 @@ class MoocTests:
         self.next("Login: Opening page")
         self.driver.open(self.URL)
         self.debug("Opened page")
+        # Maximize the browser window
+        self.driver.maximize_window()
 
         # Get the login credentials
         if "EDX_LOGIN" not in os.environ:
@@ -84,18 +85,20 @@ class MoocTests:
 
         # Click on the edu-ID button
         self.next("Login: Waiting for'SWITCH edu-ID'")
-        self.driver.click("button:contains('SWITCH edu-ID')", timeout=60)
+        self.driver.click('button:contains("SWITCH edu-ID")', timeout=60)
         self.debug("Clicked on 'SWITCH edu-ID'")
 
-        # Set username and password
-        self.next("Login: Inserting authorization")
+        # Login by entering username then clicking login
+        self.next("Login: Inserting username for authentication")
         self.driver.type("#username", username)
+        self.next("Login: Waiting for login button")
+        self.next("Login: Clicking 'Login' button first time")
+        self.driver.click("login-button", by=By.ID, timeout=60)
+        self.debug("Clicked on first 'Login' button")
         self.driver.type("#password", password)
-
-        # Click on login
         self.next("Login: Waiting for login button")
         self.driver.click("login-button", by=By.ID, timeout=60)
-        self.debug("Clicked on 'Login")
+        self.debug("Clicked on 'Login' second time")
 
     def check_page(self, name, params):
         """Test a certain page or service."""
@@ -104,21 +107,29 @@ class MoocTests:
         if "wait" in params:
             timeout = params["wait"]
         else:
-            timeout = 5
+            timeout = 7
 
-        # Just checking
-        time.sleep(5)
+        time.sleep(3)
         self.driver.save_screenshot(f"{self.OUTPUT}/test_{name}_1.png")
 
         # Click on the next test
-        text = params["test"]
-        self.next("Test: Waiting for button")
         self.switch_to_iframe("unit-iframe")
-        self.driver.click(f"button:contains('{text}')", timeout=30)
-        self.debug("Button for test has been clicked")
-        self.driver.save_screenshot(f"{self.OUTPUT}test_{name}_2.png")
+        print("Switched to iframe")
+        time.sleep(3)
 
-        # Switching to the new tab
+        text = params["test"]
+        self.next("Test: Waiting for app button")
+        time.sleep(10)
+        self.debug(f"Attempting to click on the app button: {text}")
+        time.sleep(10)
+        element_selector = f"button:contains('{text}')"
+        element = self.driver.find_element(element_selector)
+        self.driver.execute_script("arguments[0].click();", element)
+        self.debug(f"Button for {text} has been clicked using JavaScript")
+        time.sleep(10)
+        self.driver.save_screenshot(f"{self.OUTPUT}test_{name}_2.png")
+        time.sleep(5)
+        self.next(f"Waiting to switch to the new tab")
         self.driver.switch_to_window(1)
 
         # Check the actual element
@@ -130,7 +141,8 @@ class MoocTests:
         )
         self.driver.save_screenshot(f"{self.OUTPUT}/test_{name}_3.png")
 
-        # Go back to main tab
+        # Go back to the main tab
+        self.next("Waiting to switch back to the original tab")
         self.driver.switch_to_window(0)
         self.debug("Test: Success")
 
@@ -139,6 +151,7 @@ class MoocTests:
         Switch to the given iFrame.
         If frame_id is None, switch back to the default content
         """
+
         if frame_id is None:
             self.debug('frame_id is None - switching to default content')
             self.driver.driver.switch_to.default_content()
@@ -150,16 +163,16 @@ class MoocTests:
 
     def get_grader_key(self):
         """Get and returns the current grader key for the demo exercise."""
-        time.sleep(5)
 
         # Click on the next test
         self.next("Test: Waiting for 'KeyGrading' button")
         self.switch_to_iframe("unit-iframe")
-        self.driver.click("button:contains('KeyGrading')", timeout=30)
-        self.debug("Button for 'KeyGrading' has been clicked")
-        self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_1.png")
+        element = self.driver.find_element('button:contains("KeyGrading")')
+        self.driver.execute_script("arguments[0].click();", element)
+        self.debug("Button for 'KeyGrading' has been clicked using JavaScript")
 
-        # Switching to the new tab
+        self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_1.png")
+    #
         self.driver.switch_to_window(1)
 
         # Get the element and extract the attribute
@@ -170,6 +183,7 @@ class MoocTests:
 
         # Go back to main tab
         self.driver.switch_to_window(0)
+        time.sleep(10)
         return attribute
 
     def grade_submission(self):
@@ -182,8 +196,9 @@ class MoocTests:
         self.switch_to_iframe("unit-iframe")
         self.next("Set the grader key and click on submit")
         self.driver.type("//input[@id='vizKey']", key)
-        self.driver.click("//button[text()='Submit']")
-        self.debug("Clicked on submit")
+        submit_button = self.driver.find_element("//button[text()='Submit']")
+        self.driver.execute_script("arguments[0].click();", submit_button)
+        self.debug("Clicked on submit using JavaScript")
         self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_2.png")
 
         # Check result; sleep is required because element can be found, but it is empty
@@ -224,6 +239,7 @@ class MoocTests:
 
     def open_page(self, pagename):
         """Opens the page of the app, and returns the authentification token."""
+
         screenshot_name = f"{self.OUTPUT}/open_{pagename}.png"
 
         # Choose the page and retrieve the auth token from the page URL (???)
@@ -238,7 +254,12 @@ class MoocTests:
         self.driver.switch_to_newest_window()
         url = self.driver.get_current_url()
         self.debug(f"URL retrieved is `{pagename}`  ->  {url}")
-        return url.split("?")[1]
+
+        # Split the URL only if it contains a question mark
+        if "?" in url:
+            return url.split("?")[1]
+        else:
+            return ""
 
     def check_simui(self):
         """Verify the previous run of a SimUI job."""
@@ -265,17 +286,19 @@ class MoocTests:
 
         # Open the SimUI page and get the auth token (????)
         auth = self.open_page("AppPSP")
-        time.sleep(5)
+        time.sleep(10)
         self.driver.save_screenshot(screenshot_name.format("1-open"))
 
         # Read the name of the job to check
         job_name = self.read_info(self.PSPAPP_NAME)
         self.debug(f"CHECK_PSPAPP job name: {job_name}")
+        time.sleep(5)
 
         # Open the status page for the job
         url = "https://bbp-mooc-sim-neuro.epfl.ch/psp-validation/list" + "?" + auth
         self.next(f"Open the overview page {url}")
         self.driver.open(url)
+        self.debug(f"Opened page of the AppPSP*******, {url}")
         time.sleep(5)
         self.debug("Opened the overview page")
         self.driver.save_screenshot(screenshot_name.format("2-overview"))
@@ -285,7 +308,6 @@ class MoocTests:
         time.sleep(5)
         self.debug(f"Clicked on the job name {job_name}")
         self.driver.save_screenshot(screenshot_name.format("3-clickedjob"))
-
         self.next("Wait for 'SUCCESSFUL'")
         self.text_visible("SUCCESSFUL", timeout=60)
         self.driver.save_screenshot(screenshot_name.format("4-checksuccess"))

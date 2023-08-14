@@ -1,0 +1,7 @@
+.DS_Store
+.idea/
+build/
+check_pages.egg-info/
+debugtest_*.png
+latest_logs/
+service_results.txt
