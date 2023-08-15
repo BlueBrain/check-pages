@@ -107,7 +107,7 @@ class MoocTests:
         if "wait" in params:
             timeout = params["wait"]
         else:
-            timeout = 7
+            timeout = 5
 
         time.sleep(3)
         self.driver.save_screenshot(f"{self.OUTPUT}/test_{name}_1.png")
@@ -126,9 +126,9 @@ class MoocTests:
         element = self.driver.find_element(element_selector)
         self.driver.execute_script("arguments[0].click();", element)
         self.debug(f"Button for {text} has been clicked using JavaScript")
-        time.sleep(10)
+        # time.sleep(10)
         self.driver.save_screenshot(f"{self.OUTPUT}test_{name}_2.png")
-        time.sleep(5)
+        # time.sleep(5)
         self.next(f"Waiting to switch to the new tab")
         self.driver.switch_to_window(1)
 
@@ -172,7 +172,7 @@ class MoocTests:
         self.debug("Button for 'KeyGrading' has been clicked using JavaScript")
 
         self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_1.png")
-    #
+
         self.driver.switch_to_window(1)
 
         # Get the element and extract the attribute
@@ -183,7 +183,7 @@ class MoocTests:
 
         # Go back to main tab
         self.driver.switch_to_window(0)
-        time.sleep(10)
+        # time.sleep(10)
         return attribute
 
     def grade_submission(self):
@@ -239,27 +239,20 @@ class MoocTests:
 
     def open_page(self, pagename):
         """Opens the page of the app, and returns the authentification token."""
-
-        screenshot_name = f"{self.OUTPUT}/open_{pagename}.png"
-
         # Choose the page and retrieve the auth token from the page URL (???)
         self.next(f"Clicking on '{pagename}'")
         self.switch_to_iframe("unit-iframe")
-        self.driver.click(f"//button[contains(text(),'{pagename}')]", by=By.XPATH, timeout=60)
-        self.debug(f"Clicked on '{pagename}'")
-        self.driver.save_screenshot(screenshot_name)
-
+        time.sleep(5)
+        page_app = f"//button[contains(text(),'{pagename}')]"
+        page_element = self.driver.find_element(page_app)
+        self.driver.execute_script("arguments[0].click();", page_element)
+        self.debug(f"The PageApp button was found and clicked using JavaScript")
         time.sleep(5)
         self.next("Get the URL token")
         self.driver.switch_to_newest_window()
         url = self.driver.get_current_url()
         self.debug(f"URL retrieved is `{pagename}`  ->  {url}")
-
-        # Split the URL only if it contains a question mark
-        if "?" in url:
-            return url.split("?")[1]
-        else:
-            return ""
+        return url.split("?")[1]
 
     def check_simui(self):
         """Verify the previous run of a SimUI job."""
@@ -267,7 +260,7 @@ class MoocTests:
 
         # open the SimUI page and get the auth token (TODO: Why is this needed? Anymore?)
         auth = self.open_page("AppSim")
-
+        time.sleep(5)
         # Read SimUI progress page URL and open it
         url = self.read_info(self.SIMUI_NAME) + "?" + auth
         self.next(f"Open CHECK_SIMUI URL: {url}")
@@ -286,27 +279,25 @@ class MoocTests:
 
         # Open the SimUI page and get the auth token (????)
         auth = self.open_page("AppPSP")
-        time.sleep(10)
+        time.sleep(5)
         self.driver.save_screenshot(screenshot_name.format("1-open"))
 
         # Read the name of the job to check
         job_name = self.read_info(self.PSPAPP_NAME)
         self.debug(f"CHECK_PSPAPP job name: {job_name}")
-        time.sleep(5)
 
         # Open the status page for the job
         url = "https://bbp-mooc-sim-neuro.epfl.ch/psp-validation/list" + "?" + auth
         self.next(f"Open the overview page {url}")
         self.driver.open(url)
-        self.debug(f"Opened page of the AppPSP*******, {url}")
-        time.sleep(5)
         self.debug("Opened the overview page")
         self.driver.save_screenshot(screenshot_name.format("2-overview"))
 
         self.next(f"Click on the job name {job_name}")
-        self.driver.click(f"//span[contains(text(),'{job_name}')]", by=By.XPATH, timeout=20)
-        time.sleep(5)
-        self.debug(f"Clicked on the job name {job_name}")
+        job_name_element = f"//span[contains(text(),'{job_name}')]"
+        job_name_selector = self.driver.find_element(job_name_element)
+        self.driver.execute_script("arguments[0].click();", job_name_selector)
+        self.debug(f"Clicked on the job name {job_name} using JavaScript")
         self.driver.save_screenshot(screenshot_name.format("3-clickedjob"))
         self.next("Wait for 'SUCCESSFUL'")
         self.text_visible("SUCCESSFUL", timeout=60)
@@ -319,7 +310,7 @@ class MoocTests:
 
         # Open the page
         self.open_page("AppSim")
-
+        time.sleep(5)
         # Choose the mc1 column as the population
         self.next("Select mc1 popluation")
         self.driver.click("//input[@placeholder='Select']", by=By.XPATH)
@@ -351,6 +342,7 @@ class MoocTests:
         screenshot_name = f"{self.OUTPUT}/start_pspapp_{{}}.png"
         # open the PSPApp page
         self.open_page("AppPSP")
+        time.sleep(5)
 
         # Click on Continue and to run the app.
         self.next("Start a PSPApp Simulation")
