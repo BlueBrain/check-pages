@@ -242,12 +242,12 @@ class MoocTests:
         # Choose the page and retrieve the auth token from the page URL (???)
         self.next(f"Clicking on '{pagename}'")
         self.switch_to_iframe("unit-iframe")
-        time.sleep(5)
+        time.sleep(10)
         page_app = f"//button[contains(text(),'{pagename}')]"
         page_element = self.driver.find_element(page_app)
         self.driver.execute_script("arguments[0].click();", page_element)
         self.debug(f"The PageApp button was found and clicked using JavaScript")
-        time.sleep(5)
+        time.sleep(10)
         self.next("Get the URL token")
         self.driver.switch_to_newest_window()
         url = self.driver.get_current_url()
@@ -279,7 +279,7 @@ class MoocTests:
 
         # Open the SimUI page and get the auth token (????)
         auth = self.open_page("AppPSP")
-        time.sleep(5)
+        time.sleep(10)
         self.driver.save_screenshot(screenshot_name.format("1-open"))
 
         # Read the name of the job to check
@@ -310,7 +310,7 @@ class MoocTests:
 
         # Open the page
         self.open_page("AppSim")
-        time.sleep(5)
+        time.sleep(10)
         # Choose the mc1 column as the population
         self.next("Select mc1 popluation")
         self.driver.click("//input[@placeholder='Select']", by=By.XPATH)
@@ -342,7 +342,7 @@ class MoocTests:
         screenshot_name = f"{self.OUTPUT}/start_pspapp_{{}}.png"
         # open the PSPApp page
         self.open_page("AppPSP")
-        time.sleep(5)
+        time.sleep(10)
 
         # Click on Continue and to run the app.
         self.next("Start a PSPApp Simulation")
