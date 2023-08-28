@@ -65,7 +65,7 @@ check_pages_sscx:
   script:
     - *setup-env
     - exit_code=0
-    - py.test -s check_pages/pagechecker/pagechecker.py --wire  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal/" --header "Authorization:Basic c3NjeDphZXc0b29TaA==" --number 5 || exit_code=1
+    - py.test -s check_pages/pagechecker/pagechecker.py --wire  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal" --header "Authorization:Basic c3NjeDphZXc0b29TaA==" --number 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Page Check" --filename pagechecker.log --status $exit_code
     - exit $exit_code
 

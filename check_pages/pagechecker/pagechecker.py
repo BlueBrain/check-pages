@@ -61,6 +61,7 @@ def test_link_checking(selbase, test_details):
         selbase: The seleniumbase driver.
         test_details: A dictionary with details of the test to perform.
     """
+
     domain = test_details["domain"]
     file = test_details["file"]
     folder = test_details["folder"]
@@ -69,19 +70,26 @@ def test_link_checking(selbase, test_details):
     output = test_details["output"]
     url = test_details["url"]
 
+    print("Debug: folder =", folder)
+    print("Debug: file =", file)
+
     if folder:
         files = glob.glob(folder + "/*.txt")
+        print("Debug: files in folder =", files)
     if file:
         files = [file]
-
+        print("Debug: files =", files)
     # Get the URLs
     if url:
         urls = [url]
     elif files:
         urls = []
         for filename in files:
-            with open(filename) as filein:
-                urls.extend(filein.readlines())
+            try:
+                with open(filename) as filein:
+                    urls.extend(filein.readlines())
+            except FileNotFoundError:
+                print(f"File '{filename}' not found.")
     else:
         raise ValueError(
             "Must specify either an url, or one of the option 'urls' or 'folder'."
