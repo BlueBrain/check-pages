@@ -96,8 +96,10 @@ def location_test(params, portal, test):
     # Get variables
     USER_EMAIL = os.environ["GTMETRIX_USER"]
     API_KEY = os.environ["GTMETRIX_APIKEY"]
-    HTTP_AUTH = (os.environ["HTTP_AUTH_LOGIN"], os.environ["HTTP_AUTH_PASSWD"])
-
+    if "HTTP_AUTH_LOGIN" in os.environ and "HTTP_AUTH_PASSWD" in os.environ:
+        HTTP_AUTH = (os.environ["HTTP_AUTH_LOGIN"], os.environ["HTTP_AUTH_PASSWD"])
+    else:
+        HTTP_AUTH = None
     # timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
     # Read the json data
