@@ -295,7 +295,11 @@ class MoocTests:
 
         self.next(f"Click on the job name {job_name}")
         job_name_element = f"//span[contains(text(),'{job_name}')]"
-        job_name_selector = self.driver.find_element(job_name_element)
+        try:
+            job_name_selector = self.driver.find_element(job_name_element, timeout=60)
+        except:
+            self.driver.save_screenshot(screenshot_name.format("2b-issue"))
+            raise
         self.driver.execute_script("arguments[0].click();", job_name_selector)
         self.debug(f"Clicked on the job name {job_name} using JavaScript")
         self.driver.save_screenshot(screenshot_name.format("3-clickedjob"))
@@ -434,7 +438,7 @@ def test_mooc_service(selbase, testparam):
     mooc.perform_test(mooc.check_page, testparam[0], *testparam)
 
 
-@pytest.mark.parametrize("appname", ["check_simui", "start_simui", "start_pspapp", "check_pspapp"])
+@pytest.mark.parametrize("appname", ["check_simui", "check_pspapp", "start_simui", "start_pspapp"])
 def test_mooc_apps(selbase, appname):
     """Tests a service by starting the application and wait until it is running."""
     mooc = MoocTests(selbase)
