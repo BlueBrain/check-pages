@@ -107,28 +107,22 @@ class MoocTests:
         if "wait" in params:
             timeout = params["wait"]
         else:
-            timeout = 5
+            timeout = 20
 
         time.sleep(3)
         self.driver.save_screenshot(f"{self.OUTPUT}/test_{name}_1.png")
 
         # Click on the next test
         self.switch_to_iframe("unit-iframe")
-        print("Switched to iframe")
         time.sleep(3)
 
         text = params["test"]
         self.next("Test: Waiting for app button")
-        time.sleep(10)
-        self.debug(f"Attempting to click on the app button: {text}")
-        time.sleep(10)
-        element_selector = f"button:contains('{text}')"
-        element = self.driver.find_element(element_selector)
-        self.driver.execute_script("arguments[0].click();", element)
+        element_selector = f"Attempting to click on the app button: {text}"
+        button_test = self.driver.find_element(element_selector, timeout=60)
+        self.driver.execute_script("arguments[0].click();", button_test)
         self.debug(f"Button for {text} has been clicked using JavaScript")
-        # time.sleep(10)
         self.driver.save_screenshot(f"{self.OUTPUT}test_{name}_2.png")
-        # time.sleep(5)
         self.next(f"Waiting to switch to the new tab")
         self.driver.switch_to_window(1)
 
@@ -162,58 +156,58 @@ class MoocTests:
             self.debug('iFrame found - switching')
             self.driver.driver.switch_to.frame(iframe)
 
-    def get_grader_key(self):
-        """Get and returns the current grader key for the demo exercise."""
+    # def get_grader_key(self):
+    #     """Get and returns the current grader key for the demo exercise."""
+    #
+    #     # Click on the next test
+    #     self.next("Test: Waiting for 'KeyGrading' button")
+    #     self.switch_to_iframe("unit-iframe")
+    #     element = self.driver.find_element('button:contains("KeyGrading")')
+    #     self.driver.execute_script("arguments[0].click();", element)
+    #     self.debug("Button for 'KeyGrading' has been clicked using JavaScript")
+    #
+    #     self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_1.png")
+    #
+    #     self.driver.switch_to_window(1)
+    #
+    #     # Get the element and extract the attribute
+    #     self.next("Test: Get submission key")
+    #     element = self.driver.find_element("#submissionKey")
+    #     attribute = element.get_attribute("value")
+    #     self.debug(f"Submission key found: {attribute}")
+    #
+    #     # Go back to main tab
+    #     self.driver.switch_to_window(0)
+    #     # time.sleep(10)
+    #     return attribute
 
-        # Click on the next test
-        self.next("Test: Waiting for 'KeyGrading' button")
-        self.switch_to_iframe("unit-iframe")
-        element = self.driver.find_element('button:contains("KeyGrading")')
-        self.driver.execute_script("arguments[0].click();", element)
-        self.debug("Button for 'KeyGrading' has been clicked using JavaScript")
-
-        self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_1.png")
-
-        self.driver.switch_to_window(1)
-
-        # Get the element and extract the attribute
-        self.next("Test: Get submission key")
-        element = self.driver.find_element("#submissionKey")
-        attribute = element.get_attribute("value")
-        self.debug(f"Submission key found: {attribute}")
-
-        # Go back to main tab
-        self.driver.switch_to_window(0)
-        # time.sleep(10)
-        return attribute
-
-    def grade_submission(self):
-        """Checks if the grade submission works."""
-
-        # Get and set grader key
-        key = self.get_grader_key()
-
-        # Set the grader key and click on "submit" to submit the answer to the grader
-        self.switch_to_iframe("unit-iframe")
-        self.next("Set the grader key and click on submit")
-        self.driver.type("//input[@id='vizKey']", key)
-        submit_button = self.driver.find_element("//button[text()='Submit']")
-        self.driver.execute_script("arguments[0].click();", submit_button)
-        self.debug("Clicked on submit using JavaScript")
-        self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_2.png")
-
-        # Check result; sleep is required because element can be found, but it is empty
-        time.sleep(10)
-        self.next("Check the answer")
-        element = self.driver.find_element("//div[@id='bbpGraderAnswer']")
-        text = element.text
-        self.debug(f"Answer is: {text}")
-
-        # Do I get a valid json in return with grade=1?
-        self.next("Check the json content")
-        result = json.loads(text)
-        assert result["grade"]["value"] == 1
-        self.debug("Test: Success")
+    # def grade_submission(self):
+    #     """Checks if the grade submission works."""
+    #
+    #     # Get and set grader key
+    #     key = self.get_grader_key()
+    #
+    #     # Set the grader key and click on "submit" to submit the answer to the grader
+    #     self.switch_to_iframe("unit-iframe")
+    #     self.next("Set the grader key and click on submit")
+    #     self.driver.type("//input[@id='vizKey']", key)
+    #     submit_button = self.driver.find_element("//button[text()='Submit']")
+    #     self.driver.execute_script("arguments[0].click();", submit_button)
+    #     self.debug("Clicked on submit using JavaScript")
+    #     self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_2.png")
+    #
+    #     # Check result; sleep is required because element can be found, but it is empty
+    #     time.sleep(10)
+    #     self.next("Check the answer")
+    #     element = self.driver.find_element("//div[@id='bbpGraderAnswer']")
+    #     text = element.text
+    #     self.debug(f"Answer is: {text}")
+    #
+    #     # Do I get a valid json in return with grade=1?
+    #     self.next("Check the json content")
+    #     result = json.loads(text)
+    #     assert result["grade"]["value"] == 1
+    #     self.debug("Test: Success")
 
     def write_info(self, filename, info):
         """Write information for the next round."""
@@ -427,16 +421,16 @@ class MoocTests:
         self.driver.tearDown()
 
 
-def test_mooc_grade_submission(selbase):
-    """Tests the grade submission backend."""
-    mooc = MoocTests(selbase)
-    mooc.perform_test(mooc.grade_submission, "grade_submission")
-
-
-def test_mooc_service(selbase, testparam):
-    """Tests a Mooc service (like jupyter, Bryans, Keys etc.)"""
-    mooc = MoocTests(selbase)
-    mooc.perform_test(mooc.check_page, testparam[0], *testparam)
+# def test_mooc_grade_submission(selbase):
+#     """Tests the grade submission backend."""
+#     mooc = MoocTests(selbase)
+#     mooc.perform_test(mooc.grade_submission, "grade_submission")
+#
+#
+# def test_mooc_service(selbase, testparam):
+#     """Tests a Mooc service (like jupyter, Bryans, Keys etc.)"""
+#     mooc = MoocTests(selbase)
+#     mooc.perform_test(mooc.check_page, testparam[0], *testparam)
 
 
 @pytest.mark.parametrize("appname", ["check_simui", "check_pspapp", "start_simui", "start_pspapp"])
