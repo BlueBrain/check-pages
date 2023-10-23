@@ -75,7 +75,7 @@ class MoocTests:
         self.driver.open(self.URL)
         self.debug("Opened page")
         # Maximize the browser window
-        self.driver.maximize_window()
+        # self.driver.maximize_window()
 
         # Get the login credentials
         if "EDX_LOGIN" not in os.environ:
@@ -123,6 +123,7 @@ class MoocTests:
         self.driver.execute_script("arguments[0].click();", button_test)
         self.debug(f"Button for {text} has been clicked using JavaScript")
         self.driver.save_screenshot(f"{self.OUTPUT}test_{name}_2.png")
+        time.sleep(10)
         self.next(f"Waiting to switch to the new tab")
         self.driver.switch_to_window(1)
 
