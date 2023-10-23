@@ -102,8 +102,7 @@ class MoocTests:
         self.next("Login: Waiting for login button")
         self.driver.click("login-button", by=By.ID, timeout=60)
         self.debug("Clicked on 'Login' second time")
-        # self.driver.refresh()
-        # self.debug("refresh")
+
 
     def check_page(self, name, params):
         """Test a certain page or service."""
@@ -112,7 +111,7 @@ class MoocTests:
         if "wait" in params:
             timeout = params["wait"]
         else:
-            timeout = 20
+            timeout = 10
 
         time.sleep(3)
         self.driver.save_screenshot(f"{self.OUTPUT}/test_{name}_1.png")
@@ -157,6 +156,7 @@ class MoocTests:
             self.debug('frame_id is None - switching to default content')
             self.driver.driver.switch_to.default_content()
         else:
+            self.debug(f"Loading page before the iFrame is loaded")
             self.debug(f'Trying to find iframe with ID {frame_id}')
             iframe = self.driver.find_element(frame_id, by=By.ID, timeout=40)
             self.debug('iFrame found - switching')
@@ -243,7 +243,14 @@ class MoocTests:
         # Choose the page and retrieve the auth token from the page URL (???)
         self.next(f"Clicking on '{pagename}'")
         self.switch_to_iframe("unit-iframe")
-        time.sleep(10)
+        self.debug(f"Opened some kind of page and Switched to iFrame")
+        # time.sleep(10)
+        course_header = "//h2[@class='problem-header']"
+        try:
+            header = self.driver.find_element(course_header, timeout=20)
+            self.debug("Found the course header on the QA page")
+        except NoSuchElementException as e:
+            self.debug("The course material on the QA page was not found")
         page_app = f"//button[contains(text(),'{pagename}')]"
         page_element = self.driver.find_element(page_app)
         self.driver.execute_script("arguments[0].click();", page_element)
@@ -263,7 +270,7 @@ class MoocTests:
         auth = self.open_page("AppSim")
         try:
             run_sim_el = "//h1[contains(text(),'Run Simulation')]"
-            self.driver.find_element(run_sim_el, timeout=15)
+            self.driver.find_element(run_sim_el, timeout=25)
         except NoSuchElementException as e:
             self.debug(f"The Run Simulation page title is not present: {e}")
         # time.sleep(5)
@@ -320,7 +327,7 @@ class MoocTests:
 
         # Open the page
         self.open_page("AppSim")
-        time.sleep(10)
+        time.sleep(20)
         # Choose the mc1 column as the population
         self.next("Select mc1 popluation")
         self.driver.click("//input[@placeholder='Select']", by=By.XPATH)
