@@ -73,7 +73,10 @@ class MoocTests:
         """Open the main QA page and login."""
         self.next("Login: Opening page")
         self.driver.open(self.URL)
-        self.debug("Opened page")
+        self.debug("Opened EDX login page")
+        self.driver.refresh()
+        self.debug("Refresh page after EDX page opened")
+
         # Maximize the browser window
         # self.driver.maximize_window()
 
@@ -99,6 +102,8 @@ class MoocTests:
         self.next("Login: Waiting for login button")
         self.driver.click("login-button", by=By.ID, timeout=60)
         self.debug("Clicked on 'Login' second time")
+        # self.driver.refresh()
+        # self.debug("refresh")
 
     def check_page(self, name, params):
         """Test a certain page or service."""
@@ -242,7 +247,7 @@ class MoocTests:
         page_app = f"//button[contains(text(),'{pagename}')]"
         page_element = self.driver.find_element(page_app)
         self.driver.execute_script("arguments[0].click();", page_element)
-        self.debug(f"The PageApp button was found and clicked using JavaScript")
+        self.debug(f"The {page_app} button was found and clicked using JavaScript")
         time.sleep(10)
         self.next("Get the URL token")
         self.driver.switch_to_newest_window()
@@ -256,12 +261,17 @@ class MoocTests:
 
         # open the SimUI page and get the auth token (TODO: Why is this needed? Anymore?)
         auth = self.open_page("AppSim")
-        time.sleep(5)
+        try:
+            run_sim_el = "//h1[contains(text(),'Run Simulation')]"
+            self.driver.find_element(run_sim_el, timeout=15)
+        except NoSuchElementException as e:
+            self.debug(f"The Run Simulation page title is not present: {e}")
+        # time.sleep(5)
         # Read SimUI progress page URL and open it
         url = self.read_info(self.SIMUI_NAME) + "?" + auth
         self.next(f"Open CHECK_SIMUI URL: {url}")
         self.driver.open(url)
-        self.debug(f"Opened page {url}")
+        self.debug(f"Opened page 'Simulation App' {url}")
         self.driver.save_screenshot(screenshot_name.format("1-status"))
 
         self.next("Wait for 'SUCCESSFUL'")
@@ -284,7 +294,7 @@ class MoocTests:
 
         # Open the status page for the job
         url = "https://bbp-mooc-sim-neuro.epfl.ch/psp-validation/list" + "?" + auth
-        self.next(f"Open the overview page {url}")
+        self.next(f"Open the overview page of 'PSP App' {url}")
         self.driver.open(url)
         self.debug("Opened the overview page")
         self.driver.save_screenshot(screenshot_name.format("2-overview"))
@@ -314,6 +324,12 @@ class MoocTests:
         # Choose the mc1 column as the population
         self.next("Select mc1 popluation")
         self.driver.click("//input[@placeholder='Select']", by=By.XPATH)
+        self.debug(f"placeholder is not found")
+        # try:
+        #     self.driver.click("//input[@placeholder='Select']", by=By.XPATH)
+        # except NoSuchElementException as e:
+        #     self.debug(f"placeholder is not found")
+
         self.driver.click("//ul/li/div[text()='mc1_Column']", by=By.XPATH)
 
         # Click continue
@@ -342,7 +358,12 @@ class MoocTests:
         screenshot_name = f"{self.OUTPUT}/start_pspapp_{{}}.png"
         # open the PSPApp page
         self.open_page("AppPSP")
-        time.sleep(10)
+        # time.sleep(10)
+        try:
+            new_psp_validation = "//h3[contains(text(), 'New PSP Validation')]"
+            self.driver.find_element(new_psp_validation, timeout=15)
+        except NoSuchElementException as e:
+            self.debug(f"The title 'New PSP Validation' was not found")
 
         # Click on Continue and to run the app.
         self.next("Start a PSPApp Simulation")
