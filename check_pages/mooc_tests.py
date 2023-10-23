@@ -133,7 +133,8 @@ class MoocTests:
         self.driver.switch_to_window(1)
 
         # Check the actual element
-        self.next("Test: Waiting for element to check")
+        self.next(f"Test: Waiting for element {params['element']['element']} to check")
+        self.driver.save_screenshot(f"{self.OUTPUT}/test_{name}_2.5.png")
         self.driver.find_element(
             params["element"]["element"],
             by=params["element"]["by"],
