@@ -93,7 +93,7 @@ class MoocTests:
         self.driver.type("#username", username)
         self.next("Login: Waiting for login button")
         self.next("Login: Clicking 'Login' button first time")
-        self.driver.click("login-button", by=By.ID, timeout=60)
+        self.driver.click("login-button", by=By.ID, timeout=40)
         self.debug("Clicked on first 'Login' button")
         self.driver.type("#password", password)
         self.next("Login: Waiting for login button")
