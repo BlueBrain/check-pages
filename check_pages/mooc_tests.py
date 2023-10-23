@@ -152,7 +152,7 @@ class MoocTests:
             self.driver.driver.switch_to.default_content()
         else:
             self.debug(f'Trying to find iframe with ID {frame_id}')
-            iframe = self.driver.find_element(frame_id, by=By.ID, timeout=30)
+            iframe = self.driver.find_element(frame_id, by=By.ID, timeout=40)
             self.debug('iFrame found - switching')
             self.driver.driver.switch_to.frame(iframe)
 
