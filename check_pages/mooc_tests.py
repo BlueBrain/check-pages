@@ -16,7 +16,10 @@ from urllib.parse import urlparse
 
 import pytest
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException
+from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException, \
+    TimeoutException
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 @pytest.hookimpl
@@ -73,12 +76,28 @@ class MoocTests:
         """Open the main QA page and login."""
         self.next("Login: Opening page")
         self.driver.open(self.URL)
-        self.debug("Opened EDX login page")
-        self.driver.refresh()
-        self.debug("Refresh page after EDX page opened")
+        self.debug("Opened EDU Swiss MOOC login page")
+        EDU_login_form = "//form[@id = 'login']"
+        try:
+            self.driver.find_element(EDU_login_form, timeout=50)
+            self.debug(f"Found the form with the button to login via EDU")
+        except NoSuchElementException as e:
+            self.debug(f"The page with the EDU login button has not loaded")
 
-        # Maximize the browser window
-        # self.driver.maximize_window()
+            # If the page does not have the EDU login form, then check for a 503 error message
+            try:
+                error_message = self.driver.find_element_by_xpath("//h1[contains(text(), '503')]")
+                self.debug(f"Found the 503 error message on the page: {error_message.text}")
+
+                # Refresh the page if the 503 error message is displayed
+                self.driver.refresh()
+            except NoSuchElementException as e:
+                self.debug(f"The page does not have the EDU login form or a 503 error message")
+
+            # If the EDU login form is still not found, then the login page has not loaded properly
+        if not EDU_login_form:
+            self.debug(f"The page shows 504 error code")
+        self.driver.maximize_window()
 
         # Get the login credentials
         if "EDX_LOGIN" not in os.environ:
@@ -88,7 +107,7 @@ class MoocTests:
 
         # Click on the edu-ID button
         self.next("Login: Waiting for'SWITCH edu-ID'")
-        self.driver.click('button:contains("SWITCH edu-ID")', timeout=60)
+        self.driver.click('button:contains("SWITCH edu-ID")', timeout=30)
         self.debug("Clicked on 'SWITCH edu-ID'")
 
         # Login by entering username then clicking login
@@ -96,11 +115,11 @@ class MoocTests:
         self.driver.type("#username", username)
         self.next("Login: Waiting for login button")
         self.next("Login: Clicking 'Login' button first time")
-        self.driver.click("login-button", by=By.ID, timeout=40)
+        self.driver.click("login-button", by=By.ID, timeout=30)
         self.debug("Clicked on first 'Login' button")
         self.driver.type("#password", password)
         self.next("Login: Waiting for login button")
-        self.driver.click("login-button", by=By.ID, timeout=60)
+        self.driver.click("login-button", by=By.ID, timeout=30)
         self.debug("Clicked on 'Login' second time")
 
 
@@ -127,7 +146,7 @@ class MoocTests:
         self.driver.execute_script("arguments[0].click();", button_test)
         self.debug(f"Button for {text} has been clicked using JavaScript")
         self.driver.save_screenshot(f"{self.OUTPUT}test_{name}_2.png")
-        time.sleep(10)
+        # time.sleep(10)
         self.next(f"Waiting to switch to the new tab")
         self.driver.switch_to_window(1)
 
@@ -162,58 +181,58 @@ class MoocTests:
             self.debug('iFrame found - switching')
             self.driver.driver.switch_to.frame(iframe)
 
-    # def get_grader_key(self):
-    #     """Get and returns the current grader key for the demo exercise."""
-    #
-    #     # Click on the next test
-    #     self.next("Test: Waiting for 'KeyGrading' button")
-    #     self.switch_to_iframe("unit-iframe")
-    #     element = self.driver.find_element('button:contains("KeyGrading")')
-    #     self.driver.execute_script("arguments[0].click();", element)
-    #     self.debug("Button for 'KeyGrading' has been clicked using JavaScript")
-    #
-    #     self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_1.png")
-    #
-    #     self.driver.switch_to_window(1)
-    #
-    #     # Get the element and extract the attribute
-    #     self.next("Test: Get submission key")
-    #     element = self.driver.find_element("#submissionKey")
-    #     attribute = element.get_attribute("value")
-    #     self.debug(f"Submission key found: {attribute}")
-    #
-    #     # Go back to main tab
-    #     self.driver.switch_to_window(0)
-    #     # time.sleep(10)
-    #     return attribute
+    def get_grader_key(self):
+        """Get and returns the current grader key for the demo exercise."""
 
-    # def grade_submission(self):
-    #     """Checks if the grade submission works."""
-    #
-    #     # Get and set grader key
-    #     key = self.get_grader_key()
-    #
-    #     # Set the grader key and click on "submit" to submit the answer to the grader
-    #     self.switch_to_iframe("unit-iframe")
-    #     self.next("Set the grader key and click on submit")
-    #     self.driver.type("//input[@id='vizKey']", key)
-    #     submit_button = self.driver.find_element("//button[text()='Submit']")
-    #     self.driver.execute_script("arguments[0].click();", submit_button)
-    #     self.debug("Clicked on submit using JavaScript")
-    #     self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_2.png")
-    #
-    #     # Check result; sleep is required because element can be found, but it is empty
-    #     time.sleep(10)
-    #     self.next("Check the answer")
-    #     element = self.driver.find_element("//div[@id='bbpGraderAnswer']")
-    #     text = element.text
-    #     self.debug(f"Answer is: {text}")
-    #
-    #     # Do I get a valid json in return with grade=1?
-    #     self.next("Check the json content")
-    #     result = json.loads(text)
-    #     assert result["grade"]["value"] == 1
-    #     self.debug("Test: Success")
+        # Click on the next test
+        self.next("Test: Waiting for 'KeyGrading' button")
+        self.switch_to_iframe("unit-iframe")
+        element = self.driver.find_element('button:contains("KeyGrading")')
+        self.driver.execute_script("arguments[0].click();", element)
+        self.debug("Button for 'KeyGrading' has been clicked using JavaScript")
+
+        self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_1.png")
+
+        self.driver.switch_to_window(1)
+
+        # Get the element and extract the attribute
+        self.next("Test: Get submission key")
+        element = self.driver.find_element("#submissionKey")
+        attribute = element.get_attribute("value")
+        self.debug(f"Submission key found: {attribute}")
+
+        # Go back to main tab
+        self.driver.switch_to_window(0)
+        # time.sleep(10)
+        return attribute
+
+    def grade_submission(self):
+        """Checks if the grade submission works."""
+
+        # Get and set grader key
+        key = self.get_grader_key()
+
+        # Set the grader key and click on "submit" to submit the answer to the grader
+        self.switch_to_iframe("unit-iframe")
+        self.next("Set the grader key and click on submit")
+        self.driver.type("//input[@id='vizKey']", key)
+        submit_button = self.driver.find_element("//button[text()='Submit']")
+        self.driver.execute_script("arguments[0].click();", submit_button)
+        self.debug("Clicked on submit using JavaScript")
+        self.driver.save_screenshot(f"{self.OUTPUT}/test_grade_submission_2.png")
+
+        # Check result; sleep is required because element can be found, but it is empty
+        time.sleep(10)
+        self.next("Check the answer")
+        element = self.driver.find_element("//div[@id='bbpGraderAnswer']")
+        text = element.text
+        self.debug(f"Answer is: {text}")
+
+        # Do I get a valid json in return with grade=1?
+        self.next("Check the json content")
+        result = json.loads(text)
+        assert result["grade"]["value"] == 1
+        self.debug("Test: Success")
 
     def write_info(self, filename, info):
         """Write information for the next round."""
@@ -244,10 +263,9 @@ class MoocTests:
         self.next(f"Clicking on '{pagename}'")
         self.switch_to_iframe("unit-iframe")
         self.debug(f"Opened some kind of page and Switched to iFrame")
-        # time.sleep(10)
         course_header = "//h2[@class='problem-header']"
         try:
-            header = self.driver.find_element(course_header, timeout=20)
+            header = self.driver.find_element(course_header, timeout=40)
             self.debug("Found the course header on the QA page")
         except NoSuchElementException as e:
             self.debug("The course material on the QA page was not found")
@@ -255,7 +273,13 @@ class MoocTests:
         page_element = self.driver.find_element(page_app)
         self.driver.execute_script("arguments[0].click();", page_element)
         self.debug(f"The {page_app} button was found and clicked using JavaScript")
-        time.sleep(10)
+        # time.sleep(10)
+        try:
+            WebDriverWait(self.driver, 15).until(EC.staleness_of(page_element))
+            self.debug("The page element has become stale and is no longer attached to the DOM")
+        except TimeoutException:
+            self.debug("The page element did not become stale within the specified time")
+
         self.next("Get the URL token")
         self.driver.switch_to_newest_window()
         url = self.driver.get_current_url()
@@ -266,8 +290,9 @@ class MoocTests:
         """Verify the previous run of a SimUI job."""
         screenshot_name = f"{self.OUTPUT}/check_simui_{{}}.png"
 
-        # open the SimUI page and get the auth token (TODO: Why is this needed? Anymore?)
+        # open the SimUI page and get the auth token
         auth = self.open_page("AppSim")
+        self.debug(f"Clicked to open APP SIM")
         try:
             run_sim_el = "//h1[contains(text(),'Run Simulation')]"
             self.driver.find_element(run_sim_el, timeout=25)
@@ -290,9 +315,16 @@ class MoocTests:
         """Verify the previous run of a pspapp job."""
         screenshot_name = f"{self.OUTPUT}/check_pspapp_{{}}.png"
 
-        # Open the SimUI page and get the auth token (????)
+        # Open the SimUI page and get the auth token
         auth = self.open_page("AppPSP")
-        time.sleep(10)
+        self.debug(f"Clicked to open PSP APP")
+        new_psp_validation = "//h3[contains(text(), 'New PSP Validation')]"
+
+        try:
+            self.driver.find_element(new_psp_validation, timeout=15)
+            self.debug(f"Found New PSP Validation title")
+        except NoSuchElementException as e:
+            self.debug(f"The title 'New Validation List' title was NOT found")
         self.driver.save_screenshot(screenshot_name.format("1-open"))
 
         # Read the name of the job to check
@@ -327,16 +359,19 @@ class MoocTests:
 
         # Open the page
         self.open_page("AppSim")
-        time.sleep(20)
+        self.debug(f"STARTING SIMULATION APP")
+        define_population = "//h2[contains(text(), 'Define Population to Simulate')]"
+        try:
+            self.driver.find_element(define_population, timeout=15)
+            self.debug(f"found the title Defining population on Simulation Page")
+        except NoSuchElementException as e:
+            self.debug(f"the title Define population on Simulation Page is NOT found")
+
+        # time.sleep(10)
         # Choose the mc1 column as the population
         self.next("Select mc1 popluation")
         self.driver.click("//input[@placeholder='Select']", by=By.XPATH)
         self.debug(f"placeholder is not found")
-        # try:
-        #     self.driver.click("//input[@placeholder='Select']", by=By.XPATH)
-        # except NoSuchElementException as e:
-        #     self.debug(f"placeholder is not found")
-
         self.driver.click("//ul/li/div[text()='mc1_Column']", by=By.XPATH)
 
         # Click continue
@@ -364,8 +399,8 @@ class MoocTests:
         """Test the PSP Validation by starting a validation and checking it is running."""
         screenshot_name = f"{self.OUTPUT}/start_pspapp_{{}}.png"
         # open the PSPApp page
-        self.open_page("AppPSP")
-        # time.sleep(10)
+        app_psp = self.open_page("AppPSP")
+        self.debug(f"STARTING PSP APPLICATION")
         try:
             new_psp_validation = "//h3[contains(text(), 'New PSP Validation')]"
             self.driver.find_element(new_psp_validation, timeout=15)
@@ -450,16 +485,16 @@ class MoocTests:
         self.driver.tearDown()
 
 
-# def test_mooc_grade_submission(selbase):
-#     """Tests the grade submission backend."""
-#     mooc = MoocTests(selbase)
-#     mooc.perform_test(mooc.grade_submission, "grade_submission")
-#
-#
-# def test_mooc_service(selbase, testparam):
-#     """Tests a Mooc service (like jupyter, Bryans, Keys etc.)"""
-#     mooc = MoocTests(selbase)
-#     mooc.perform_test(mooc.check_page, testparam[0], *testparam)
+def test_mooc_grade_submission(selbase):
+    """Tests the grade submission backend."""
+    mooc = MoocTests(selbase)
+    mooc.perform_test(mooc.grade_submission, "grade_submission")
+
+
+def test_mooc_service(selbase, testparam):
+    """Tests a Mooc service (like jupyter, Bryans, Keys etc.)"""
+    mooc = MoocTests(selbase)
+    mooc.perform_test(mooc.check_page, testparam[0], *testparam)
 
 
 @pytest.mark.parametrize("appname", ["check_simui", "check_pspapp", "start_simui", "start_pspapp"])
