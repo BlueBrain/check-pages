@@ -16,10 +16,7 @@ from urllib.parse import urlparse
 
 import pytest
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException, \
-    TimeoutException
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException
 
 
 @pytest.hookimpl
@@ -80,11 +77,11 @@ class MoocTests:
         self.driver.maximize_window()
 
         EDU_login_form = "//form[@id = 'login']"
-        edu_login_button = None
+        # edu_login_button = None
         try:
-            edu_login_button = self.driver.find_element(EDU_login_form, timeout=60)
+            self.driver.find_element(EDU_login_form, timeout=60)
             self.debug(f"Found the form with the button to login via EDU")
-        except NoSuchElementException as e:
+        except NoSuchElementException:
             self.debug(f"The page with the EDU login button has not loaded")
             pass
 
@@ -112,6 +109,8 @@ class MoocTests:
         self.debug("Clicked on 'Login' second time")
 
     def check_page(self, name, params):
+        """Test a certain page or service."""
+        # Get the timeout to be used
         if "wait" in params:
             timeout = params["wait"]
         else:
@@ -120,7 +119,8 @@ class MoocTests:
         time.sleep(3)
         self.driver.save_screenshot(f"{self.OUTPUT}/test_{name}_1.png")
         self.switch_to_iframe("unit-iframe")
-        print("Switched to iframe")
+        # print("Switched to iframe")
+        self.debug("Switched to iframe")
         time.sleep(3)
 
         text = params["test"]
@@ -128,11 +128,10 @@ class MoocTests:
         # time.sleep(10)
         course_header = "//h2[@class='problem-header']"
         try:
-            header = self.driver.find_element(course_header, timeout=5)
+            self.driver.find_element(course_header, timeout=5)
             self.debug("Found the course header on the QA page")
-        except NoSuchElementException as e:
+        except NoSuchElementException:
             self.debug("The course material on the QA page was not found")
-            pass
         self.debug(f"Attempting to click on the app button: {text}")
         # time.sleep(10)
         element_selector = f"button:contains('{text}')"
@@ -261,9 +260,9 @@ class MoocTests:
         # time.sleep(10)
         course_header = "//h2[@class='problem-header']"
         try:
-            header = self.driver.find_element(course_header, timeout=10)
+            self.driver.find_element(course_header, timeout=10)
             self.debug("Found the course header on the QA page")
-        except NoSuchElementException as e:
+        except NoSuchElementException:
             self.debug("The course material on the QA page was not found")
         page_app = f"//button[contains(text(),'{pagename}')]"
         page_element = self.driver.find_element(page_app)
@@ -313,7 +312,7 @@ class MoocTests:
         try:
             self.driver.find_element(new_psp_validation, timeout=15)
             self.debug(f"Found New PSP Validation title")
-        except NoSuchElementException as e:
+        except NoSuchElementException:
             self.debug(f"The title 'New Validation List' title was NOT found")
         self.driver.save_screenshot(screenshot_name.format("1-open"))
 
@@ -354,7 +353,7 @@ class MoocTests:
         try:
             self.driver.find_element(define_population, timeout=15)
             self.debug(f"found the title Defining population on Simulation Page")
-        except NoSuchElementException as e:
+        except NoSuchElementException:
             self.debug(f"the title Define population on Simulation Page is NOT found")
 
         # time.sleep(10)
@@ -394,7 +393,7 @@ class MoocTests:
         try:
             new_psp_validation = "//h3[contains(text(), 'New PSP Validation')]"
             self.driver.find_element(new_psp_validation, timeout=15)
-        except NoSuchElementException as e:
+        except NoSuchElementException:
             self.debug(f"The title 'New PSP Validation' was not found")
 
         # Click on Continue and to run the app.
