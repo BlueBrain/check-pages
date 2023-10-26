@@ -388,7 +388,7 @@ class MoocTests:
         """Test the PSP Validation by starting a validation and checking it is running."""
         screenshot_name = f"{self.OUTPUT}/start_pspapp_{{}}.png"
         # open the PSPApp page
-        app_psp = self.open_page("AppPSP")
+        self.open_page("AppPSP")
         self.debug(f"STARTING PSP APPLICATION")
         try:
             new_psp_validation = "//h3[contains(text(), 'New PSP Validation')]"
