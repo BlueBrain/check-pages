@@ -77,6 +77,8 @@ class MoocTests:
         self.next("Login: Opening page")
         self.driver.open(self.URL)
         self.debug("Opened EDU Swiss MOOC login page")
+        self.driver.maximize_window()
+
         EDU_login_form = "//form[@id = 'login']"
         edu_login_button = None
         try:
@@ -84,6 +86,7 @@ class MoocTests:
             self.debug(f"Found the form with the button to login via EDU")
         except NoSuchElementException as e:
             self.debug(f"The page with the EDU login button has not loaded")
+            pass
 
         # Get the login credentials
         if "EDX_LOGIN" not in os.environ:
@@ -108,39 +111,37 @@ class MoocTests:
         self.driver.click("login-button", by=By.ID, timeout=60)
         self.debug("Clicked on 'Login' second time")
 
-
     def check_page(self, name, params):
-        """Test a certain page or service."""
-        self.driver.maximize_window()
-
-        # Get the timeout to be used
         if "wait" in params:
             timeout = params["wait"]
         else:
-            timeout = 10
+            timeout = 5
 
         time.sleep(3)
         self.driver.save_screenshot(f"{self.OUTPUT}/test_{name}_1.png")
-
-        # Click on the next test
         self.switch_to_iframe("unit-iframe")
-        # time.sleep(3)
+        print("Switched to iframe")
+        time.sleep(3)
 
         text = params["test"]
         self.next("Test: Waiting for app button")
-        # course_header = "//h2[@class='problem-header']"
-        # try:
-        #     header = self.driver.find_element(course_header, timeout=10)
-        #     self.debug("Found the course header on the QA page")
-        # except NoSuchElementException as e:
-        #     self.debug("The course material on the QA page was not found")
-
-        element_selector = f"Attempting to click on the app button: {text}"
-        button_test = self.driver.find_element(element_selector, timeout=30)
-        self.driver.execute_script("arguments[0].click();", button_test)
-        self.debug(f"Button for {text} has been clicked using JavaScript")
-        self.driver.save_screenshot(f"{self.OUTPUT}test_{name}_2.png")
         # time.sleep(10)
+        course_header = "//h2[@class='problem-header']"
+        try:
+            header = self.driver.find_element(course_header, timeout=5)
+            self.debug("Found the course header on the QA page")
+        except NoSuchElementException as e:
+            self.debug("The course material on the QA page was not found")
+            pass
+        self.debug(f"Attempting to click on the app button: {text}")
+        # time.sleep(10)
+        element_selector = f"button:contains('{text}')"
+        element = self.driver.find_element(element_selector)
+        self.driver.execute_script("arguments[0].click();", element)
+        self.debug(f"Button for {text} has been clicked using JavaScript")
+        # time.sleep(10)
+        self.driver.save_screenshot(f"{self.OUTPUT}test_{name}_2.png")
+        # time.sleep(5)
         self.next(f"Waiting to switch to the new tab")
         self.driver.switch_to_window(1)
 
