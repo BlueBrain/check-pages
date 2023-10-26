@@ -93,7 +93,7 @@ class MoocTests:
 
         # Click on the edu-ID button
         self.next("Login: Waiting for'SWITCH edu-ID'")
-        self.driver.click('button:contains("SWITCH edu-ID")', timeout=30)
+        self.driver.click('button:contains("SWITCH edu-ID")', timeout=60)
         self.debug("Clicked on 'SWITCH edu-ID'")
 
         # Login by entering username then clicking login
@@ -101,11 +101,11 @@ class MoocTests:
         self.driver.type("#username", username)
         self.next("Login: Waiting for login button")
         self.next("Login: Clicking 'Login' button first time")
-        self.driver.click("login-button", by=By.ID, timeout=30)
+        self.driver.click("login-button", by=By.ID, timeout=60)
         self.debug("Clicked on first 'Login' button")
         self.driver.type("#password", password)
         self.next("Login: Waiting for login button")
-        self.driver.click("login-button", by=By.ID, timeout=30)
+        self.driver.click("login-button", by=By.ID, timeout=60)
         self.debug("Clicked on 'Login' second time")
 
 
@@ -124,16 +124,16 @@ class MoocTests:
 
         # Click on the next test
         self.switch_to_iframe("unit-iframe")
-        time.sleep(3)
+        # time.sleep(3)
 
         text = params["test"]
         self.next("Test: Waiting for app button")
-        course_header = "//h2[@class='problem-header']"
-        try:
-            header = self.driver.find_element(course_header, timeout=10)
-            self.debug("Found the course header on the QA page")
-        except NoSuchElementException as e:
-            self.debug("The course material on the QA page was not found")
+        # course_header = "//h2[@class='problem-header']"
+        # try:
+        #     header = self.driver.find_element(course_header, timeout=10)
+        #     self.debug("Found the course header on the QA page")
+        # except NoSuchElementException as e:
+        #     self.debug("The course material on the QA page was not found")
 
         element_selector = f"Attempting to click on the app button: {text}"
         button_test = self.driver.find_element(element_selector, timeout=30)
@@ -171,7 +171,7 @@ class MoocTests:
         else:
             self.debug(f"Loading page before the iFrame is loaded")
             self.debug(f'Trying to find iframe with ID {frame_id}')
-            iframe = self.driver.find_element(frame_id, by=By.ID, timeout=40)
+            iframe = self.driver.find_element(frame_id, by=By.ID, timeout=30)
             self.debug('iFrame found - switching')
             self.driver.driver.switch_to.frame(iframe)
 
@@ -257,9 +257,10 @@ class MoocTests:
         self.next(f"Clicking on '{pagename}'")
         self.switch_to_iframe("unit-iframe")
         self.debug(f"Opened some kind of page and Switched to iFrame")
+        # time.sleep(10)
         course_header = "//h2[@class='problem-header']"
         try:
-            header = self.driver.find_element(course_header, timeout=40)
+            header = self.driver.find_element(course_header, timeout=10)
             self.debug("Found the course header on the QA page")
         except NoSuchElementException as e:
             self.debug("The course material on the QA page was not found")
@@ -267,13 +268,7 @@ class MoocTests:
         page_element = self.driver.find_element(page_app)
         self.driver.execute_script("arguments[0].click();", page_element)
         self.debug(f"The {page_app} button was found and clicked using JavaScript")
-        # time.sleep(10)
-        try:
-            WebDriverWait(self.driver, 15).until(EC.staleness_of(page_element))
-            self.debug("The page element has become stale and is no longer attached to the DOM")
-        except TimeoutException:
-            self.debug("The page element did not become stale within the specified time")
-
+        time.sleep(10)
         self.next("Get the URL token")
         self.driver.switch_to_newest_window()
         url = self.driver.get_current_url()
