@@ -30,7 +30,7 @@ lint:
     - cat /tmp/google.pub | apt-key add -
     - echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list
     - mkdir -p /usr/share/desktop-directories
-    - wget --no-verbose -O /tmp/chrome.deb http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_107.0.5304.87-1_amd64.deb && apt install -y /tmp/chrome.deb && rm /tmp/chrome.deb
+    - wget --no-verbose -O /tmp/chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_120.0.6099.216-1_amd64.deb && apt install -y /tmp/chrome.deb && rm /tmp/chrome.deb
     - dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome
     - echo -e "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome
     - chmod 755 /opt/google/chrome/google-chrome
@@ -98,7 +98,7 @@ check_pages_nmc:
 check_dom_sscx:
   variables:
     KUBERNETES_MEMORY_LIMIT: 10Gi
-    KUBERNETES_MEMORY_REQUEST: 10Gi  
+    KUBERNETES_MEMORY_REQUEST: 10Gi
     KUBERNETES_CPU_REQUEST: 4
     KUBERNETES_CPU_LIMIT: 4
   stage: page_checks
@@ -124,7 +124,7 @@ check_dom_sscx:
 check_dom_hippo:
   variables:
     KUBERNETES_MEMORY_LIMIT: 5Gi
-    KUBERNETES_MEMORY_REQUEST: 5Gi 
+    KUBERNETES_MEMORY_REQUEST: 5Gi
   stage: page_checks
   rules:
     - if: $PIPELINE_SELECT == "daily_even"
@@ -147,7 +147,7 @@ check_dom_hippo:
 check_dom_ngv:
   variables:
     KUBERNETES_MEMORY_LIMIT: 5Gi
-    KUBERNETES_MEMORY_REQUEST: 5Gi 
+    KUBERNETES_MEMORY_REQUEST: 5Gi
   stage: page_checks
   rules:
     - if: $PIPELINE_SELECT == "daily_even"
