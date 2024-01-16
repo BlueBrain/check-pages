@@ -37,7 +37,15 @@ lint:
     - google-chrome --version
     - wget --no-verbose https://chromedriver.storage.googleapis.com/107.0.5304.18/chromedriver_linux64.zip && unzip chromedriver_linux64.zip
     - export PATH=`pwd`:${PATH}
-    - pip install -r requirements.txt
+
+.install-requirements-old: &install-requirements-old
+    - *setup-env
+    - pip install -r requirements-old.txt
+    - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
+
+.install-requirements-new: &install-requirements-new
+    - *setup-env
+    - pip install -r requirements-new.txt
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
 
 check_ngvviewer:
@@ -47,7 +55,7 @@ check_ngvviewer:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *setup-env
+    - *install-requirements-new
     - NGVViewerStatus=`curl -s https://bbp.epfl.ch/ngv-viewer/status`
     - if [ "$NGVViewerStatus" = "Status OK" ]; then
     -   'echo "NGV Viewer seems to work normally."'
@@ -63,7 +71,7 @@ check_pages_sscx:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *setup-env
+    - *install-requirements-old
     - exit_code=0
     - py.test -s check_pages/pagechecker/pagechecker.py --wire  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal" --header "Authorization:Basic c3NjeDphZXc0b29TaA==" --number 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Page Check" --filename pagechecker.log --status $exit_code
@@ -76,7 +84,7 @@ check_pages_hippo:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *setup-env
+    - *install-requirements-new
     - exit_code=0
     - py.test -s check_pages/pagechecker/pagechecker.py --wire  --folder resources/HIPPO_Portal/  --domain "https://www.hippocampushub.eu" --number 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Page Check" --filename pagechecker.log --status $exit_code
@@ -89,7 +97,7 @@ check_pages_nmc:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *setup-env
+    - *install-requirements-new
     - exit_code=0
     - py.test -s check_pages/pagechecker/pagechecker.py --wire --folder resources/NMC_Portal/  --domain "https://bbp.epfl.ch/nmc-portal/microcircuit.html#" --number 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NMC Page Check" --filename pagechecker.log --status $exit_code
@@ -108,7 +116,7 @@ check_dom_sscx:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *setup-env
+    - *install-requirements-old
     - mkdir -p output
     - exit_code=0
     - Xvfb :99 &
@@ -131,7 +139,7 @@ check_dom_hippo:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *setup-env
+    - *install-requirements-new
     - mkdir -p output
     - exit_code=0
     - Xvfb :99 &
@@ -154,7 +162,7 @@ check_dom_ngv:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *setup-env
+    - *install-requirements-new
     - mkdir -p output
     - exit_code=0
     - Xvfb :99 &
@@ -241,7 +249,7 @@ check_mooc:
     - exit_code=0
     - py.test -s check_pages/mooc_tests.py --tests resources/Mooc/mooc_tests.json --headless --wire || exit_code=1
     - cat service_results.txt
-    - mv latest_logs debug
+    - if [ -e latest_logs ]; then mv latest_logs debug; fi
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "MOOC Check" --filename service_results.txt --status $exit_code
     - cat SIMUI.INFO
     - exit $exit_code
