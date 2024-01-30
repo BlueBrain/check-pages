@@ -13,7 +13,7 @@
 			[["id", "metadata"]],
 			[["id", "morphologyDownloadBtn"]],
 			[["id", "morphometrics"]],
-			[["id", "expMorphMemodelList"], ["xpath", ".//p[contains(text(),'No models were built using this morphology')]"]],
+			[["id", "expMorphMemodelList"],["xpath", ".//p[contains(text(),'No models were built using this morphology')]"]],
 			[["id", "expMorphologyTable"]],
 			[["class name", "morpho-viewer"]]
 		]

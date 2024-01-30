@@ -280,7 +280,7 @@ class MoocTests:
 
         # Open the SimUI page and get the auth token (????)
         auth = self.open_page("AppPSP")
-        time.sleep(10)
+        time.sleep(20)
         self.driver.save_screenshot(screenshot_name.format("1-open"))
 
         # Read the name of the job to check

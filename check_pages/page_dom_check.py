@@ -9,10 +9,9 @@ import json
 import random
 from io import BytesIO
 from PIL import Image
-
 import pytest
 from selenium.common import exceptions
-
+from seleniumbase.common import exceptions as sb_exceptions
 
 LOG_OUTPUT = "page_dom_check.log"
 
@@ -73,6 +72,7 @@ def make_full_screenshot(driver, savename):
     """Performs a full screenshot of the entire page.
     Taken from https://gist.github.com/fabtho/13e4a2e7cfbfde671b8fa81bbe9359fb
     """
+
     # initiate value
     img_list = []  # to store image fragment
     offset = 0  # where to start
@@ -156,6 +156,7 @@ def find_element(driver, method, name):
     """Returns True, if elements exists in webpage, False else.
 
     Args:
+        driver: Selenium WebDriver instance
         method (string): Name of the selenium method to find an element.
         name (string): Name of the element to find.
     """
@@ -163,6 +164,8 @@ def find_element(driver, method, name):
         driver.find_element(name, by=method, timeout=1.0)
         return True
     except exceptions.NoSuchElementException:
+        return False
+    except sb_exceptions.NoSuchElementException:
         return False
 
 
@@ -209,6 +212,7 @@ def check_url(driver, site, domain, url, checks, wait, screenshots):
 
         # Check all elements
         debug("Trying to find the elements")
+        time.sleep(1)
         for name, check in checks.items():
             if not check_result[name]:
                 found = False
@@ -239,7 +243,7 @@ def check_url(driver, site, domain, url, checks, wait, screenshots):
         # Make full screenshot if required
         if screenshots:
             debug("Making screenshot")
-            filename = f"output/{savename}_{time.time()-time0:.1f}.png"
+            filename = f"output/{savename}_{time.time() - time0:.1f}.png"
             make_full_screenshot(driver, filename)
 
         # Check if wait time has elapsed
@@ -253,7 +257,7 @@ def check_url(driver, site, domain, url, checks, wait, screenshots):
     if not success:
         # Not all elements found after time limit
         debug("Making full screenshot because of timeout.")
-        filename = f"output/{savename}_{time.time()-time0:.1f}_error.png"
+        filename = f"output/{savename}_{time.time() - time0:.1f}_error.png"
         make_full_screenshot(driver, filename)
 
         errors = []
@@ -261,11 +265,11 @@ def check_url(driver, site, domain, url, checks, wait, screenshots):
             if not found:
                 errors.append(element)
 
-        debug(f"ERROR: Elements missing after {time.time()-time0:.1f} s: {errors}")
+        debug(f"ERROR: Elements missing after {time.time() - time0:.1f} s: {errors}")
         write_errors(LOG_OUTPUT, site, complete_url, errors)
     else:
         if screenshots:
-            filename = f"output/{savename}_{time.time()-time0:.1f}_ok.png"
+            filename = f"output/{savename}_{time.time() - time0:.1f}_ok.png"
             make_full_screenshot(driver, filename)
 
     browser_log = driver.driver.get_log("browser")

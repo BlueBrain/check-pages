@@ -1,9 +1,0 @@
-selenium-wire
-click
-psutil
-requests
-elemental
-pytest
-pytest-repeat
-seleniumbase==4.22.5
-selenium

@@ -30,23 +30,21 @@ lint:
     - cat /tmp/google.pub | apt-key add -
     - echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list
     - mkdir -p /usr/share/desktop-directories
-    - wget --no-verbose -O /tmp/chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_120.0.6099.216-1_amd64.deb && apt install -y /tmp/chrome.deb && rm /tmp/chrome.deb
+    - wget --no-verbose -O /tmp/chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_121.0.6167.85-1_amd64.deb && apt install -y /tmp/chrome.deb && rm /tmp/chrome.deb
     - dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome
     - echo -e "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome
     - chmod 755 /opt/google/chrome/google-chrome
     - google-chrome --version
-    - wget --no-verbose https://chromedriver.storage.googleapis.com/107.0.5304.18/chromedriver_linux64.zip && unzip chromedriver_linux64.zip
+    - wget --no-verbose https://chromedriver.storage.googleapis.com/121.0.6167.85/chromedriver_linux64.zip && unzip chromedriver_linux64.zip
     - export PATH=`pwd`:${PATH}
-
-.install-requirements-old: &install-requirements-old
-    - *setup-env
-    - pip install -r requirements-old.txt
+    - wget --no-verbose https://github.com/mozilla/geckodriver/releases/download/v0.34.0/geckodriver-v0.34.0-linux64.tar.gz
+    - tar -xvzf geckodriver-v0.34.0-linux64.tar.gz
+    - chmod +x geckodriver
+    - mv geckodriver /usr/local/bin/
+    - pip install -r requirements.txt
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
 
-.install-requirements-new: &install-requirements-new
-    - *setup-env
-    - pip install -r requirements-new.txt
-    - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
+
 
 check_ngvviewer:
   stage: page_checks
@@ -55,7 +53,7 @@ check_ngvviewer:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *install-requirements-new
+    - *setup-env
     - NGVViewerStatus=`curl -s https://bbp.epfl.ch/ngv-viewer/status`
     - if [ "$NGVViewerStatus" = "Status OK" ]; then
     -   'echo "NGV Viewer seems to work normally."'
@@ -71,9 +69,9 @@ check_pages_sscx:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *install-requirements-old
+    - *setup-env
     - exit_code=0
-    - py.test -s check_pages/pagechecker/pagechecker.py --wire  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal" --header "Authorization:Basic c3NjeDphZXc0b29TaA==" --number 5 || exit_code=1
+    - pytest -s check_pages/pagechecker/pagechecker.py --wire  --folder resources/SSCX_Portal/  --domain "https://bbp.epfl.ch/sscx-portal" --header "Authorization:Basic c3NjeDphZXc0b29TaA==" --number 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Page Check" --filename pagechecker.log --status $exit_code
     - exit $exit_code
 
@@ -84,9 +82,9 @@ check_pages_hippo:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *install-requirements-new
+    - *setup-env
     - exit_code=0
-    - py.test -s check_pages/pagechecker/pagechecker.py --wire  --folder resources/HIPPO_Portal/  --domain "https://www.hippocampushub.eu" --number 5 || exit_code=1
+    - pytest -s -v check_pages/pagechecker/pagechecker.py --wire  --folder resources/HIPPO_Portal/  --domain "https://www.hippocampushub.eu" --number 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Page Check" --filename pagechecker.log --status $exit_code
     - exit $exit_code
 
@@ -97,7 +95,7 @@ check_pages_nmc:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *install-requirements-new
+    - *setup-env
     - exit_code=0
     - py.test -s check_pages/pagechecker/pagechecker.py --wire --folder resources/NMC_Portal/  --domain "https://bbp.epfl.ch/nmc-portal/microcircuit.html#" --number 5 || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NMC Page Check" --filename pagechecker.log --status $exit_code
@@ -116,12 +114,12 @@ check_dom_sscx:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *install-requirements-old
+    - *setup-env
     - mkdir -p output
     - exit_code=0
     - Xvfb :99 &
     - export DISPLAY=:99
-    - py.test -s check_pages/page_dom_check.py  --number 20 --params resources/SSCX_Portal/sscx_dom_check.json --domain https://sscx-portal.kcp.bbp.epfl.ch/sscx-portal  --enable-3d-apis --headed || exit_code=1
+    - pytest -s -v check_pages/page_dom_check.py  --number 20 --params resources/SSCX_Portal/sscx_dom_check.json --domain https://sscx-portal.kcp.bbp.epfl.ch/sscx-portal  --headed --enable-3d-apis  || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "SSCX Dom Check" --filename page_dom_check.log --status $exit_code
     - exit $exit_code
   artifacts:
@@ -139,12 +137,12 @@ check_dom_hippo:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *install-requirements-new
+    - *setup-env
     - mkdir -p output
     - exit_code=0
     - Xvfb :99 &
     - export DISPLAY=:99
-    - py.test -s check_pages/page_dom_check.py --number 5 --params resources/HIPPO_Portal/hippo_dom_check.json --domain https://www.hippocampushub.eu --enable-3d-apis --headed  || exit_code=1
+    - pytest -s check_pages/page_dom_check.py --number 5 --params resources/HIPPO_Portal/hippo_dom_check.json --domain https://www.hippocampushub.eu --enable-3d-apis --xvfb  || exit_code=1
     - echo slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "HIPPO Dom Check" --filename page_dom_check.log --status $exit_code
     - exit $exit_code
   artifacts:
@@ -162,12 +160,12 @@ check_dom_ngv:
     - if: $PIPELINE_SELECT == $CI_JOB_NAME
   image: python:3.8-buster
   script:
-    - *install-requirements-new
+    - *setup-env
     - mkdir -p output
     - exit_code=0
     - Xvfb :99 &
     - export DISPLAY=:99
-    - py.test -s check_pages/page_dom_check.py --number 3 --params resources/NGV_Portal/ngv_dom_check.json --domain http://ngv-portal.kcp.bbp.epfl.ch/ngv-portal --screenshots  --headed || exit_code=1
+    - pytest -s check_pages/page_dom_check.py --number 3 --params resources/NGV_Portal/ngv_dom_check.json --domain http://ngv-portal.kcp.bbp.epfl.ch/ngv-portal --screenshots  --headed || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "NGV Dom Check" --filename page_dom_check.log --status $exit_code
     - exit $exit_code
   artifacts:
@@ -247,7 +245,7 @@ check_mooc:
     - cat SIMUI.INFO
     - mkdir debug
     - exit_code=0
-    - py.test -s check_pages/mooc_tests.py --tests resources/Mooc/mooc_tests.json --headless --wire || exit_code=1
+    - pytest -s check_pages/mooc_tests.py --tests resources/Mooc/mooc_tests.json --headless --wire || exit_code=1
     - cat service_results.txt
     - if [ -e latest_logs ]; then mv latest_logs debug; fi
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "MOOC Check" --filename service_results.txt --status $exit_code
@@ -281,7 +279,7 @@ check_ebrains:
     - mkdir debug
     - ls -ltr
     - exit_code=0
-    - py.test -s check_pages/ebrains_tests.py --headless --wire || exit_code=1
+    - pytest -s check_pages/ebrains_tests.py --headless --wire || exit_code=1
     - cat service_results.txt
     - ls -ltr
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "EBRAINS Check" --filename service_results.txt --status $exit_code
@@ -309,6 +307,6 @@ check_pickneuron:
     - pip install -r requirements.txt
     - pip install -i https://bbpteam.epfl.ch/repository/devpi/simple .
     - exit_code=0
-    - py.test -s check_pages/pick_test.py --headless || exit_code=1
+    - pytest -s check_pages/pick_test.py --headless || exit_code=1
     - slack_reporter --ok_url $SLACK_LINK_OK --err_url $SLACK_LINK_NOK --name "PICK-NEURON Check" --status $exit_code
     - exit $exit_code
