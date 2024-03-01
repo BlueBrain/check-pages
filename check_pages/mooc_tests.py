@@ -38,10 +38,11 @@ class MoocTests:
     """Defines the MOOC Testing class."""
 
     # This URL leads to a special edx page containing links to all test apps and services.
-    URL = (
-        "https://courseware.epfl.ch/courses/course-v1:EPFL+SimNeuro2+2019_2/courseware/"
-        "ba6f8be8f0bb4956a94147f7a09e4cf4/fc4b687d340a4c69a862661e110970b1/1"
-    )
+    URL = ("https://app.courseware.epfl.ch/learning/course/course-v1:EPFL+SimNeuro2+2019_2/home"
+           # The previous URL used is kept below:
+           # "https://courseware.epfl.ch/courses/course-v1:EPFL+SimNeuro2+2019_2/courseware/"
+           # "ba6f8be8f0bb4956a94147f7a09e4cf4/fc4b687d340a4c69a862661e110970b1/1"
+           )
     SIMUI_NAME = "SIMUI.INFO"
     PSPAPP_NAME = "PSPAPP.INFO"
 
@@ -74,6 +75,11 @@ class MoocTests:
         self.next("Login: Opening page")
         self.driver.open(self.URL)
         self.debug("Opened page")
+        signin = self.driver.find_element("//a[@href='https://courseware.epfl.ch/login?next=https"
+                                          "%3A%2F%2Fapp.courseware.epfl.ch%2Flearning%2Fcourse"
+                                          "%2Fcourse-v1%3AEPFL%2BSimNeuro2%2B2019_2%2Fhome' and "
+                                          "text()='Sign in' and @class='btn btn-primary']")
+        self.driver.execute_script("arguments[0].click();", signin)
         # Maximize the browser window
         self.driver.maximize_window()
 
@@ -99,6 +105,10 @@ class MoocTests:
         self.next("Login: Waiting for login button")
         self.driver.click("login-button", by=By.ID, timeout=60)
         self.debug("Clicked on 'Login' second time")
+        QA_page = self.driver.find_element("//a[@href='/learning/course/course-v1:EPFL+SimNeuro2"
+                                           "+2019_2/block-v1:EPFL+SimNeuro2+2019_2+type"
+                                           "@sequential+block@fc4b687d340a4c69a862661e110970b1']")
+        self.driver.execute_script("arguments[0].click();", QA_page)
 
     def check_page(self, name, params):
         """Test a certain page or service."""
@@ -126,9 +136,7 @@ class MoocTests:
         element = self.driver.find_element(element_selector)
         self.driver.execute_script("arguments[0].click();", element)
         self.debug(f"Button for {text} has been clicked using JavaScript")
-        # time.sleep(10)
         self.driver.save_screenshot(f"{self.OUTPUT}test_{name}_2.png")
-        # time.sleep(5)
         self.next(f"Waiting to switch to the new tab")
         self.driver.switch_to_window(1)
 
@@ -184,7 +192,6 @@ class MoocTests:
 
         # Go back to main tab
         self.driver.switch_to_window(0)
-        # time.sleep(10)
         return attribute
 
     def grade_submission(self):
