@@ -105,9 +105,14 @@ class MoocTests:
         self.next("Login: Waiting for login button")
         self.driver.click("login-button", by=By.ID, timeout=60)
         self.debug("Clicked on 'Login' second time")
+        staging_area = self.driver.find_element("//div[@class='collapsible-trigger' and "
+                                                "@role='button']//span[contains(text(), 'Staging "
+                                                "Area')]")
+        self.driver.execute_script("arguments[0].click();", staging_area)
         QA_page = self.driver.find_element("//a[@href='/learning/course/course-v1:EPFL+SimNeuro2"
                                            "+2019_2/block-v1:EPFL+SimNeuro2+2019_2+type"
                                            "@sequential+block@fc4b687d340a4c69a862661e110970b1']")
+        time.sleep(3)
         self.driver.execute_script("arguments[0].click();", QA_page)
 
     def check_page(self, name, params):
@@ -287,7 +292,7 @@ class MoocTests:
 
         # Open the SimUI page and get the auth token (????)
         auth = self.open_page("AppPSP")
-        time.sleep(20)
+        time.sleep(10)
         self.driver.save_screenshot(screenshot_name.format("1-open"))
 
         # Read the name of the job to check
