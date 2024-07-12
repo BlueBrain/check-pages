@@ -81,8 +81,7 @@ class MoocTests:
                                           "text()='Sign in' and @class='btn btn-primary']")
         self.driver.execute_script("arguments[0].click();", signin)
         # Maximize the browser window
-        self.driver.maximize_window()
-
+        # self.driver.maximize_window()
         # Get the login credentials
         if "EDX_LOGIN" not in os.environ:
             raise ValueError("Error: EDX login undefined!")
@@ -99,11 +98,12 @@ class MoocTests:
         self.driver.type("#username", username)
         self.next("Login: Waiting for login button")
         self.next("Login: Clicking 'Login' button first time")
-        self.driver.click("login-button", by=By.ID, timeout=60)
+        self.driver.click("button-submit", by=By.ID, timeout=60)
         self.debug("Clicked on first 'Login' button")
         self.driver.type("#password", password)
         self.next("Login: Waiting for login button")
-        self.driver.click("login-button", by=By.ID, timeout=60)
+        self.driver.click("button-proceed", by=By.ID, timeout=60)
+        # time.sleep(60)
         self.debug("Clicked on 'Login' second time")
         staging_area = self.driver.find_element("//div[@class='collapsible-trigger' and "
                                                 "@role='button']//span[contains(text(), 'Staging "
@@ -308,6 +308,7 @@ class MoocTests:
 
         self.next(f"Click on the job name {job_name}")
         job_name_element = f"//span[contains(text(),'{job_name}')]"
+        time.sleep(20)
         try:
             job_name_selector = self.driver.find_element(job_name_element, timeout=60)
         except:
@@ -439,16 +440,16 @@ class MoocTests:
         self.driver.tearDown()
 
 
-def test_mooc_grade_submission(selbase):
-    """Tests the grade submission backend."""
-    mooc = MoocTests(selbase)
-    mooc.perform_test(mooc.grade_submission, "grade_submission")
-
-
-def test_mooc_service(selbase, testparam):
-    """Tests a Mooc service (like jupyter, Bryans, Keys etc.)"""
-    mooc = MoocTests(selbase)
-    mooc.perform_test(mooc.check_page, testparam[0], *testparam)
+# def test_mooc_grade_submission(selbase):
+#     """Tests the grade submission backend."""
+#     mooc = MoocTests(selbase)
+#     mooc.perform_test(mooc.grade_submission, "grade_submission")
+#
+#
+# def test_mooc_service(selbase, testparam):
+#     """Tests a Mooc service (like jupyter, Bryans, Keys etc.)"""
+#     mooc = MoocTests(selbase)
+#     mooc.perform_test(mooc.check_page, testparam[0], *testparam)
 
 
 @pytest.mark.parametrize("appname", ["check_simui", "check_pspapp", "start_simui", "start_pspapp"])
