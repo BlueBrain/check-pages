@@ -440,16 +440,16 @@ class MoocTests:
         self.driver.tearDown()
 
 
-# def test_mooc_grade_submission(selbase):
-#     """Tests the grade submission backend."""
-#     mooc = MoocTests(selbase)
-#     mooc.perform_test(mooc.grade_submission, "grade_submission")
-#
-#
-# def test_mooc_service(selbase, testparam):
-#     """Tests a Mooc service (like jupyter, Bryans, Keys etc.)"""
-#     mooc = MoocTests(selbase)
-#     mooc.perform_test(mooc.check_page, testparam[0], *testparam)
+def test_mooc_grade_submission(selbase):
+    """Tests the grade submission backend."""
+    mooc = MoocTests(selbase)
+    mooc.perform_test(mooc.grade_submission, "grade_submission")
+
+
+def test_mooc_service(selbase, testparam):
+    """Tests a Mooc service (like jupyter, Bryans, Keys etc.)"""
+    mooc = MoocTests(selbase)
+    mooc.perform_test(mooc.check_page, testparam[0], *testparam)
 
 
 @pytest.mark.parametrize("appname", ["check_simui", "check_pspapp", "start_simui", "start_pspapp"])
