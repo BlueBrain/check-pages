@@ -1,3 +1,7 @@
+# Copyright (c) 2024 Blue Brain Project/EPFL
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Tests for 'pick-real-neuron'.
 """
 from selenium.webdriver.common.by import By

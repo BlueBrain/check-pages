@@ -1,3 +1,7 @@
+# Copyright (c) 2024 Blue Brain Project/EPFL
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """DOM checker for portal pages.
 
 The code will load random pages and checks for expected DOM elements.
