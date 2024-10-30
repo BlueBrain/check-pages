@@ -1,10 +1,14 @@
+# Copyright (c) 2024 Blue Brain Project/EPFL
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Tests for the MOOC 2 (2019)
 
 In order to see all the tests collected do
-py.test --tests <path to json> --collect-only
+pytest --tests <path to json> --collect-only
 
-To execute a singl test do e.g.
-py.test -k test_mooc_service[SimulationApp]
+To execute a single test do e.g.
+pytest -k test_mooc_service[SimulationApp]
 """
 
 import os
@@ -38,11 +42,7 @@ class MoocTests:
     """Defines the MOOC Testing class."""
 
     # This URL leads to a special edx page containing links to all test apps and services.
-    URL = ("https://app.courseware.epfl.ch/learning/course/course-v1:EPFL+SimNeuro2+2019_2/home"
-           # The previous URL used is kept below:
-           # "https://courseware.epfl.ch/courses/course-v1:EPFL+SimNeuro2+2019_2/courseware/"
-           # "ba6f8be8f0bb4956a94147f7a09e4cf4/fc4b687d340a4c69a862661e110970b1/1"
-           )
+    URL = "https://app.courseware.epfl.ch/learning/course/course-v1:EPFL+SimNeuro2+2019_2/home"
     SIMUI_NAME = "SIMUI.INFO"
     PSPAPP_NAME = "PSPAPP.INFO"
 
@@ -67,7 +67,7 @@ class MoocTests:
 
     @staticmethod
     def timestamp():
-        """Returns the current time in human readable format."""
+        """Returns the current time in human-readable format."""
         return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
 
     def login_edx(self):
@@ -80,8 +80,7 @@ class MoocTests:
                                           "%2Fcourse-v1%3AEPFL%2BSimNeuro2%2B2019_2%2Fhome' and "
                                           "text()='Sign in' and @class='btn btn-primary']")
         self.driver.execute_script("arguments[0].click();", signin)
-        # Maximize the browser window
-        # self.driver.maximize_window()
+
         # Get the login credentials
         if "EDX_LOGIN" not in os.environ:
             raise ValueError("Error: EDX login undefined!")
@@ -103,7 +102,6 @@ class MoocTests:
         self.driver.type("#password", password)
         self.next("Login: Waiting for login button")
         self.driver.click("button-proceed", by=By.ID, timeout=60)
-        # time.sleep(60)
         self.debug("Clicked on 'Login' second time")
         staging_area = self.driver.find_element("//div[@class='collapsible-trigger' and "
                                                 "@role='button']//span[contains(text(), 'Staging "
@@ -252,7 +250,7 @@ class MoocTests:
 
     def open_page(self, pagename):
         """Opens the page of the app, and returns the authentification token."""
-        # Choose the page and retrieve the auth token from the page URL (???)
+        # Choose the page and retrieve the auth token from the page URL
         self.next(f"Clicking on '{pagename}'")
         self.switch_to_iframe("unit-iframe")
         time.sleep(10)
@@ -271,7 +269,7 @@ class MoocTests:
         """Verify the previous run of a SimUI job."""
         screenshot_name = f"{self.OUTPUT}/check_simui_{{}}.png"
 
-        # open the SimUI page and get the auth token (TODO: Why is this needed? Anymore?)
+        # open the SimUI page and get the auth token
         auth = self.open_page("AppSim")
         time.sleep(5)
         # Read SimUI progress page URL and open it

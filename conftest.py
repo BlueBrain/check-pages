@@ -1,3 +1,7 @@
+# Copyright (c) 2024 Blue Brain Project/EPFL
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Conftest for py.test environment to contain the following features:
 
 - supress the output of the dots
@@ -8,7 +12,6 @@
 import pytest
 from seleniumbase import BaseCase
 from selenium.webdriver.chrome.options import Options
-
 from check_pages import mooc_tests
 
 # Define common test variables
