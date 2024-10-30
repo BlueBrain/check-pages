@@ -42,11 +42,7 @@ class MoocTests:
     """Defines the MOOC Testing class."""
 
     # This URL leads to a special edx page containing links to all test apps and services.
-    URL = ("https://app.courseware.epfl.ch/learning/course/course-v1:EPFL+SimNeuro2+2019_2/home"
-           # The previous URL used is kept below:
-           # "https://courseware.epfl.ch/courses/course-v1:EPFL+SimNeuro2+2019_2/courseware/"
-           # "ba6f8be8f0bb4956a94147f7a09e4cf4/fc4b687d340a4c69a862661e110970b1/1"
-           )
+    URL = "https://app.courseware.epfl.ch/learning/course/course-v1:EPFL+SimNeuro2+2019_2/home"
     SIMUI_NAME = "SIMUI.INFO"
     PSPAPP_NAME = "PSPAPP.INFO"
 
@@ -254,7 +250,7 @@ class MoocTests:
 
     def open_page(self, pagename):
         """Opens the page of the app, and returns the authentification token."""
-        # Choose the page and retrieve the auth token from the page URL (???)
+        # Choose the page and retrieve the auth token from the page URL
         self.next(f"Clicking on '{pagename}'")
         self.switch_to_iframe("unit-iframe")
         time.sleep(10)
@@ -273,7 +269,7 @@ class MoocTests:
         """Verify the previous run of a SimUI job."""
         screenshot_name = f"{self.OUTPUT}/check_simui_{{}}.png"
 
-        # open the SimUI page and get the auth token (TODO: Why is this needed? Anymore?)
+        # open the SimUI page and get the auth token
         auth = self.open_page("AppSim")
         time.sleep(5)
         # Read SimUI progress page URL and open it

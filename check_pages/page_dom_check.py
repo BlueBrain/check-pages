@@ -150,8 +150,6 @@ def accept_cookies(driver):
     """Safely accepting the possible cookies popup."""
     try:
         driver.click_xpath("//*[text()='Allow']")
-        # driver.find_element(By.XPATH, "//*[text()='Allow']").click()
-        # //*[@id="__next"]/div[6]/div/div[3]/a/span
     except exceptions.NoSuchElementException:
         pass
 

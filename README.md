@@ -42,7 +42,7 @@ Follow the instructions provided in the [Usage](#usage) section.
 
 ## Usage
 
-Once the dependencies are installed, you can run the project with the command specified in
+Once the dependencies are installed, you can run the project with the commands specified in
 the `.gitlab-ci.yml` file.
 
 ## Code
@@ -57,7 +57,7 @@ If any of the request has a status code >= 400, then this particular test is mar
 
 ### `page_dom_check`
 
-This code also uses selenium, but checks for the presence of certain expected DOM elements.
+This implementation uses Selenium to verify the presence of specific expected DOM elements.
 
 The pages to test and the expected DOM elements are defined in a json file which looks like this:
 
@@ -86,8 +86,7 @@ marked as *failed*.
 
 ### `location_test`
 
-This test initially was using the API of GTMetrix to load the given URL(s) on various locations
-around the world.
+Initially, the GTMetrix API was used to load the given URL(s) from various locations around the world.
 
 The URL's to test are defined in a json file:
 
@@ -127,10 +126,10 @@ Several `pytest` tests are defined to check some services/apps.
 
 #### mooc_tests.py
 
-This test setup is used to run selenium tests to check several pages and services as defined
+This test setup is used to run Selenium tests to check several pages and services as defined
 in `resources/Mooc/mooc_tests.json` in addition to extensive tests for the SimUI and PSPAPP. This
 test logs in to edX and opens a special page where all the services are linked. For the tests listed
-in `mooc_tests.json` the code only verifies the existance of a certain element.
+in `mooc_tests.json` the code only verifies the existence of a certain element.
 
 For the tests of SimUI and PSPAPP, two tests (`start_simui` and `start_pspapp`) will start a simple
 job on the GUI and stored the job-ID or result-URL in the file `SIMUI.INFO` and `PSPAPP.INFO`.
@@ -139,12 +138,12 @@ When the CI job is run again, the two tests `check_simui` and `check_pspapp` pic
 and result-URL and check if the job as been completed successfully.
 
 #### ebrains_tests.py
+[NOTE] This test is no longer running as EBRAINS portal is no longer supported by the BBP.
 
 This test setup us used to run selenium tests to check two SimUI ebrains services. Like the test
 before this test stats two SimUI runs (on circuit `CA1` and circuit `MICROCIRCUIT`) and stores the
 ID's in the files `SIMUI_CA1.INFO` and `SIMUI_MICRO.INFO`. In the next run of the job the results
 are verified.
-This test is no longer running as EBRAINS portal is no longer supported by the BBP.
 
 #### pick_test.py
 

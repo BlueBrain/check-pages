@@ -12,7 +12,6 @@
 import pytest
 from seleniumbase import BaseCase
 from selenium.webdriver.chrome.options import Options
-
 from check_pages import mooc_tests
 
 # Define common test variables
