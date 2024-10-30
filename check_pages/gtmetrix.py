@@ -1,4 +1,4 @@
-s# Copyright (c) 2024 Blue Brain Project/EPFL
+# Copyright (c) 2024 Blue Brain Project/EPFL
 #
 # SPDX-License-Identifier: Apache-2.0
 
