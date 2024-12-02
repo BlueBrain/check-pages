@@ -351,12 +351,8 @@ first time it runs it starts a simulation or a computation with the job ID or th
 one of the files. The second time the job runs it takes this information from these files to verify
 if the calculations, which might take hours to complete, ended successfully.
 
-## Copyright, Funding & Authors
-The development of this software was supported by funding to the Blue Brain Project,
-a research center of the École polytechnique fédérale de Lausanne (EPFL), from
-the Swiss government's ETH Board of the Swiss Federal Institutes of Technology.
+## Acknowledgment
 
+The development of this software was supported by funding to the Blue Brain Project, a research center of the École polytechnique fédérale de Lausanne (EPFL), from the Swiss government's ETH Board of the Swiss Federal Institutes of Technology.
 
-Copyright: Copyright (c) 2024 Blue Brain Project/EPFL
-
-Apache-2.0 license
+Copyright (c) 2024 Blue Brain Project/EPFL
